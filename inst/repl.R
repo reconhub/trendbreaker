@@ -21,7 +21,14 @@ names(x_mtcars) <- paste0("x_", names(mtcars))
 models <- list(null = model2, glm_gaussian = model1, glm_negbin = model3)
 evaluate_models(models, mtcars)
 evaluate_models(models, x_mtcars, hp = x_hp, cyl = x_cyl)
+
+# find best model
 select_model(models, mtcars, evaluate_aic)
+best_model <- select_model(models, mtcars, evaluate_aic)$model
+
+# detect outliers
+detect_outliers(best_model, x_mtcars, hp = x_hp, cyl = x_cyl)
+
 
 
 # monitor(model, data)

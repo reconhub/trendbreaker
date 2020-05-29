@@ -28,10 +28,6 @@ lm_model <- function(formula, ...) {
   )
 }
 
-## NOTE (TJ): not sure if we need 'formula' in there. `ciTools` returns the
-## whole data input, so the response variable is there (current version
-## duplicates one of the columns). If we need to retrieve the response variable
-## from a model object we could use an accessor (see model-accessors.R).
 model_fit <- function(model, formula) {
   list(
     model = model,
@@ -53,9 +49,3 @@ model_fit <- function(model, formula) {
     }
   )
 }
-
-#model$predict(mtcars)
-#
-#model <- lm_model(mpg ~ 1, mtcars)
-#model$predict(mtcars)
-#
