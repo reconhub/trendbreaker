@@ -5,7 +5,7 @@
 get_formula <- function(model) {
   as.list(environment(model$train))$formula
 }
- 
+
 
 
 #' @param model the output of functions `lm_model`, `glm_model`, or
@@ -24,6 +24,3 @@ get_response <- function(model) {
 get_family <- function(model) {
   as.list(environment(model$train))$family
 }
-
-
-
