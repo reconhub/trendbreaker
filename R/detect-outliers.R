@@ -1,7 +1,10 @@
 #' @export
+#'
+#' @param model is a trained model
+#' 
 detect_outliers <- function(model, data, alpha = 0.05, ...) {
   data <- dplyr::select(data, ..., everything())
-  preds <- model$train(data)$predict(data, alpha = alpha)
+  preds <- model$predict(data, alpha = alpha)
   out <- dplyr::mutate(
     preds,
     outlier = observed < lower | observed > upper,
