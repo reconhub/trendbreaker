@@ -141,3 +141,4 @@ ggplot(stratified_monitoring, aes(x = date, y = count)) +
 # # general wrapper: detect trend and k, identify outliers
 # epichange(models, mtcars)
 # epichange(models, x_mtcars, hp = x_hp, cyl = x_cyl, method = evaluate_aic)
+
