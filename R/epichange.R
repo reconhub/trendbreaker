@@ -6,6 +6,7 @@ epichange <- function(models, data,
                       method = evaluate_resampling,
                       ...) {
   data <- dplyr::select(data, ..., everything())
+
   res_changepoint <- detect_changepoint(
     models = models,
     data = data,
