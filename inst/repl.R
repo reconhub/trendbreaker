@@ -27,14 +27,10 @@ select_model(models, mtcars, evaluate_aic)
 best_model <- select_model(models, mtcars, evaluate_aic)$model
 
 # detect outliers
-detect_outliers(best_model$train(mtcars), x_mtcars, hp = x_hp, cyl = x_cyl)
+detect_outliers(models, x_mtcars, hp = x_hp, cyl = x_cyl)
 detect_outliers(best_model$train(mtcars), tail(mtcars, 3))
 
 
-# monitor(model, data)
-
-# monitor(model3, new_data) =>
-
-# monitor on many time series
-
-# functions to evaluate the monitoring system
+# general wrapper: detect trend and k, identify outliers
+epichange(models, mtcars)
+epichange(models, x_mtcars, hp = x_hp, cyl = x_cyl, method = evaluate_aic)
