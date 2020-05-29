@@ -8,7 +8,7 @@ detect_outliers <- function(model, data, alpha = 0.05, ...) {
   out <- dplyr::mutate(
     preds,
     outlier = observed < lower | observed > upper,
-    classification = case_when(
+    classification = dplyr::case_when(
       observed < lower ~ "decrease",
       observed > upper ~ "increase",
       TRUE ~ "normal"),

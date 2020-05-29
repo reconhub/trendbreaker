@@ -27,9 +27,8 @@ select_model(models, mtcars, evaluate_aic)
 best_model <- select_model(models, mtcars, evaluate_aic)$model
 
 # detect outliers
-detect_outliers(models, x_mtcars, hp = x_hp, cyl = x_cyl)
+detect_outliers(model1$train(mtcars), x_mtcars, hp = x_hp, cyl = x_cyl)
 detect_outliers(best_model$train(mtcars), tail(mtcars, 3))
-
 
 # general wrapper: detect trend and k, identify outliers
 epichange(models, mtcars)
