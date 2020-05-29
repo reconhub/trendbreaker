@@ -9,7 +9,7 @@ glm_model <- function(formula, family, ...) {
 }
 
 #' @export
-glm_nb_model <- function(formula, ...) { # TODO: pass ...
+glm_nb_model <- function(formula, ...) {
   list(
     train = function(data) {
       model <- MASS::glm.nb(formula = formula, data = data, ...)
@@ -28,6 +28,10 @@ lm_model <- function(formula, ...) {
   )
 }
 
+## NOTE (TJ): not sure if we need 'formula' in there. `ciTools` returns the
+## whole data input, so the response variable is there (current version
+## duplicates one of the columns). If we need to retrieve the response variable
+## from a model object we could use an accessor (see model-accessors.R).
 model_fit <- function(model, formula) {
   list(
     model = model,
