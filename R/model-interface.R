@@ -77,6 +77,36 @@ brms_model <- function(formula, family, ...) {
   )
 }
 
+add_prediction_interval <- function(model, data, alpha) {
+  UseMethod("add_prediction_interval")
+}
+
+add_prediction_interval.negbin <- function(model, data, alpha) {
+  mu <- predict(model, newdata = data, type = "response")
+  theta <- model$theta
+  stopifnot(theta > 0)
+  # this ignores the uncertainty around mu and theta
+  dplyr::bind_cols(
+    data,
+    tibble::tibble(
+      pred = mu,
+      lower = qnbinom(alpha / 2, mu = mu, size = theta),
+      upper = qnbinom(1 - alpha / 2, mu = mu, size = theta),
+    )
+  )
+}
+
+add_prediction_interval.default <- function(model, data, alpha) {
+  suppressWarnings(
+    ciTools::add_pi(
+      tb = data,
+      fit = model,
+      alpha = alpha,
+      names = c("lower", "upper")
+    )
+  )
+}
+
 model_fit <- function(model, formula) {
   list(
     model = model,
@@ -85,11 +115,10 @@ model_fit <- function(model, formula) {
       ## replace add_ci with add_pi, and fix subsequent issue occuring with
       ## negbin models
       suppressWarnings(
-        res <- ciTools::add_ci(
-          tb = newdata,
-          fit = model,
-          alpha = alpha,
-          names = c("lower", "upper")
+        res <- add_prediction_interval(
+          data = newdata,
+          model = model,
+          alpha = alpha
         )
       )
       col_name <- as.character(formula[[2]])
