@@ -5,8 +5,8 @@
 \title{General wrapper}
 \usage{
 epichange(
-  models,
   data,
+  models,
   alpha = 0.05,
   max_k = 7,
   method = evaluate_resampling,

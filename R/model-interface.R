@@ -2,6 +2,7 @@
 glm_model <- function(formula, family, ...) {
   structure(
     eval(bquote(list(
+      model_class = "glm",
       train = function(data) {
         model <- glm(formula = .(formula), family = .(family), data = data, ...)
         model_fit(model, formula)
@@ -15,6 +16,7 @@ glm_model <- function(formula, family, ...) {
 glm_nb_model <- function(formula, ...) {
   structure(
     eval(bquote(list(
+      model_class = "MASS::glm.nb",
       train = function(data) {
         model <- MASS::glm.nb(formula = .(formula), data = data, ...)
         model_fit(model, formula)
@@ -28,6 +30,7 @@ glm_nb_model <- function(formula, ...) {
 lm_model <- function(formula, ...) {
   structure(
     eval(bquote(list(
+      model_class = "lm",
       train = function(data) {
         model <- lm(formula = .(formula), data = data, ...)
         model_fit(model, formula)
@@ -41,6 +44,7 @@ lm_model <- function(formula, ...) {
 brms_model <- function(formula, family, ...) {
   structure(
     eval(bquote(list(
+      model_class = "brms",
       train = function(data) {
         model <- brms::brm(
           formula = .(formula),
@@ -98,4 +102,14 @@ model_fit <- function(model, formula) {
       res
     }
   )
+}
+
+#' @export
+format.epichange_model <- function(x, ...) {
+  paste0("Untrained epichange model type: ", x[["model_class"]])
+}
+
+#' @export
+print.epichange_model <- function(x, ...) {
+  cat(format(x, ...))
 }
