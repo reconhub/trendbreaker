@@ -2,10 +2,18 @@ Package: epichange
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Dirk",
-           family = "Schumacher",
-           role = c("aut", "cre"),
-           email = "mail@dirk-schumacher.net")
+    c(
+      person(
+        given = "Dirk",
+        family = "Schumacher",
+        role = c("aut", "cre"),
+        email = "mail@dirk-schumacher.net"
+      ),
+      person(
+        given = "Thibaut",
+        family = "Jombart", role = c("aut"), email = "thibautjombart@gmail.com"
+      )
+    )
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
