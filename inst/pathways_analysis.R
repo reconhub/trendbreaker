@@ -43,6 +43,10 @@ models <- list(
 
 
 # analyses on all data
+counts_overall <- pathways_recent %>%
+  group_by(date, day, weekday) %>%
+  summarise(count = sum(count))
+
 res_overall <- pathways_recent %>%
   group_by(date, day, weekday) %>%
   summarise(count = sum(count)) %>%
@@ -70,7 +74,3 @@ plots_nhs_region <- lapply(seq_along(res_nhs_region),
                              plot(res_nhs_region[[i]], "date", point_size = 1, guide = FALSE) +
                                labs(subtitle = names(res_nhs_region)[i]))
 cowplot::plot_grid(plotlist = plots_nhs_region)
-
-
-
-
