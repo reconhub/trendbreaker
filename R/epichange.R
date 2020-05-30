@@ -8,14 +8,14 @@ epichange <- function(data,
                       method = evaluate_resampling,
                       ...) {
   
-  res_changepoint <- detect_changepoint(models = models,
-                                        data = data,
+  res_changepoint <- detect_changepoint( data = data,
+                                        models = models,
                                         alpha = alpha,
                                         max_k = max_k,
                                         method = method,
                                         ...)
 
-  res <- detect_outliers(res_changepoint$model, data, alpha = alpha)
+  res <- detect_outliers(data = data, model = res_changepoint$model, alpha = alpha)
   out <- list(k = res_changepoint$k,
        model = res_changepoint$model,
        results = res)

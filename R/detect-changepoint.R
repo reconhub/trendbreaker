@@ -1,7 +1,7 @@
 
 #' @export
 #' 
-detect_changepoint <- function(models, data, alpha = 0.05, max_k = 7,
+detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
                                method = evaluate_resampling, ...) {
 
   res <- vector(mode = "list", length = max_k + 1)

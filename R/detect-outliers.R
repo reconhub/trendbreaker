@@ -2,8 +2,7 @@
 #'
 #' @param model is a trained model
 #' 
-detect_outliers <- function(model, data, alpha = 0.05, ...) {
-  data <- dplyr::select(data, ..., everything())
+detect_outliers <- function(data, model, alpha = 0.05, ...) {
   preds <- model$predict(data, alpha = alpha)
   out <- dplyr::mutate(
     preds,
