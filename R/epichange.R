@@ -2,17 +2,18 @@
 #'
 #' @export
 
-epichange <- function(models, data,
+epichange <- function(data,
+                      models,
                       alpha = 0.05, max_k = 7,
                       method = evaluate_resampling,
                       ...) {
   
-  data <- dplyr::select(data, ..., everything())
   res_changepoint <- detect_changepoint(models = models,
                                         data = data,
                                         alpha = alpha,
                                         max_k = max_k,
-                                        method = method)
+                                        method = method,
+                                        ...)
 
   res <- detect_outliers(res_changepoint$model, data, alpha = alpha)
   out <- list(k = res_changepoint$k,

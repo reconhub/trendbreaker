@@ -21,12 +21,12 @@ evaluate_resampling <- function(model, data, ...) {
 
 
 #' @export
-evaluate_aic <- function(model, data) {
+evaluate_aic <- function(model, data, ...) {
   full_model_fit <- model$train(data)
 
   tibble::tibble(
     metric = "aic",
-    score = stats::AIC(full_model_fit$model)
+    score = stats::AIC(full_model_fit$model, ...)
   )
 }
 
@@ -34,8 +34,7 @@ evaluate_aic <- function(model, data) {
 
 #' @export
 evaluate_models <- function(models, data, method = evaluate_resampling, ...) {
-  data <- dplyr::select(data, ..., everything())
-  out <- lapply(models, function(model) method(model, data))
+  out <- lapply(models, function(model) method(model, data, ...))
   dplyr::bind_rows(out, .id = "model")
 }
 

@@ -3,7 +3,6 @@
 #' 
 detect_changepoint <- function(models, data, alpha = 0.05, max_k = 7,
                                method = evaluate_resampling, ...) {
-  data <- dplyr::select(data, ..., everything())
 
   res <- vector(mode = "list", length = max_k + 1)
   res_models <- vector(mode = "list", length = max_k + 1)
@@ -23,7 +22,8 @@ detect_changepoint <- function(models, data, alpha = 0.05, max_k = 7,
     current_model <- select_model(models = models,
                                   data = data,
                                   method = method,
-                                  scores = FALSE)$model
+                                  scores = FALSE,
+                                  ...)$model
     current_model <- current_model$train(data_train)
     outliers_train <- detect_outliers(model = current_model,
                                       data = data_train,
