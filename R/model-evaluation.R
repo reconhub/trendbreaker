@@ -35,8 +35,8 @@ evaluate_aic <- function(model, data, ...) {
 evaluate_models <- function(models, data, method = evaluate_resampling, ...) {
   out <- lapply(models, function(model) method(model, data, ...))
   dplyr::bind_rows(out, .id = "model")
-  #data <- dplyr::select(data, ..., everything())
-    # TODO: think about one metric per col
+  # data <- dplyr::select(data, ..., everything())
+  # TODO: think about one metric per col
   # out <- lapply(models, function(model) method(model, data, ...))
   # out <- dplyr::bind_rows(out, .id = "model")
   # tidyr::pivot_wider(

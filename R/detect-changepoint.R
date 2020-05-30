@@ -2,7 +2,6 @@
 #' @export
 detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
                                method = evaluate_resampling, ...) {
-
   res <- vector(mode = "list", length = max_k + 1)
   res_models <- vector(mode = "list", length = max_k + 1)
 
@@ -19,12 +18,14 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
   for (k in 0:max_k) {
     n_train <- n - k
     data_train <- data[seq_len(n_train), , drop = FALSE]
-    data_test <- data[-seq_len(n_train), ,drop = FALSE]
-    current_model <- select_model(models = models,
-                                  data = data,
-                                  method = method,
-                                  scores = FALSE,
-                                  ...)$model
+    data_test <- data[-seq_len(n_train), , drop = FALSE]
+    current_model <- select_model(
+      models = models,
+      data = data,
+      method = method,
+      scores = FALSE,
+      ...
+    )$model
     current_model <- current_model$train(data_train)
     outliers_train <- detect_outliers(
       model = current_model,

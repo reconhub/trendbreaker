@@ -12,7 +12,8 @@ test_that("an example select models process", {
   training_data <- mtcars
   suppressWarnings(
     auto_fit <- select_model(models, training_data, evaluate_resampling,
-                             metrics = list(yardstick::rmse), v = 2, repeats = 1)
+      metrics = list(yardstick::rmse), v = 2, repeats = 1
+    )
   )
   res <- auto_fit$leaderboard
   expect_equal(colnames(res), c("model", "rmse"))
