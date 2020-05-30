@@ -8,7 +8,6 @@ plot.epichange <- function(x,
                            col_decrease = "#32AB96",
                            guide = TRUE,
                            ...) {
-
   ## ensure that x_axis is the name of a variable
   results <- get_results(x)
   if (is.numeric(x_axis)) {
@@ -35,7 +34,6 @@ plot.epichange <- function(x,
   )
 
   custom_guide <- if (guide) ggplot2::guide_legend(override.aes = list(size = c(4, 4, 3))) else FALSE
-
   ggplot2::ggplot(results, ggplot2::aes_string(x = x_axis, y = "count")) +
     ggplot2::theme_bw() +
     ggplot2::geom_vline(xintercept = train_limit, linetype = 2) +

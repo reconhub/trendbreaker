@@ -50,7 +50,7 @@ counts_overall <- pathways_recent %>%
 
 res_overall <- epichange(counts_overall, models, method = evaluate_aic)
 
-plot(res_overall, "day")
+plot.epichange(res_overall, "day")
 # For Tibo to fix; also fix value of "k" and its display
 # plot(res_overall, "date")
 
@@ -70,6 +70,6 @@ res_nhs_region <- lapply(counts_nhs_region,
 
 plots_nhs_region <- lapply(seq_along(res_nhs_region),
                            function(i)
-                             plot(res_nhs_region[[i]], "date", point_size = 1, guide = FALSE) +
+                             plot.epichange(res_nhs_region[[i]], "date", point_size = 1, guide = FALSE) +
                                labs(subtitle = names(res_nhs_region)[i]))
 cowplot::plot_grid(plotlist = plots_nhs_region)

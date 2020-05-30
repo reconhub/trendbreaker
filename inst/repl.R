@@ -35,8 +35,7 @@ models <- list(
   null = model_constant,
   glm_poisson = model1,
   lm_trend = model2,
-  lm_weekdays = model3,
-  brms = model4
+  lm_weekdays = model3
   # glm_negbin = model3
 )
 
