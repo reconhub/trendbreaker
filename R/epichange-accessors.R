@@ -23,6 +23,6 @@ get_outliers <- function(x) {
 
 
 #' @export
-predict.epichange <- function(x) {
-  x$model$predict
+predict.epichange <- function(object, ...) {
+  x$model$predict(object, ...)
 }

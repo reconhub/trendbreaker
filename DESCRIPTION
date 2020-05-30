@@ -27,4 +27,8 @@ Suggests:
 Imports: 
     dplyr,
     yardstick,
-    rsample
+    rsample,
+    ggplot2,
+    tidyr,
+    ciTools,
+    tibble
