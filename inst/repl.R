@@ -24,19 +24,19 @@ model_constant <- lm_model(count ~ 1)
 model1 <- glm_model(count ~ 1 + date, poisson())
 model2 <- lm_model(count ~ 1 + date)
 model3 <- lm_model(count ~ 1 + date + I(weekday %in% c("Saturday", "Sunday")))
-model4 <- brms_model(
-  count ~ 1 + date + I(weekday %in% c("Saturday", "Sunday")) + I(weekday %in% c("Monday")),
-  brms::negbinomial(),
-  chains = 1
-)
-# model3 <- glm_nb_model(count ~ 1 + date)
+#model4 <- brms_model(
+#  count ~ 1 + date + I(weekday %in% c("Saturday", "Sunday")) + I(weekday %in% c("Monday")),
+#  brms::negbinomial(),
+#  chains = 1
+#)
+model4 <- glm_nb_model(count ~ 1 + date + I(weekday %in% c("Saturday", "Sunday")) + I(weekday %in% c("Monday")))
 
 models <- list(
   null = model_constant,
   glm_poisson = model1,
   lm_trend = model2,
-  lm_weekdays = model3
-  # glm_negbin = model3
+  lm_weekdays = model3,
+  glm_negbin = model4
 )
 
 # now we need to think about what part of the time series is representative
@@ -52,12 +52,12 @@ monitoring_data <- cut_df(global_ts, 7)
 library(yardstick)
 
 # the ... are passed to the evaluation function
-auto_fit <- select_model(models, training_data, evaluate_resampling, metrics = list(rmse), v = 10, repeats = 1)
+auto_fit <- select_model(training_data, models, evaluate_resampling, metrics = list(rmse), v = 10, repeats = 10)
 auto_fit$leaderboard
 
 best_model <- auto_fit$best_model
 trained_best_model <- best_model$train(training_data)
-result <- detect_outliers(trained_best_model, monitoring_data) %>%
+result <- detect_outliers(monitoring_data, trained_best_model) %>%
   bind_rows(training_data)
 
 
@@ -82,7 +82,7 @@ stratified_monitoring <- pathway_data %>%
     training_data <- cut_df(ts, 40, 8)
     monitoring_data <- cut_df(ts, 7)
     trained_best_model <- best_model$train(training_data)
-    detect_outliers(trained_best_model, monitoring_data) %>%
+    detect_outliers(monitoring_data, trained_best_model) %>%
       bind_rows(training_data) %>%
       arrange(date)
   })
@@ -107,10 +107,10 @@ stratified_monitoring <- pathway_data %>%
 
     training_data <- cut_df(ts, 40, 8)
     monitoring_data <- cut_df(ts, 7)
-    auto_fit <- select_model(models, training_data, evaluate_resampling, metrics = list(rmse), v = 10, repeats = 10)
+    auto_fit <- select_model(training_data, models, evaluate_resampling, metrics = list(rmse), v = 10, repeats = 10)
     best_model <- auto_fit$best_model
     trained_best_model <- best_model$train(training_data)
-    detect_outliers(trained_best_model, monitoring_data) %>%
+    detect_outliers(monitoring_data, trained_best_model) %>%
       bind_rows(training_data) %>%
       arrange(date)
   })
