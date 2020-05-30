@@ -15,7 +15,9 @@ epichange <- function(models, data,
                                         method = method)
 
   res <- detect_outliers(res_changepoint$model, data, alpha = alpha)
-  list(k = res_changepoint$k,
+  out <- list(k = res_changepoint$k,
        model = res_changepoint$model,
        results = res)
+  class(out) <- c("epichange", class(out))
+  out 
 }
