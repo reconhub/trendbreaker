@@ -1,10 +1,7 @@
 
 #' @export
-#'
-detect_changepoint <- function(models, data, alpha = 0.05, max_k = 7,
+detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
                                method = evaluate_resampling, ...) {
-  data <- dplyr::select(data, ..., everything())
-
   res <- vector(mode = "list", length = max_k + 1)
   res_models <- vector(mode = "list", length = max_k + 1)
 

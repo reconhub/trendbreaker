@@ -77,8 +77,10 @@ model_fit <- function(model, formula) {
   list(
     model = model,
     predict = function(newdata, alpha = 0.05) {
-      # this assumes the observed column is always there
-      res <- ciTools::add_pi(
+      ## TODO:
+      ## replace add_ci with add_pi, and fix subsequent issue occuring with
+      ## negbin models
+      res <- ciTools::add_ci(
         tb = newdata,
         fit = model,
         alpha = alpha,
