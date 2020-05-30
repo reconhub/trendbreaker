@@ -4,7 +4,6 @@ evaluate_resampling <- function(model, data, metrics = list(yardstick::rmse), v 
   metrics <- do.call(yardstick::metric_set, metrics)
   res <- lapply(training_split$splits, function(split) {
     fit <- model$train(rsample::analysis(split))
-
     validation <- fit$predict(rsample::assessment(split))
     # TODO: always sort by time component
     metrics(validation, observed, pred)
