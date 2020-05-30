@@ -47,13 +47,12 @@ counts_overall <- pathways_recent %>%
   group_by(date, day, weekday) %>%
   summarise(count = sum(count))
 
-res_overall <- pathways_recent %>%
-  group_by(date, day, weekday) %>%
-  summarise(count = sum(count)) %>%
-  epichange(models, method = evaluate_aic)
+
+res_overall <- epichange(counts_overall, models, method = evaluate_aic)
 
 plot(res_overall, "day")
-plot(res_overall, "date")
+# For Tibo to fix; also fix value of "k" and its display
+# plot(res_overall, "date")
 
 
 

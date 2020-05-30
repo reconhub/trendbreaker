@@ -23,7 +23,7 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
       models = models,
       data = data,
       method = method
-    )$model
+    )$best_model
     current_model <- current_model$train(data_train)
     outliers_train <- detect_outliers(
       model = current_model,
