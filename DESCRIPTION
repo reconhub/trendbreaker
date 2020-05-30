@@ -18,4 +18,5 @@ Imports:
     dplyr,
     yardstick,
     rsample,
-    MASS
+    MASS,
+    brms

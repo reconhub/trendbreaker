@@ -5,7 +5,8 @@ pathway_data <- tempfile()
 download.file("https://github.com/thibautjombart/epichange/blob/994cc7d211a5473b1b27bcf7c7159aee1c14dcbd/factory/data/rds/pathways_latest.rds?raw=true", pathway_data)
 pathway_data <- readRDS(pathway_data)
 pathway_data <- as_tibble(pathway_data) %>%
-  mutate(weekday = as.factor(weekdays(date)))
+  mutate(weekday = as.factor(weekdays(date))) %>%
+  mutate(date = as.numeric(date))
 
 global_ts <- pathway_data %>%
   group_by(date, weekday) %>%
@@ -23,14 +24,20 @@ model_constant <- lm_model(count ~ 1)
 model1 <- glm_model(count ~ 1 + date, poisson())
 model2 <- lm_model(count ~ 1 + date)
 model3 <- lm_model(count ~ 1 + date + I(weekday %in% c("Saturday", "Sunday")))
-#model3 <- glm_nb_model(count ~ 1 + date)
+model4 <- brms_model(
+  count ~ 1 + date + I(weekday %in% c("Saturday", "Sunday")) + I(weekday %in% c("Monday")),
+  brms::negbinomial(),
+  chains = 1
+)
+# model3 <- glm_nb_model(count ~ 1 + date)
 
 models <- list(
   null = model_constant,
   glm_poisson = model1,
   lm_trend = model2,
-  lm_weekdays = model3
-  #glm_negbin = model3
+  lm_weekdays = model3,
+  brms = model4
+  # glm_negbin = model3
 )
 
 # now we need to think about what part of the time series is representative
@@ -39,14 +46,14 @@ models <- list(
 # and training the model on the last 30 - 7 days. I.e. we assume
 # days 30 to 8 can be used to predict the cases in days 7 to 1.
 cut_df <- function(df, from, to = -Inf) {
-  filter(df, date >= max(date) - !!from, date <= max(date)  - !!to)
+  filter(df, date >= max(date) - !!from, date <= max(date) - !!to)
 }
 training_data <- cut_df(global_ts, 40, 8)
 monitoring_data <- cut_df(global_ts, 7)
 library(yardstick)
 
 # the ... are passed to the evaluation function
-auto_fit <- select_model(models, training_data, evaluate_resampling, metrics = list(rmse), v = 10, repeats = 10)
+auto_fit <- select_model(models, training_data, evaluate_resampling, metrics = list(rmse), v = 10, repeats = 1)
 auto_fit$leaderboard
 
 best_model <- auto_fit$best_model
@@ -69,7 +76,7 @@ stratified_monitoring <- pathway_data %>%
       group_by(date, weekday) %>%
       summarise(count = sum(count)) %>%
       ungroup()
-    ts <- zero_count_ts %>% #hacky way to fill in the gaps with 0
+    ts <- zero_count_ts %>% # hacky way to fill in the gaps with 0
       left_join(ts, by = "date") %>%
       mutate(count = count.x + ifelse(is.na(count.y), 0, count.y))
 
@@ -84,7 +91,7 @@ stratified_monitoring <- pathway_data %>%
 ggplot(stratified_monitoring, aes(x = date, y = count)) +
   geom_point(aes(color = classification)) +
   geom_ribbon(aes(y = pred, ymin = lower, ymax = upper), alpha = 0.3) +
-  facet_wrap(~ age)
+  facet_wrap(~age)
 
 # we could also do model selection for each group
 stratified_monitoring <- pathway_data %>%
@@ -112,7 +119,7 @@ stratified_monitoring <- pathway_data %>%
 ggplot(stratified_monitoring, aes(x = date, y = count)) +
   geom_point(aes(color = classification)) +
   geom_ribbon(aes(y = pred, ymin = lower, ymax = upper), alpha = 0.3) +
-  facet_wrap(~ age) +
+  facet_wrap(~age) +
   geom_vline(xintercept = max(stratified_monitoring$date) - 7)
 
 
@@ -141,4 +148,3 @@ ggplot(stratified_monitoring, aes(x = date, y = count)) +
 # # general wrapper: detect trend and k, identify outliers
 # epichange(models, mtcars)
 # epichange(models, x_mtcars, hp = x_hp, cyl = x_cyl, method = evaluate_aic)
-
