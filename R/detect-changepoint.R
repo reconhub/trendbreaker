@@ -25,8 +25,7 @@ detect_changepoint <- function(models, data, alpha = 0.05, max_k = 7,
     current_model <- select_model(
       models = models,
       data = data,
-      method = method,
-      scores = FALSE
+      method = method
     )$model
     current_model <- current_model$train(data_train)
     outliers_train <- detect_outliers(
