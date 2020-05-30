@@ -32,7 +32,7 @@ evaluate_aic <- function(model, data, ...) {
 
 
 #' @export
-evaluate_models <- function(models, data, method = evaluate_resampling, ...) {
+evaluate_models <- function(data, models, method = evaluate_resampling, ...) {
   out <- lapply(models, function(model) method(model, data, ...))
   dplyr::bind_rows(out, .id = "model")
   # data <- dplyr::select(data, ..., everything())
@@ -50,8 +50,8 @@ evaluate_models <- function(models, data, method = evaluate_resampling, ...) {
 
 
 #' @export
-select_model <- function(models, data, method = evaluate_resampling, ...) {
-  stats <- evaluate_models(models = models, data = data, method = method, ...)
+select_model <- function(data, models, method = evaluate_resampling, ...) {
+  stats <- evaluate_models(data = data, models = models, method = method, ...)
   stats <- stats[order(stats[, 2]), ]
   # per convention the first row is the best model sorted by the first metric
   list(best_model = models[[stats$model[[1]]]], leaderboard = stats)
