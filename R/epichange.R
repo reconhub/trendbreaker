@@ -1,13 +1,12 @@
 #' General wrapper
 #'
 #' @export
-
 epichange <- function(data,
                       models,
                       alpha = 0.05, max_k = 7,
                       method = evaluate_resampling,
                       ...) {
-  
+
   res_changepoint <- detect_changepoint( data = data,
                                         models = models,
                                         alpha = alpha,
@@ -20,5 +19,5 @@ epichange <- function(data,
        model = res_changepoint$model,
        results = res)
   class(out) <- c("epichange", class(out))
-  out 
+  out
 }

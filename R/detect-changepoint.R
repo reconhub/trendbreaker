@@ -1,20 +1,21 @@
 
 #' @export
-#' 
 detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
                                method = evaluate_resampling, ...) {
 
   res <- vector(mode = "list", length = max_k + 1)
   res_models <- vector(mode = "list", length = max_k + 1)
-    
+
   n <- nrow(data)
   if (max_k > (n - 4)) {
-    msg <- sprintf("`max_k` (%d) is too high for the dataset size (%d)",
-                   max_k,
-                   n)
+    msg <- sprintf(
+      "`max_k` (%d) is too high for the dataset size (%d)",
+      max_k,
+      n
+    )
     stop(msg)
   }
-  
+
   for (k in 0:max_k) {
     n_train <- n - k
     data_train <- data[seq_len(n_train), , drop = FALSE]
@@ -25,12 +26,16 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
                                   scores = FALSE,
                                   ...)$model
     current_model <- current_model$train(data_train)
-    outliers_train <- detect_outliers(model = current_model,
-                                      data = data_train,
-                                      alpha = alpha)
-    outliers_test <- detect_outliers(model = current_model,
-                                     data = data_test,
-                                     alpha = alpha)
+    outliers_train <- detect_outliers(
+      model = current_model,
+      data = data_train,
+      alpha = alpha
+    )
+    outliers_test <- detect_outliers(
+      model = current_model,
+      data = data_test,
+      alpha = alpha
+    )
 
     n_outliers_train <- sum(outliers_train$outlier, na.rm = TRUE)
     n_outliers_test <- sum(outliers_test$outlier, na.rm = TRUE)
@@ -47,14 +52,16 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
   }
 
   res <- dplyr::bind_rows(res)
-  res <- dplyr::arrange(res,
-                        dplyr::desc(n_non_outliers_train),
-                        dplyr::desc(n_outliers_test))
+  res <- dplyr::arrange(
+    res,
+    dplyr::desc(n_non_outliers_train),
+    dplyr::desc(n_outliers_test)
+  )
   best_k <- res$k[1]
-  best_model <- res_models[[k+1]]
-  list(results = res,
-       k = best_k,
-       model = best_model)
-  
+  best_model <- res_models[[k + 1]]
+  list(
+    results = res,
+    k = best_k,
+    model = best_model
+  )
 }
-
