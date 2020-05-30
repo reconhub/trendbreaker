@@ -1,0 +1,36 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# epichange
+
+<!-- badges: start -->
+[![R build status](https://github.com/reconhub/epichange/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/epichange/actions)
+<!-- badges: end -->
+
+The goal of epichange to do outlier detection on count series. WORK IN PROGRESS
+
+## Installation
+
+You can install the released version of epichange from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("epichange")
+```
+
+And the development version from [GitHub](https://github.com/) with:
+
+``` r
+remotes::install_github("reconhub/epichange")
+```
