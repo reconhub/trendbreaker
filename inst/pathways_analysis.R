@@ -96,7 +96,7 @@ res_ccg <- lapply(counts_ccg,
                   models,
                   method = evaluate_aic,
                   alpha = 0.05)
-)
+
 
 ## here we can select results to display as we want: based on low p-values, a
 ## fixed number of outliers, a value of k, ...
