@@ -51,7 +51,6 @@ counts_overall <- pathways_recent %>%
 
 ## results with automated detection of 'k'
 res_overall <- epichange(counts_overall, models, method = evaluate_aic)
-plot.epichange(res_overall, "day")
 plot(res_overall, "date")
 
 # results with fixed value of 'k' (7 days)
