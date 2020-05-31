@@ -111,9 +111,6 @@ model_fit <- function(model, formula) {
   list(
     model = model,
     predict = function(newdata, alpha = 0.05) {
-      ## TODO:
-      ## replace add_ci with add_pi, and fix subsequent issue occuring with
-      ## negbin models
       suppressWarnings(
         res <- add_prediction_interval(
           data = newdata,
