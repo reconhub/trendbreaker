@@ -16,36 +16,49 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
   }
 
   for (k in 0:max_k) {
+    ## isolate training data
     n_train <- n - k
     data_train <- data[seq_len(n_train), , drop = FALSE]
-    data_test <- data[-seq_len(n_train), , drop = FALSE]
+
+    ## select best model on training data
     current_model <- select_model(
       models = models,
-      data = data,
+      data = data_train,
       method = method
     )$best_model
     current_model <- current_model$train(data_train)
-    outliers_train <- detect_outliers(
-      model = current_model,
-      data = data_train,
-      alpha = alpha
-    )
-    outliers_test <- detect_outliers(
-      model = current_model,
-      data = data_test,
-      alpha = alpha
-    )
 
-    n_outliers_train <- sum(outliers_train$outlier, na.rm = TRUE)
-    n_outliers_test <- sum(outliers_test$outlier, na.rm = TRUE)
+    ## find outliers in entire dataset
+    outliers <-  detect_outliers(
+      model = current_model,
+      data = data,
+      alpha = alpha
+    )$outlier
+    outliers_train <- outliers & (1:n <= n_train)
+    outliers_test <- outliers & (1:n > n_train)
+    
 
+    # Calculate model score for the current value of 'k'; the score is defined
+    # as the sum of two components:
+    # 1. the number of non-outliers before the last 'k' days
+    # 2. the number of outliers in the last 'k' days
+    #
+    # the model with the highest score will be retained; in case of ties, then
+    # the first component is used to break ties
+    
+    n_outliers_train <- sum(outliers_train, na.rm = TRUE)
+    n_non_outliers_train <- n_train - n_outliers_train
+    n_outliers_test <- sum(outliers_test, na.rm = TRUE)
+    model_score <- n_non_outliers_train + n_outliers_test
+    
     ## save outputs
     res[[k + 1]] <- data.frame(
       k = k,
       n_outliers_train = n_outliers_train,
-      n_non_outliers_train = n_train - n_outliers_train,
+      n_non_outliers_train = n_non_outliers_train,
       n_outliers_test = n_outliers_test,
-      n_non_outliers_test = k - n_outliers_test
+      n_non_outliers_test = k - n_outliers_test,
+      model_score = model_score
     )
     res_models[[k + 1]] <- current_model
   }
@@ -53,11 +66,12 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
   res <- dplyr::bind_rows(res)
   res <- dplyr::arrange(
     res,
-    dplyr::desc(n_non_outliers_train),
-    dplyr::desc(n_outliers_test)
+    dplyr::desc(model_score),
+    dplyr::desc(n_non_outliers_train)
+    #dplyr::desc(n_outliers_test)
   )
   best_k <- res$k[1]
-  best_model <- res_models[[k + 1]]
+  best_model <- res_models[[best_k + 1]]
   list(
     results = res,
     k = best_k,
