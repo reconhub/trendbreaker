@@ -52,8 +52,7 @@ counts_overall <- pathways_recent %>%
 res_overall <- epichange(counts_overall, models, method = evaluate_aic)
 
 plot.epichange(res_overall, "day")
-# For Tibo to fix; also fix value of "k" and its display
-# plot(res_overall, "date")
+plot(res_overall, "date")
 
 
 
