@@ -1,6 +1,7 @@
 
 library(tidyverse)
-devtools::load_all()
+library(devtools)
+load_all()
 
 # download data
 pathways <- tempfile()

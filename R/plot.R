@@ -13,16 +13,14 @@ plot.epichange <- function(x,
   if (is.numeric(x_axis)) {
     x_axis <- names(results)[x_axis]
   }
-
+    
   n <- nrow(results)
   n_train <- n - get_k(x)
   if (n_train < n) {
-    train_limit <- mean(results[n_train:(n_train + 1), x_axis])
+    train_limit <- mean(results[n_train:(n_train + 1), x_axis, drop = TRUE])
   } else {
     train_limit <- NULL
   }
-
-
 
   col_model <- "#BBB67E"
 
