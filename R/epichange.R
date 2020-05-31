@@ -9,6 +9,8 @@ epichange <- function(data,
                       method = evaluate_resampling,
                       ...) {
 
+  n <- nrow(data)
+
   ## There are two modes for this function:
   ## 1. (default) auto-detection of the value of 'k', in which case we use the
   ## `detect_changepoint` routine to select the 'best' value of `k`
@@ -32,7 +34,6 @@ epichange <- function(data,
       stop(msg)
     }
     k <- as.integer(max(fixed_k, 0L))
-    n <- nrow(data)
     n_train <- n - k
     data_train <- data[seq_len(n_train), ]
     selected_model <- select_model(data = data_train,
@@ -51,9 +52,23 @@ epichange <- function(data,
 
 
   ## form output
+  n_train <- n - selected_k
+  n_outliers <- sum(res$outlier, na.rm = TRUE)
+  outliers_train <- res$outlier & (1:n <= n_train)
+  n_outliers_train <- sum(outliers_train, na.rm = TRUE)
+  n_outliers_recent <- n_outliers - n_outliers_train
+  p_value <- stats::pbinom(n_outliers,
+                           size = n,
+                           prob = alpha,
+                           lower.tail = FALSE)
+  
   out <- list(
     k = selected_k,
     model = selected_model,
+    n_outliers = n_outliers,
+    n_outliers_train = n_outliers_train,
+    n_outliers_recent = n_outliers_recent,
+    p_value = p_value,
     results = res_outliers
   )
   class(out) <- c("epichange", class(out))
