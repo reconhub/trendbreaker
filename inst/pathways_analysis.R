@@ -73,7 +73,7 @@ res_nhs_region <- lapply(counts_nhs_region,
 
 plots_nhs_region <- lapply(seq_along(res_nhs_region),
                            function(i)
-                             plot.epichange(res_nhs_region[[i]], "date", point_size = 1, guide = FALSE) +
+                             plot(res_nhs_region[[i]], "date", point_size = 1, guide = FALSE) +
                                labs(subtitle = names(res_nhs_region)[i], x = NULL))
 cowplot::plot_grid(plotlist = plots_nhs_region)
 
@@ -124,7 +124,7 @@ top_ccg <- ccg_stats %>%
 res_ccg_top <- res_ccg[top_ccg]
 plots_ccg_top <- lapply(seq_along(res_ccg_top),
                            function(i)
-                             plot.epichange(res_ccg_top[[i]], "date", point_size = 1, guide = FALSE) +
+                             plot(res_ccg_top[[i]], "date", point_size = 1, guide = FALSE) +
                                labs(subtitle = names(res_ccg_top)[i]))
 cowplot::plot_grid(plotlist = plots_ccg_top)
 
