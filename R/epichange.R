@@ -53,10 +53,9 @@ epichange <- function(data,
 
   ## form output
   n_train <- n - selected_k
-  n_outliers <- sum(res$outlier, na.rm = TRUE)
-  outliers_train <- res$outlier & (1:n <= n_train)
-  n_outliers_train <- sum(outliers_train, na.rm = TRUE)
-  n_outliers_recent <- n_outliers - n_outliers_train
+  n_outliers <- sum(res_outliers$outlier, na.rm = TRUE)
+  n_outliers_recent <- sum(tail(res_outliers$outlier, selected_k), na.rm = TRUE)
+  n_outliers_train <-  n_outliers - n_outliers_recent
   p_value <- stats::pbinom(n_outliers,
                            size = n,
                            prob = alpha,
