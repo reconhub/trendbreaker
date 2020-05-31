@@ -5,7 +5,7 @@ load_all()
 
 # download data
 pathways <- tempfile()
-download.file("https://github.com/thibautjombart/epichange/blob/994cc7d211a5473b1b27bcf7c7159aee1c14dcbd/factory/data/rds/pathways_latest.rds?raw=true", pathways)
+download.file("https://github.com/qleclerc/nhs_pathways_report/raw/master/data/rds/pathways_latest.rds", pathways)
 pathways <- readRDS(pathways)
 
 
