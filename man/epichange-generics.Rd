@@ -6,7 +6,6 @@
 \alias{get_k}
 \alias{get_results}
 \alias{get_outliers}
-\alias{get_classification}
 \alias{get_formula}
 \alias{get_response}
 \alias{get_family}
@@ -20,13 +19,11 @@ get_results(x, ...)
 
 get_outliers(x, ...)
 
-get_classification(x, ...)
+get_formula(x, ...)
 
-get_formula(model)
+get_response(x, ...)
 
-get_response(model)
-
-get_family(model)
+get_family(x, ...)
 }
 \description{
 These are generic functions used by the \emph{epichange} package, mostly used for

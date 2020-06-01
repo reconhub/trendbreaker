@@ -1,4 +1,34 @@
+#' Plotting method for epichange objects
+#'
+#' The plotting method for `epichange` objects produces a `ggplot` object, which
+#' can then be modified using `ggplot2`. It accepts a few arguments for
+#' customising the graphs produced.
+#'
+#' @param x an `epichange` object, as returned by `asmodee`
+#'
+#' @param x_axis the name or position of the variable in `get_results(x)` to be
+#'   used on the x-axis, which represents time
+#'
+#' @param point_size the size of the points to be used; defaults to 2
+#'
+#' @param col_normal the color to be used for non-outlying observations,
+#'   i.e. observations falling within the prediction interval of the estimated
+#'   temporal trend
+#' 
+#' @param col_increase the color to be used for outlying observations which are
+#'   above the prediction interval of the estimated temporal trend
+#' 
+#' @param col_decrease the color to be used for outlying observations which are
+#'   below the prediction interval of the estimated temporal trend
+#'
+#' @param guide a `logical` indicating whether a color legend should be added to
+#'   the plot (`TRUE`, default) or not (`FALSE`)
+#'
+#' @param ... unused - present for compatibility with the `plot` generic
+#'
 #' @export
+#' @rdname plot.epichange
+#' @aliases plot.epichange
 
 plot.epichange <- function(x,
                            x_axis,

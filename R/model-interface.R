@@ -28,6 +28,8 @@
 #'
 #' @return  An `epichange_model` object (S3 class inheriting `list`), containing items
 #'   which can be accessed by various accessors - see `?epichange_model-accessors`
+#'
+#' @author Dirk Schumacher
 #' 
 #' @export
 #' @rdname epichange_model
