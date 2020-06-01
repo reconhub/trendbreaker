@@ -78,10 +78,15 @@ only measures model fit rather than predictive ability.
 }
 \examples{
 
-if (require(cowplot)) {
+if (require(cowplot) && require(tidyverse)) {
   # load data
   data(nhs_pathways_covid19)
 
+  # select last 28 days
+  first_date <- max(nhs_pathways_covid19$date, na.rm = TRUE) - 28
+  pathways_recent <- nhs_pathways_covid19 \%>\%
+    filter(date >= first_date)
+  
   # define candidate models
   models <- list(
     regression = lm_model(count ~ day),

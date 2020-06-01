@@ -49,10 +49,13 @@
 #'
 #' \dontrun{
 #' # These commands will download the latest version of the data:
+#' library(tidyverse)
 #' 
 #' # download data
 #' pathways <- tempfile()
-#' download.file("https://github.com/qleclerc/nhs_pathways_report/raw/master/data/rds/pathways_latest.rds", pathways)
+#' url <- paste0("https://github.com/qleclerc/nhs_pathways_report/",
+#'               "raw/master/data/rds/pathways_latest.rds"
+#' download.file(url, pathways)
 #' pathways <- readRDS(pathways)
 #'
 #'
