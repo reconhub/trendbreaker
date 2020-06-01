@@ -4,7 +4,6 @@
 \alias{get_model.epichange_model_fit}
 \alias{epichange_model_fit-accessors}
 \alias{epichange_model_fit-class}
-\alias{get_model.epichange}
 \alias{predict.epichange_model_fit}
 \title{Accessors for epichange_model_fit objects}
 \usage{
@@ -34,10 +33,9 @@ These functions can be used to access information stored in
 \details{
 The following accessors are available:
 \itemize{
-\item \code{get_formula}: get the formula used to model temporal trends
-\item \code{get_response}: get the name of the response variable
-\item \code{get_family}: get the model family, indicating the type of distribution
-assumed for the response variable
+\item \code{get_model()}: get the fitted model stored in the object
+\item \code{predict()}: get model predictions for user-provided data, including
+average predictions and prediction intervals
 }
 }
 \author{

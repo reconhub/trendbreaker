@@ -38,16 +38,16 @@ objects. See details.
 \details{
 The following accessors are available:
 \itemize{
-\item \code{get_model}: fitted model capturing the temporal trend in the data as an
+\item \code{get_model()}: fitted model capturing the temporal trend in the data as an
 \code{epichange_model_fit} object
-\item \code{get_k}: number of recent days excluded from the temporal trend
-\item \code{get_results}: main \code{data.frame} containing the original data, the
+\item \code{get_k()}: number of recent days excluded from the temporal trend
+\item \code{get_results()}: main \code{data.frame} containing the original data, the
 predicted values with lower and upper bounds for the prediction interval, a
 \code{logical} variable \code{outlier} which is \code{TRUE} for data points falling outside
 the prediction interval, and \code{classification} of outliers as a \code{factor}.
-\item \code{get_outliers}: returns data points (as rows of \code{get_results(x)}
+\item \code{get_outliers()}: returns data points (as rows of \code{get_results(x)}
 corresponding to outliers
-\item \code{predict}: function to make model predictions from the fitted model in the
+\item \code{predict()}: function to make model predictions from the fitted model in the
 \code{epichange} object; accepts two arguments \code{newdata}, a mandatory input
 containing data for which predictions are derived, and \code{alpha}, the threshold
 used for prediction intervals, defaulting to 0.05.

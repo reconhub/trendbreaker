@@ -6,14 +6,14 @@
 #'
 #' @details The following accessors are available:
 #'
-#' * `get_formula`: get the formula used to model temporal trends
+#' * `get_formula()`: get the formula used to model temporal trends
 #' 
-#' * `get_response`: get the name of the response variable
+#' * `get_response()`: get the name of the response variable
 #' 
-#' * `get_family`: get the model family, indicating the type of distribution
+#' * `get_family()`: get the model family, indicating the type of distribution
 #' assumed for the response variable
 #'
-#' * `train`: train a model using data to obtain a
+#' * `train()`: train a model using data to obtain a
 #' [`epichange_model_fit`](epichange_model_fit) object
 #' 
 #' @author Thibaut Jombart, Dirk Schumacher
@@ -27,7 +27,7 @@
 
 #' @export
 #' @rdname epichange_model-accessors
-#' @aliases get_formula get_formula.epichange 
+#' @aliases get_formula get_formula.epichange_model
 get_formula.epichange_model <- function(model) {
   as.list(environment(model$train))$formula
 }
@@ -56,7 +56,7 @@ get_family.epichange_model <- function(model) {
 
 #' @export
 #' @rdname epichange_model-accessors
-#' @aliases train
+#' @aliases train train.epichange_model
 train.epichange_model <- function(model, data) {
   model$train(data)
 }

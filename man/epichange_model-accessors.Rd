@@ -5,7 +5,6 @@
 \alias{epichange_model-accessors}
 \alias{epichange_model-class}
 \alias{get_formula}
-\alias{get_formula.epichange}
 \alias{get_response.epichange_model}
 \alias{get_response}
 \alias{get_family.epichange_model}
@@ -35,11 +34,11 @@ objects. See details.
 \details{
 The following accessors are available:
 \itemize{
-\item \code{get_formula}: get the formula used to model temporal trends
-\item \code{get_response}: get the name of the response variable
-\item \code{get_family}: get the model family, indicating the type of distribution
+\item \code{get_formula()}: get the formula used to model temporal trends
+\item \code{get_response()}: get the name of the response variable
+\item \code{get_family()}: get the model family, indicating the type of distribution
 assumed for the response variable
-\item \code{train}: train a model using data to obtain a
+\item \code{train()}: train a model using data to obtain a
 \url{epichange_model_fit} object
 }
 }

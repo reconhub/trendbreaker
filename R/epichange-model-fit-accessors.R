@@ -6,12 +6,10 @@
 #'
 #' @details The following accessors are available:
 #'
-#' * `get_formula`: get the formula used to model temporal trends
+#' * `get_model()`: get the fitted model stored in the object
 #' 
-#' * `get_response`: get the name of the response variable
-#' 
-#' * `get_family`: get the model family, indicating the type of distribution
-#' assumed for the response variable
+#' * `predict()`: get model predictions for user-provided data, including
+#' average predictions and prediction intervals
 #' 
 #' @author Thibaut Jombart, Dirk Schumacher
 #' 
@@ -26,7 +24,7 @@
 
 #' @export
 #' @rdname epichange_model_fit-accessors
-#' @aliases get_model.epichange
+#' @aliases get_model.epichange_model_fit
 get_model.epichange_model_fit <- function(x) {
   x$model
 }
