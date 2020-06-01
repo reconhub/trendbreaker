@@ -22,7 +22,7 @@ day_of_week <- function(date) {
 }
 
 pathways <- as_tibble(pathways) %>%
-  mutate(nhs_region = str_to_title(gsub("_"," ",nhs_region)),
+  mutate(nhs_region = stringr::str_to_title(gsub("_", " ", nhs_region)),
          nhs_region = gsub(" Of ", " of ", nhs_region),
          nhs_region = gsub(" And ", " and ", nhs_region),
          day = as.integer(date - min(date, na.rm = TRUE)),
