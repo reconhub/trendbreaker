@@ -1,4 +1,14 @@
-
+#' Detect change in temporal trend
+#'
+#' This function looks for the 'optimal' number of recent days to exclude from
+#' the temporal trend fitting in [`asmodee`](asmodee). The procedure selects
+#' the value of `k` which maximises the sum if i) the number of non-outliers in
+#' training set (before the last `k` points) ii) the number of outliers in the
+#' last `k` points. Note that for each value of `k` investigated, model
+#' selection is performed as described in `?asmodee`.
+#' 
+#' @inheritParams asmodee
+#' 
 #' @export
 detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
                                method = evaluate_resampling, ...) {
