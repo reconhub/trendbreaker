@@ -26,12 +26,13 @@
 #' 
 #' @author Thibaut Jombart, Dirk Schumacher
 #' 
-#' @export
-#'
-#' @rdname epichange-accessors
 #' @aliases epichange-accessors epichange-class
-#' @aliases get_model.epichange
+#'
+#' @param x an `epichange` object, as returned by [`asmodee`](asmodee)
 
+#' @export
+#' @rdname epichange-accessors
+#' @aliases get_model.epichange
 get_model.epichange <- function(x) {
   x$model
 }
@@ -64,6 +65,11 @@ get_outliers.epichange <- function(x) {
 #' @export
 #' @rdname epichange-accessors
 #' @aliases predict.epichange
+#' @param object an `epichange` object, as returned by [`asmodee`](asmodee)
+#' @param newdata a `data.frame` containing data for which predictions are to be
+#'   derived
+#' @param alpha the alpha threshold to be used for prediction intervals,
+#'   defaulting to 0.05, i.e. 95% prediction intervals are derived
 predict.epichange <- function(object, newdata, alpha = 0.05, ...) {
   get_model(object)$predict(newdata = newdata, alpha = alpha)
 }
