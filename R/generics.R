@@ -10,9 +10,7 @@
 #'
 #' @rdname epichange-generics
 #' @aliases epichange-generics
-
 #' @export
-#' @rdname epichange-generics
 get_model <- function (x, ...) {
   UseMethod("get_model", x)
 }
@@ -36,13 +34,6 @@ get_results <- function (x, ...) {
 #' @rdname epichange-generics
 get_outliers <- function (x, ...) {
   UseMethod("get_outliers", x)
-}
-
-
-#' @export
-#' @rdname epichange-generics
-get_classification <- function (x, ...) {
-  UseMethod("get_classification", x)
 }
 
 

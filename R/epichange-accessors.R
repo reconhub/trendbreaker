@@ -19,8 +19,10 @@
 #' * `get_outliers`: returns data points (as rows of `get_results(x)`
 #' corresponding to outliers
 #'
-#' * `get_classification`: returns a `factor` indicating if data points are
-#' `normal` outliers (`TRUE`) or not (`FALSE`)
+#' * `predict`: function to make model predictions from the fitted model in the
+#' `epichange` object; accepts two arguments `newdata`, a mandatory input
+#' containing data for which predictions are derived, and `alpha`, the threshold
+#' used for prediction intervals, defaulting to 0.05.
 #' 
 #' @author Thibaut Jombart, Dirk Schumacher
 #' 
