@@ -47,3 +47,9 @@ training set (before the last \code{k} points) ii) the number of outliers in the
 last \code{k} points. Note that for each value of \code{k} investigated, model
 selection is performed as described in \code{?asmodee}.
 }
+\seealso{
+\url{asmodee}
+}
+\author{
+Thibaut Jombart
+}

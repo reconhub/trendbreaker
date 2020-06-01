@@ -2,6 +2,8 @@
 % Please edit documentation in R/model-interface.R
 \name{glm_model}
 \alias{glm_model}
+\alias{epichange_model}
+\alias{epichange_models}
 \title{Modeling interface for epichange}
 \usage{
 glm_model(formula, family, ...)

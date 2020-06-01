@@ -9,6 +9,7 @@
 \alias{get_formula}
 \alias{get_response}
 \alias{get_family}
+\alias{train}
 \title{S3 generics for epichange}
 \usage{
 get_model(x, ...)
@@ -24,6 +25,8 @@ get_formula(x, ...)
 get_response(x, ...)
 
 get_family(x, ...)
+
+train(x, data, ...)
 }
 \description{
 These are generic functions used by the \emph{epichange} package, mostly used for

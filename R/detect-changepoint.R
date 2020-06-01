@@ -8,6 +8,10 @@
 #' selection is performed as described in `?asmodee`.
 #' 
 #' @inheritParams asmodee
+#'
+#' @author Thibaut Jombart
+#'
+#' @seealso [asmodee](asmodee)
 #' 
 #' @export
 detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
@@ -37,7 +41,7 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
       method = method,
       ...
     )$best_model
-    current_model <- current_model$train(data_train)
+    current_model <- train(current_model, data_train)
 
     ## find outliers in entire dataset
     outliers <-  detect_outliers(

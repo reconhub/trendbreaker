@@ -30,6 +30,8 @@
 #'   which can be accessed by various accessors - see `?epichange_model-accessors`
 #'
 #' @author Dirk Schumacher
+#'
+#' @aliases epichange_model epichange_models
 #' 
 #' @export
 #' @rdname epichange_model
