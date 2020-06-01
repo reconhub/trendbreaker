@@ -24,7 +24,8 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
     current_model <- select_model(
       models = models,
       data = data_train,
-      method = method
+      method = method,
+      ...
     )$best_model
     current_model <- current_model$train(data_train)
 

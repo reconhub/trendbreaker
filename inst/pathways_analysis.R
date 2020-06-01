@@ -50,11 +50,11 @@ counts_overall <- pathways_recent %>%
 
 
 ## results with automated detection of 'k'
-res_overall <- epichange(counts_overall, models, method = evaluate_aic)
+res_overall <- asmodee(counts_overall, models, method = evaluate_aic)
 plot(res_overall, "date")
 
 # results with fixed value of 'k' (7 days)
-res_overall_k7 <- epichange(counts_overall, models, fixed_k = 7)
+res_overall_k7 <- asmodee(counts_overall, models, fixed_k = 7)
 plot(res_overall_k7, "date")
 
 

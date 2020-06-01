@@ -10,7 +10,7 @@ test_that("epichange works", {
     negbin = model3
   )
   expect_silent(
-    res <- epichange(mtcars, models, method = evaluate_aic)
+    res <- asmodee(mtcars, models, method = evaluate_aic)
   )
   expect_true(res$k >= 0)
   expect_true(is.logical(res$results$outlier))
