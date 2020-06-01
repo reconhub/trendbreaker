@@ -29,6 +29,7 @@
 #' @rdname epichange-accessors
 #' @aliases epichange-accessors epichange-class
 #' @aliases get_model.epichange
+
 get_model.epichange <- function(x) {
   x$model
 }
