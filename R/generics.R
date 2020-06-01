@@ -56,3 +56,10 @@ get_response <- function (x, ...) {
 get_family <- function (x, ...) {
   UseMethod("get_family", x)
 }
+
+
+#' @export
+#' @rdname epichange-generics
+train <- function (x, data, ...) {
+  UseMethod("train", x)
+}

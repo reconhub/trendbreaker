@@ -41,5 +41,5 @@ get_model.epichange_model_fit <- function(x) {
 #' @param alpha the alpha threshold to be used for prediction intervals,
 #'   defaulting to 0.05, i.e. 95% prediction intervals are derived
 predict.epichange_model_fit <- function(object, newdata, alpha = 0.05, ...) {
-  get_model(object)$predict(newdata = newdata, alpha = alpha)
+  object$predict(newdata = newdata, alpha = alpha)
 }
