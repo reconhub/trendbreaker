@@ -1,4 +1,37 @@
+#' Modeling interface for epichange
+#'
+#' These functions wrappers around various modelling tools to ensure a
+#' consistent input for *epichange* functions. See details for available model
+#' interfaces.
+#'
+#' @details The following interfaces are available:
+#'
+#' * `lm_model`: interface for linear models implemented in [`stats::lm`](stats::lm)
+#'
+#' * `glm_model`: interface for generalised linear models (GLMs) implemented in
+#' `[stats::glm](stats::glm)`
+#'
+#' * `glm_nb_model`: interface for negative binomial generalied linear models
+#' implemented in [`MASS::glm_nb`](MASS::glm_nb)
+#'
+#' * `brms_model`: interface for Bayesian regression models implemented in
+#' [`brms::brm`](brms::brm)
+#'
+#' @param formula the formula of the model, with the response variable on the
+#'   left of a tilde symbol, and predictors on the right hand-side; variable
+#'   names used in the formula will need to be matched by columns in the `data`
+#'   input to other functions
+#'
+#' @param family the model family to be used for the response variable
+#'
+#' @param x an `epichange_model` object
+#'
+#' @return  An `epichange_model` object (S3 class inheriting `list`), containing items
+#'   which can be accessed by various accessors - see `?epichange_model-accessors`
+#' 
 #' @export
+#' @rdname epichange_model
+#' @aliases glm_model
 glm_model <- function(formula, family, ...) {
   structure(
     eval(bquote(list(

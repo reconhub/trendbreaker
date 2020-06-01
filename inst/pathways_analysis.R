@@ -66,7 +66,7 @@ counts_nhs_region <- pathways_recent %>%
   split(.$nhs_region)
 
 res_nhs_region <- lapply(counts_nhs_region,
-                         epichange,
+                         asmodee,
                          models,
                          method = evaluate_aic,
                          alpha = 0.05)
@@ -92,7 +92,7 @@ counts_ccg <- pathways_recent %>%
   split(.$ccg_name)
 
 res_ccg <- lapply(counts_ccg,
-                  epichange,
+                  asmodee,
                   models,
                   method = evaluate_aic,
                   alpha = 0.05)
