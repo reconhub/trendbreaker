@@ -108,7 +108,7 @@ add_prediction_interval.default <- function(model, data, alpha) {
 }
 
 model_fit <- function(model, formula) {
-  list(
+  out <- list(
     model = model,
     predict = function(newdata, alpha = 0.05) {
       suppressWarnings(
@@ -128,6 +128,8 @@ model_fit <- function(model, formula) {
       res
     }
   )
+  class(out) <- c("epichange_model_fit", class(out))
+  out
 }
 
 #' @export
