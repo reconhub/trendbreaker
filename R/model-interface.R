@@ -91,21 +91,13 @@ brms_model <- function(formula, family, ...) {
         list(
           model = model,
           predict = function(newdata, alpha = 0.05) {
-            fit <- predict(model, newdata)
+            res <- add_prediction_interval(
+              data = newdata,
+              model = model,
+              alpha = alpha
+            )
             col_name <- as.character(formula[[2]])
-            interval <- brms::predictive_interval(model,
-              newdata = newdata,
-              prob = 1 - alpha
-            )
-            dplyr::bind_cols(
-              tibble::tibble(
-                observed = newdata[[col_name]],
-                pred = fit[, 1],
-                lower = interval[, 1],
-                upper = interval[, 2]
-              ),
-              newdata
-            )
+            append_observed_column(res, res[[col_name]])
           }
         )
       }
@@ -133,6 +125,23 @@ add_prediction_interval.negbin <- function(model, data, alpha) {
   )
 }
 
+add_prediction_interval.brmsfit <- function(model, data, alpha) {
+  fit <- predict(model, data)
+  interval <- brms::predictive_interval(
+    model,
+    newdata = data,
+    prob = 1 - alpha
+  )
+  dplyr::bind_cols(
+    data,
+    tibble::tibble(
+      pred = fit[, 1],
+      lower = interval[, 1],
+      upper = interval[, 2]
+    )
+  )
+}
+
 add_prediction_interval.default <- function(model, data, alpha) {
   suppressWarnings(
     ciTools::add_pi(
@@ -156,17 +165,16 @@ model_fit <- function(model, formula) {
         )
       )
       col_name <- as.character(formula[[2]])
-      res <- dplyr::bind_cols(
-        res,
-        data.frame(
-          observed = res[[col_name]]
-        )
-      )
-      res
+      append_observed_column(res, res[[col_name]])
     }
   )
   class(out) <- c("epichange_model_fit", class(out))
   out
+}
+
+append_observed_column <- function(data, value) {
+  data[["observed"]] <- value
+  data
 }
 
 #' @export
