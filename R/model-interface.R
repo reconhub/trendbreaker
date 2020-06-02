@@ -88,7 +88,7 @@ brms_model <- function(formula, family, ...) {
           data = data,
           family = .(family), ...
         )
-        list(
+        res <- list(
           model = model,
           predict = function(newdata, alpha = 0.05) {
             res <- add_prediction_interval(
@@ -100,6 +100,8 @@ brms_model <- function(formula, family, ...) {
             append_observed_column(res, res[[col_name]])
           }
         )
+        class(res) <- c("epichange_model_fit", class(res))
+        res
       }
     ))),
     class = c("epichange_brms_nb", "epichange_model")
