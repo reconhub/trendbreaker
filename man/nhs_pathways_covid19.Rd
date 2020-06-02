@@ -59,7 +59,7 @@ library(tidyverse)
 # download data
 pathways <- tempfile()
 url <- paste0("https://github.com/qleclerc/nhs_pathways_report/",
-              "raw/master/data/rds/pathways_latest.rds"
+              "raw/master/data/rds/pathways_latest.rds")
 download.file(url, pathways)
 pathways <- readRDS(pathways)
 
