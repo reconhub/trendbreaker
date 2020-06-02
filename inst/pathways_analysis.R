@@ -62,7 +62,7 @@ plot(res_overall_k7, "date")
 counts_nhs_region <- pathways_recent %>%
   group_by(nhs_region, date, day, weekday) %>%
   summarise(count = sum(count)) %>%
-  complete(date, fill = list(count = 0)) %>% 
+  complete(date, fill = list(count = 0)) %>%
   split(.$nhs_region)
 
 res_nhs_region <- lapply(counts_nhs_region,
@@ -88,7 +88,7 @@ cowplot::plot_grid(plotlist = plots_nhs_region)
 counts_ccg <- pathways_recent %>%
   group_by(ccg_name, date, day, weekday) %>%
   summarise(count = sum(count)) %>%
-  complete(date, fill = list(count = 0)) %>% 
+  complete(date, fill = list(count = 0)) %>%
   split(.$ccg_name)
 
 res_ccg <- lapply(counts_ccg,
@@ -112,7 +112,7 @@ ccg_stats <- lapply(res_ccg, function(e)
           desc(k))
 
 ccg_stats %>%
-  mutate(p_value = format.pval(p_value, digits = 3)) %>% 
+  mutate(p_value = format.pval(p_value, digits = 3)) %>%
   DT::datatable(ccg_stats, rownames = FALSE)
 
 
@@ -127,5 +127,3 @@ plots_ccg_top <- lapply(seq_along(res_ccg_top),
                              plot(res_ccg_top[[i]], "date", point_size = 1, guide = FALSE) +
                                labs(subtitle = names(res_ccg_top)[i]))
 cowplot::plot_grid(plotlist = plots_ccg_top)
-
-
