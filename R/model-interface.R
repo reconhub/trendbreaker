@@ -32,7 +32,7 @@
 #' @author Dirk Schumacher
 #'
 #' @aliases epichange_model epichange_models
-#' 
+#'
 #' @export
 #' @rdname epichange_model
 #' @aliases glm_model
@@ -45,7 +45,7 @@ glm_model <- function(formula, family, ...) {
         model_fit(model, formula)
       }
     ))),
-    class = c("epichange_model", "epichange_glm")
+    class = c("epichange_glm", "epichange_model")
   )
 }
 
@@ -59,7 +59,7 @@ glm_nb_model <- function(formula, ...) {
         model_fit(model, formula)
       }
     ))),
-    class = c("epichange_model", "epichange_glm_nb")
+    class = c("epichange_glm_nb", "epichange_model")
   )
 }
 
@@ -73,7 +73,7 @@ lm_model <- function(formula, ...) {
         model_fit(model, formula)
       }
     ))),
-    class = c("epichange_model", "epichange_lm")
+    class = c("epichange_lm", "epichange_model")
   )
 }
 
@@ -110,7 +110,7 @@ brms_model <- function(formula, family, ...) {
         )
       }
     ))),
-    class = c("epichange_model", "epichange_brms_nb")
+    class = c("epichange_brms_nb", "epichange_model")
   )
 }
 
