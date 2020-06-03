@@ -1,7 +1,7 @@
-
+ 
 # needs the current devel @master
 # install using:
-remotes::install_github("reconhub/projections")
+remotes::install_github("reconhub/projections", upgrade = "never")
 library(projections)
 devtools::load_all()
 library(tidyverse)
@@ -26,7 +26,7 @@ si_distribution <- distcrete::distcrete("gamma", interval = 1,
 
 ## 3. relapse: 1000 initial cases, R = 0.8 (5 weeks) then R = 1.2 (1 week)
 
-n_replicates <- 10
+n_replicates <- 30
 sd <- .1
 duration <- 6 * 7
 change_at <- 5 * 7
