@@ -196,12 +196,28 @@ tnr_relapse_fixed_k <- sapply(
                                  ref_relapse))
 
 
+## pull all results together into a long table
+all_results <- lapply(ls(pattern = "^(tpr|tnr)"), get)
+names(all_results) <- ls(pattern = "^(tpr|tnr)")
+all_results <- as_tibble(all_results)
+
+scale_color_method <- scale_color_manual()
+
+all_results <- all_results %>%
+  pivot_longer(cols = everything(),
+               names_to = c("metric", "scenario", "method"),
+               values_to = "rate",
+               names_sep = "_")
 
 
-
-
-
-
+ggplot(all_results, aes(x = metric, y = rate, color = method, fill = method)) +
+  theme_bw() +
+  facet_grid(scenario ~ .) +
+  geom_boxplot(alpha = .3) + ylim(c(0, NA)) +
+  scale_x_discrete(labels = c(tpr ="sensitivity", tnr = "specificity")) +
+  scale_color_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1") +
+  labs(x = "", title = "Simulation results")
 
 
 
