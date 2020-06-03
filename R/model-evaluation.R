@@ -1,5 +1,5 @@
 #' @export
-evaluate_resampling <- function(model, data, metrics = list(yardstick::rmse), v = 10, repeats = 1) {
+evaluate_resampling <- function(model, data, metrics = list(yardstick::rmse), v = nrow(data), repeats = 1) {
   training_split <- rsample::vfold_cv(data, v = v, repeats = repeats)
   metrics <- do.call(yardstick::metric_set, metrics)
   res <- lapply(training_split$splits, function(split) {

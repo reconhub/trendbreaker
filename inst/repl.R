@@ -1,149 +1,143 @@
-# ALL WIP and just tinkering with ideas
-
 library(tidyverse)
-pathway_data <- tempfile()
-download.file("https://github.com/thibautjombart/epichange/blob/994cc7d211a5473b1b27bcf7c7159aee1c14dcbd/factory/data/rds/pathways_latest.rds?raw=true", pathway_data)
-pathway_data <- readRDS(pathway_data)
-pathway_data <- as_tibble(pathway_data) %>%
-  mutate(weekday = as.factor(weekdays(date))) %>%
-  mutate(date = as.numeric(date))
+library(devtools)
+load_all()
 
-global_ts <- pathway_data %>%
-  group_by(date, weekday) %>%
-  summarise(count = sum(count)) %>%
-  ungroup()
+# download data
+pathways <- tempfile()
+download.file("https://github.com/qleclerc/nhs_pathways_report/raw/master/data/rds/pathways_latest.rds", pathways)
+pathways <- readRDS(pathways)
 
-zero_count_ts <- tibble(
-  date = seq(min(global_ts$date), max(global_ts$date), 1),
-  count = 0
-)
 
-# the first step is to find a good model to monitor your time series
-# here we define a number of models we want to evaluate
-model_constant <- lm_model(count ~ 1)
-model1 <- glm_model(count ~ 1 + date, poisson())
-model2 <- lm_model(count ~ 1 + date)
-model3 <- lm_model(count ~ 1 + date + I(weekday %in% c("Saturday", "Sunday")))
-#model4 <- brms_model(
-#  count ~ 1 + date + I(weekday %in% c("Saturday", "Sunday")) + I(weekday %in% c("Monday")),
-#  brms::negbinomial(),
-#  chains = 1
-#)
-model4 <- glm_nb_model(count ~ 1 + date + I(weekday %in% c("Saturday", "Sunday")) + I(weekday %in% c("Monday")))
-
-models <- list(
-  null = model_constant,
-  glm_poisson = model1,
-  lm_trend = model2,
-  lm_weekdays = model3,
-  glm_negbin = model4
-)
-
-# now we need to think about what part of the time series is representative
-# for the current trend
-# In this example we are interested in monitoring the last 7 days
-# and training the model on the last 30 - 7 days. I.e. we assume
-# days 30 to 8 can be used to predict the cases in days 7 to 1.
-cut_df <- function(df, from, to = -Inf) {
-  filter(df, date >= max(date) - !!from, date <= max(date) - !!to)
+# add variables and subsets
+day_of_week <- function(date) {
+  day_of_week <- weekdays(date)
+  out <- dplyr::case_when(
+    day_of_week %in% c("Saturday", "Sunday") ~ "weekend",
+    day_of_week %in% c("Monday") ~ "monday",
+    TRUE ~ "rest_of_week"
+  )
+  out <- factor(out, levels = c("rest_of_week", "monday", "weekend"))
+  out
 }
-training_data <- cut_df(global_ts, 40, 8)
-monitoring_data <- cut_df(global_ts, 7)
-library(yardstick)
 
-# the ... are passed to the evaluation function
-auto_fit <- select_model(training_data, models, evaluate_resampling, metrics = list(rmse), v = 10, repeats = 10)
-auto_fit$leaderboard
+pathways <- as_tibble(pathways) %>%
+  mutate(
+    nhs_region = stringr::str_to_title(gsub("_", " ", nhs_region)),
+    nhs_region = gsub(" Of ", " of ", nhs_region),
+    nhs_region = gsub(" And ", " and ", nhs_region),
+    day = as.integer(date - min(date, na.rm = TRUE)),
+    weekday = day_of_week(date)
+  )
 
-best_model <- auto_fit$best_model
-trained_best_model <- best_model$train(training_data)
-result <- detect_outliers(monitoring_data, trained_best_model) %>%
-  bind_rows(training_data)
-
-
-ggplot(result, aes(x = date, y = count)) +
-  geom_point() +
-  geom_ribbon(aes(y = pred, ymin = lower, ymax = upper), alpha = 0.3)
+first_date <- max(pathways$date, na.rm = TRUE) - 28
+pathways_recent <- pathways %>%
+  filter(date >= first_date)
 
 
-# we assume the best model for the aggregate data is also the best for subsets
-stratified_monitoring <- pathway_data %>%
-  group_by(age) %>%
-  do({
-    data <- .
-    ts <- data %>%
-      group_by(date, weekday) %>%
-      summarise(count = sum(count)) %>%
-      ungroup()
-    ts <- zero_count_ts %>% # hacky way to fill in the gaps with 0
-      left_join(ts, by = "date") %>%
-      mutate(count = count.x + ifelse(is.na(count.y), 0, count.y))
 
-    training_data <- cut_df(ts, 40, 8)
-    monitoring_data <- cut_df(ts, 7)
-    trained_best_model <- best_model$train(training_data)
-    detect_outliers(monitoring_data, trained_best_model) %>%
-      bind_rows(training_data) %>%
-      arrange(date)
-  })
-
-ggplot(stratified_monitoring, aes(x = date, y = count)) +
-  geom_point(aes(color = classification)) +
-  geom_ribbon(aes(y = pred, ymin = lower, ymax = upper), alpha = 0.3) +
-  facet_wrap(~age)
-
-# we could also do model selection for each group
-stratified_monitoring <- pathway_data %>%
-  group_by(age) %>%
-  do({
-    data <- .
-    ts <- data %>%
-      group_by(date, weekday) %>%
-      summarise(count = sum(count)) %>%
-      ungroup()
-    ts <- zero_count_ts %>%
-      left_join(ts, by = "date") %>%
-      mutate(count = count.x + ifelse(is.na(count.y), 0, count.y))
-
-    training_data <- cut_df(ts, 40, 8)
-    monitoring_data <- cut_df(ts, 7)
-    auto_fit <- select_model(training_data, models, evaluate_resampling, metrics = list(rmse), v = 10, repeats = 10)
-    best_model <- auto_fit$best_model
-    trained_best_model <- best_model$train(training_data)
-    detect_outliers(monitoring_data, trained_best_model) %>%
-      bind_rows(training_data) %>%
-      arrange(date)
-  })
-
-ggplot(stratified_monitoring, aes(x = date, y = count)) +
-  geom_point(aes(color = classification)) +
-  geom_ribbon(aes(y = pred, ymin = lower, ymax = upper), alpha = 0.3) +
-  facet_wrap(~age) +
-  geom_vline(xintercept = max(stratified_monitoring$date) - 7)
+# define candidate models
+models <- list(
+  regression = lm_model(count ~ day),
+  poisson_constant = glm_model(count ~ 1, family = "poisson"),
+  negbin_time = glm_nb_model(count ~ day),
+  negbin_time_weekday = glm_nb_model(count ~ day + weekday),
+  bayes_negbin_time_weekday = brms_model(count ~ day + weekday + day * weekday, brms::negbinomial(), file = "inst/model_cache_stan")
+)
 
 
-# evaluate_resampling(model1, global_ts)
-# evaluate_resampling(model2, global_ts)
-# evaluate_resampling(model3, global_ts)
-# evaluate_aic(model1, global_ts)
-# evaluate_aic(model2, global_ts)
-# evaluate_aic(model3, global_ts)
-#
-# x_mtcars <- mtcars
-# names(x_mtcars) <- paste0("x_", names(mtcars))
-# models <- list(null = model2, glm_gaussian = model1, glm_negbin = model3)
-# evaluate_models(models, mtcars)
-# evaluate_models(models, x_mtcars, hp = x_hp, cyl = x_cyl)
-#
-# # find best model
-# select_model(models, mtcars, evaluate_aic)
-# best_model <- select_model(models, mtcars, evaluate_aic)$model
-#
-# # detect outliers
-# detect_outliers(models, x_mtcars, hp = x_hp, cyl = x_cyl)
-# detect_outliers(best_model$train(mtcars), tail(mtcars, 3))
-#
-#
-# # general wrapper: detect trend and k, identify outliers
-# asmodee(models, mtcars)
-# asmodee(models, x_mtcars, hp = x_hp, cyl = x_cyl, method = evaluate_aic)
+# analyses on all data
+counts_overall <- pathways_recent %>%
+  group_by(date, day, weekday) %>%
+  summarise(count = sum(count))
+
+
+## results with automated detection of 'k'
+res_overall <- asmodee(counts_overall, models, method = evaluate_resampling)
+plot(res_overall, "date")
+
+# results with fixed value of 'k' (7 days)
+res_overall_k7 <- asmodee(counts_overall, models, fixed_k = 7, method = evaluate_resampling)
+plot(res_overall_k7, "date")
+
+
+## analyses by NHS regions
+counts_nhs_region <- pathways_recent %>%
+  group_by(nhs_region, date, day, weekday) %>%
+  summarise(count = sum(count)) %>%
+  complete(date, fill = list(count = 0)) %>%
+  split(.$nhs_region)
+
+res_nhs_region <- lapply(counts_nhs_region,
+  asmodee,
+  models,
+  fixed_k = 7, method = evaluate_resampling,
+  alpha = 0.05
+)
+
+plots_nhs_region <- lapply(
+  seq_along(res_nhs_region),
+  function(i) {
+    plot(res_nhs_region[[i]], "date", point_size = 1, guide = FALSE) +
+      labs(subtitle = names(res_nhs_region)[i], x = NULL)
+  }
+)
+cowplot::plot_grid(plotlist = plots_nhs_region)
+
+
+
+
+
+
+## analyses by CCG
+## note: this takes about 1 minute to run with AIC model selection,
+## areound 16-17 min with cross validation
+counts_ccg <- pathways_recent %>%
+  group_by(ccg_name, date, day, weekday) %>%
+  summarise(count = sum(count)) %>%
+  complete(date, fill = list(count = 0)) %>%
+  split(.$ccg_name)
+
+res_ccg <- lapply(counts_ccg,
+  asmodee,
+  models,
+  fixed_k = 7, method = evaluate_resampling, v = 5, # 5-fold for speed
+  alpha = 0.05
+)
+
+
+## here we can select results to display as we want: based on low p-values, a
+## fixed number of outliers, a value of k, ...
+
+ccg_stats <- lapply(res_ccg, function(e) {
+  data.frame(
+    p_value = e$p_value,
+    k = e$k,
+    n_outliers_recent = e$n_outliers_recent,
+    n_outliers = e$n_outliers
+  )
+}) %>%
+  bind_rows(.id = "ccg") %>%
+  arrange(
+    desc(n_outliers_recent),
+    desc(k)
+  )
+
+ccg_stats %>%
+  mutate(p_value = format.pval(p_value, digits = 3)) %>%
+  DT::datatable(ccg_stats, rownames = FALSE)
+
+
+## display all CCGs with at least one recent
+top_ccg <- ccg_stats %>%
+  pull(ccg) %>%
+  head(12)
+
+res_ccg_top <- res_ccg[top_ccg]
+plots_ccg_top <- lapply(
+  seq_along(res_ccg_top),
+  function(i) {
+    plot(res_ccg_top[[i]], "date", point_size = 1, guide = FALSE) +
+      labs(subtitle = names(res_ccg_top)[i])
+  }
+)
+cowplot::plot_grid(plotlist = plots_ccg_top)

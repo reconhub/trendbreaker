@@ -32,7 +32,7 @@
 #' @author Dirk Schumacher
 #'
 #' @aliases epichange_model epichange_models
-#' 
+#'
 #' @export
 #' @rdname epichange_model
 #' @aliases glm_model
@@ -45,7 +45,7 @@ glm_model <- function(formula, family, ...) {
         model_fit(model, formula)
       }
     ))),
-    class = c("epichange_model", "epichange_glm")
+    class = c("epichange_glm", "epichange_model")
   )
 }
 
@@ -59,7 +59,7 @@ glm_nb_model <- function(formula, ...) {
         model_fit(model, formula)
       }
     ))),
-    class = c("epichange_model", "epichange_glm_nb")
+    class = c("epichange_glm_nb", "epichange_model")
   )
 }
 
@@ -73,7 +73,7 @@ lm_model <- function(formula, ...) {
         model_fit(model, formula)
       }
     ))),
-    class = c("epichange_model", "epichange_lm")
+    class = c("epichange_lm", "epichange_model")
   )
 }
 
@@ -88,29 +88,23 @@ brms_model <- function(formula, family, ...) {
           data = data,
           family = .(family), ...
         )
-        list(
+        res <- list(
           model = model,
           predict = function(newdata, alpha = 0.05) {
-            fit <- predict(model, newdata)
+            res <- add_prediction_interval(
+              data = newdata,
+              model = model,
+              alpha = alpha
+            )
             col_name <- as.character(formula[[2]])
-            interval <- brms::predictive_interval(model,
-              newdata = newdata,
-              prob = 1 - alpha
-            )
-            dplyr::bind_cols(
-              tibble::tibble(
-                observed = newdata[[col_name]],
-                pred = fit[, 1],
-                lower = interval[, 1],
-                upper = interval[, 2]
-              ),
-              newdata
-            )
+            append_observed_column(res, res[[col_name]])
           }
         )
+        class(res) <- c("epichange_model_fit", class(res))
+        res
       }
     ))),
-    class = c("epichange_model", "epichange_brms_nb")
+    class = c("epichange_brms_nb", "epichange_model")
   )
 }
 
@@ -129,6 +123,23 @@ add_prediction_interval.negbin <- function(model, data, alpha) {
       pred = mu,
       lower = qnbinom(alpha / 2, mu = mu, size = theta),
       upper = qnbinom(1 - alpha / 2, mu = mu, size = theta),
+    )
+  )
+}
+
+add_prediction_interval.brmsfit <- function(model, data, alpha) {
+  fit <- predict(model, data)
+  interval <- brms::predictive_interval(
+    model,
+    newdata = data,
+    prob = 1 - alpha
+  )
+  dplyr::bind_cols(
+    data,
+    tibble::tibble(
+      pred = fit[, 1],
+      lower = interval[, 1],
+      upper = interval[, 2]
     )
   )
 }
@@ -156,17 +167,16 @@ model_fit <- function(model, formula) {
         )
       )
       col_name <- as.character(formula[[2]])
-      res <- dplyr::bind_cols(
-        res,
-        data.frame(
-          observed = res[[col_name]]
-        )
-      )
-      res
+      append_observed_column(res, res[[col_name]])
     }
   )
   class(out) <- c("epichange_model_fit", class(out))
   out
+}
+
+append_observed_column <- function(data, value) {
+  data[["observed"]] <- value
+  data
 }
 
 #' @export
