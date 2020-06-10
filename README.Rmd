@@ -19,8 +19,30 @@ knitr::opts_chunk$set(
 [![R build status](https://github.com/reconhub/epichange/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/epichange/actions)
 <!-- badges: end -->
 
-The goal of *epichange* to do outlier detection on count series. This is work in
-progress. Please reach out to the authors before using this package.
+The *epichange* package implements tools for detecting changes in temporal
+trends of a single response variable. It provides a coherent interface to
+several modeling tools, alonside functions for model selection and outlier
+detection. It implements the **A**utomatic **S**election of **M**odels and
+**O**utlier **De**tection for **E**pidemmics (ASMODEE), an algorithm originally
+designed for detecting changes in COVID-19 case incidence. 
+
+ASMODEE proceeds by:
+
+1. defining a training set excluding the last *k* data points
+2. identifying the temporal trend in the training set by fitting a range of
+   (user-specified) models to the data and retaining the best predicting /
+   fitting model
+3. calculating the prediction interval (PI) of the temporal trend
+4. classifying any data point outside the PI as outlier
+
+The algorithm can be applied with fixed, user-specified value of *k*, so as to
+monitor potential changes in this recent time period. Alternatively, the optimal
+value of *k* can be determined automatically.
+
+**Disclaimer:** this is work in progress. Please reach out to the authors before
+using this package. Also note this package may soon be renamed to avoid clashes
+with other projects and reflect a more general scope.
+
 
 ## Getting started
 
@@ -66,14 +88,76 @@ The package implements the following main functions
 * `detect_outliers`: a function to identify outliers using a fitted model and
   data
   
+
+
+### ASMODEE
+
+We illustrate 
+
+```{r asmodee}
+if (require(cowplot) && require(tidyverse)) {
+  # load data
+  data(nhs_pathways_covid19)
+
+  # select last 28 days
+  first_date <- max(nhs_pathways_covid19$date, na.rm = TRUE) - 28
+  pathways_recent <- nhs_pathways_covid19 %>%
+    filter(date >= first_date)
+  
+  # define candidate models
+  models <- list(
+    regression = lm_model(count ~ day),
+    poisson_constant = glm_model(count ~ 1, family = "poisson"),
+    negbin_time = glm_nb_model(count ~ day),
+    negbin_time_weekday = glm_nb_model(count ~ day + weekday)
+  )
+
+  # analyses on all data
+  counts_overall <- pathways_recent %>%
+    group_by(date, day, weekday) %>%
+    summarise(count = sum(count))
+
+  # results with automated detection of 'k'
+  res_overall <- asmodee(counts_overall, models, method = evaluate_aic)
+  res_overall
+  plot(res_overall, "date")
+
+  # results with fixed value of 'k' (7 days)
+  res_overall_k7 <- asmodee(counts_overall, models, fixed_k = 7)
+  plot(res_overall_k7, "date")
+
+  # analyses by NHS regions
+  counts_nhs_region <- pathways_recent %>%
+    group_by(nhs_region, date, day, weekday) %>%
+    summarise(count = sum(count)) %>%
+    complete(date, fill = list(count = 0)) %>% 
+    split(.$nhs_region)
+
+  res_nhs_region <- lapply(counts_nhs_region,
+                           asmodee,
+                           models,
+                           method = evaluate_aic,
+                           alpha = 0.05)
+
+  plots_nhs_region <- lapply(seq_along(res_nhs_region),
+                             function(i)
+                               plot(res_nhs_region[[i]], "date", point_size = 1, guide = FALSE) +
+                                 labs(subtitle = names(res_nhs_region)[i], x = NULL))
+  cowplot::plot_grid(plotlist = plots_nhs_region)
+
+}
+
+```
+
 ### Model selection
 
 You can define a number of different regression models using a common interface.
-Once defined you can use different strategies to select the best-fitting/best-predicting model.
+Once defined you can use different strategies to select the
+best-fitting/best-predicting model.
 
-As an example we try to predict `hp` of the famous `mtcars` dataset.
-Of course, this is just a toy example. Usually you would use the package to
-predict counts data in a time series.
+As an example we try to predict `hp` of the famous `mtcars` dataset.  Of course,
+this is just a toy example. Usually you would use the package to predict counts
+data in a time series.
 
 First we define some potential models:
 ```{r}
