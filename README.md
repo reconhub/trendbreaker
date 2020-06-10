@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3888494.svg)](https://doi.org/10.5281/zenodo.3888494)
 [![R build
 status](https://github.com/reconhub/trendbreaker/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/trendbreaker/actions)
 <!-- badges: end -->
@@ -154,11 +155,11 @@ res
 #>     col_name <- as.character(formula[[2]])
 #>     append_observed_column(res, res[[col_name]])
 #> }
-#> <bytecode: 0x55ed216eb4a0>
-#> <environment: 0x55ed2711e960>
+#> <bytecode: 0x55aca770b160>
+#> <environment: 0x55acad36c0a8>
 #> 
 #> attr(,"class")
-#> [1] "trendbreaker_model_fit" "list"               
+#> [1] "trendbreaker_model_fit" "list"                  
 #> 
 #> $n_outliers
 #> [1] 9
@@ -241,7 +242,7 @@ auto_select$leaderboard
 #> # A tibble: 5 x 4
 #>   model          huber_loss   mae  rmse
 #>   <chr>               <dbl> <dbl> <dbl>
-#> 1 brms_complex         18.4  18.9  18.9
+#> 1 brms_complex         18.2  18.7  18.7
 #> 2 glm_poisson          21.2  21.7  21.7
 #> 3 negbin_complex       22.8  23.3  23.3
 #> 4 lm_complex           26.2  26.7  26.7
