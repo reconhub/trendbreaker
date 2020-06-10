@@ -1,10 +1,10 @@
-#' Plotting method for epichange objects
+#' Plotting method for trendbreaker objects
 #'
-#' The plotting method for `epichange` objects produces a `ggplot` object, which
+#' The plotting method for `trendbreaker` objects produces a `ggplot` object, which
 #' can then be modified using `ggplot2`. It accepts a few arguments for
 #' customising the graphs produced.
 #'
-#' @param x an `epichange` object, as returned by `asmodee`
+#' @param x an `trendbreaker` object, as returned by `asmodee`
 #'
 #' @param x_axis the name or position of the variable in `get_results(x)` to be
 #'   used on the x-axis, which represents time
@@ -29,10 +29,10 @@
 #' @author Thibaut Jombart
 #' 
 #' @export
-#' @rdname plot.epichange
-#' @aliases plot.epichange
+#' @rdname plot.trendbreaker
+#' @aliases plot.trendbreaker
 
-plot.epichange <- function(x,
+plot.trendbreaker <- function(x,
                            x_axis,
                            point_size = 2,
                            col_normal = "#8B8B8C",

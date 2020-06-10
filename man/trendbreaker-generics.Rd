@@ -2,7 +2,7 @@
 % Please edit documentation in R/generics.R
 \name{get_model}
 \alias{get_model}
-\alias{epichange-generics}
+\alias{trendbreaker-generics}
 \alias{get_k}
 \alias{get_results}
 \alias{get_outliers}
@@ -10,7 +10,7 @@
 \alias{get_response}
 \alias{get_family}
 \alias{train}
-\title{S3 generics for epichange}
+\title{S3 generics for trendbreaker}
 \usage{
 get_model(x, ...)
 
@@ -36,12 +36,12 @@ train(x, data, ...)
 \item{data}{a \code{data.frame} to be used as training set for the model}
 }
 \description{
-These are generic functions used by the \emph{epichange} package, mostly used for
-accessing content of various objects. See \code{?epichange-accessors} for methods
-relating to \code{epichange} objects, and \code{epichange_model-accessors} for methods
-relating to \code{epichange_model} objects.
+These are generic functions used by the \emph{trendbreaker} package, mostly used for
+accessing content of various objects. See \code{?trendbreaker-accessors} for methods
+relating to \code{trendbreaker} objects, and \code{trendbreaker_model-accessors} for methods
+relating to \code{trendbreaker_model} objects.
 }
 \seealso{
-\url{epichange-accessors},
-\url{epichange_model-accessors}
+\url{trendbreaker-accessors},
+\url{trendbreaker_model-accessors}
 }

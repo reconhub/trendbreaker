@@ -1,4 +1,4 @@
 library(testthat)
-library(epichange)
+library(trendbreaker)
 
-test_check("epichange")
+test_check("trendbreaker")

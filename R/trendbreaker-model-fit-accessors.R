@@ -1,8 +1,8 @@
 
-#' Accessors for epichange_model_fit objects
+#' Accessors for trendbreaker_model_fit objects
 #'
 #' These functions can be used to access information stored in
-#' `epichange_model_fit` objects. See details.
+#' `trendbreaker_model_fit` objects. See details.
 #'
 #' @details The following accessors are available:
 #'
@@ -18,24 +18,24 @@
 #'
 #' @param ... further arguments passed to other methods
 #' 
-#' @aliases epichange_model_fit-accessors epichange_model_fit-class
+#' @aliases trendbreaker_model_fit-accessors trendbreaker_model_fit-class
 
 #' @export
-#' @rdname epichange_model_fit-accessors
-#' @aliases get_model.epichange_model_fit
-get_model.epichange_model_fit <- function(x, ...) {
+#' @rdname trendbreaker_model_fit-accessors
+#' @aliases get_model.trendbreaker_model_fit
+get_model.trendbreaker_model_fit <- function(x, ...) {
   x$model
 }
 
 
 #' @export
-#' @rdname epichange_model_fit-accessors
-#' @aliases predict.epichange_model_fit
-#' @param object an `epichange_model_fit` object
+#' @rdname trendbreaker_model_fit-accessors
+#' @aliases predict.trendbreaker_model_fit
+#' @param object an `trendbreaker_model_fit` object
 #' @param newdata a `data.frame` containing data for which predictions are to be
 #'   derived
 #' @param alpha the alpha threshold to be used for prediction intervals,
 #'   defaulting to 0.05, i.e. 95% prediction intervals are derived
-predict.epichange_model_fit <- function(object, newdata, alpha = 0.05, ...) {
+predict.trendbreaker_model_fit <- function(object, newdata, alpha = 0.05, ...) {
   object$predict(newdata = newdata, alpha = alpha)
 }

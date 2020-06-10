@@ -1,15 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# epichange
+# trendbreaker
 
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/reconhub/epichange/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/epichange/actions)
+status](https://github.com/reconhub/trendbreaker/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/trendbreaker/actions)
 <!-- badges: end -->
 
-The *epichange* package implements tools for detecting changes in
+The *trendbreaker* package implements tools for detecting changes in
 temporal trends of a single response variable. It provides a coherent
 interface to several modeling tools, alongside functions for model
 selection and outlier detection. It implements the **A**utomatic
@@ -41,7 +41,7 @@ Once it is released on [CRAN](https://CRAN.R-project.org), you will be
 able to install the stable version of the package with:
 
 ``` r
-install.packages("epichange")
+install.packages("trendbreaker")
 ```
 
 The development version can be installed from
@@ -51,14 +51,14 @@ The development version can be installed from
 if (!require(remotes)) {
   install.packages("remotes")
 }
-remotes::install_github("reconhub/epichange")
+remotes::install_github("reconhub/trendbreaker")
 ```
 
 The best place to start for using this package is to read the
 documentation of the function `asmodee` and run its example:
 
 ``` r
-library(epichange)
+library(trendbreaker)
 ?asmodee
 example(asmodee)
 ```
@@ -93,7 +93,7 @@ See `?asmodee` for further example stratified by geographic units.
 
 ``` r
 
-library(epichange)
+library(trendbreaker)
 library(tidyverse)
 #> ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
 #> ✔ ggplot2 3.3.1     ✔ purrr   0.3.4
@@ -158,7 +158,7 @@ res
 #> <environment: 0x55ed2711e960>
 #> 
 #> attr(,"class")
-#> [1] "epichange_model_fit" "list"               
+#> [1] "trendbreaker_model_fit" "list"               
 #> 
 #> $n_outliers
 #> [1] 9
@@ -190,7 +190,7 @@ res
 #> # … with 33 more rows, and 1 more variable: classification <fct>
 #> 
 #> attr(,"class")
-#> [1] "epichange" "list"
+#> [1] "trendbreaker" "list"
 plot(res, "date")
 ```
 
@@ -209,7 +209,7 @@ predict counts data in a time series.
 First we define some potential models:
 
 ``` r
-library(epichange)
+library(trendbreaker)
 stan_cache <- tempfile() # stan compile to c++ and we cache the code
 models <- list(
   null = lm_model(hp ~ 1),

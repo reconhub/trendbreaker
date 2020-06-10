@@ -1,7 +1,7 @@
 
-#' Accessors for epichange_model objects
+#' Accessors for trendbreaker_model objects
 #'
-#' These functions can be used to access information stored in `epichange_model`
+#' These functions can be used to access information stored in `trendbreaker_model`
 #' objects. See details.
 #'
 #' @details The following accessors are available:
@@ -14,7 +14,7 @@
 #' assumed for the response variable
 #'
 #' * `train()`: train a model using data to obtain a
-#' [`epichange_model_fit`](epichange_model_fit) object
+#' [`trendbreaker_model_fit`](trendbreaker_model_fit) object
 #' 
 #' @author Thibaut Jombart, Dirk Schumacher
 #' 
@@ -25,30 +25,30 @@
 #' 
 #' @param ... further arguments passed to other methods
 #' 
-#' @aliases epichange_model-accessors epichange_model-class
+#' @aliases trendbreaker_model-accessors trendbreaker_model-class
 #' 
 #' @export
-#' @rdname epichange_model-accessors
-#' @aliases get_formula.epichange_model
-get_formula.epichange_model <- function(x, ...) {
+#' @rdname trendbreaker_model-accessors
+#' @aliases get_formula.trendbreaker_model
+get_formula.trendbreaker_model <- function(x, ...) {
   as.list(environment(x$train))$formula
 }
 
 
 #' @export
-#' @rdname epichange_model-accessors
-#' @aliases get_response.epichange_model
-get_response.epichange_model <- function(x, ...) {
+#' @rdname trendbreaker_model-accessors
+#' @aliases get_response.trendbreaker_model
+get_response.trendbreaker_model <- function(x, ...) {
   form <- get_formula(x)
   as.character(form)[2]
 }
 
 
 #' @export
-#' @rdname epichange_model-accessors
-#' @aliases get_family.epichange_model
-get_family.epichange_model <- function(x, ...) {
-  if (inherits(x, "epichange_lm")) {
+#' @rdname trendbreaker_model-accessors
+#' @aliases get_family.trendbreaker_model
+get_family.trendbreaker_model <- function(x, ...) {
+  if (inherits(x, "trendbreaker_lm")) {
     "gaussian"
   } else {
     as.list(environment(x$train))$family
@@ -57,8 +57,8 @@ get_family.epichange_model <- function(x, ...) {
 
 
 #' @export
-#' @rdname epichange_model-accessors
-#' @aliases train.epichange_model
-train.epichange_model <- function(x, data, ...) {
+#' @rdname trendbreaker_model-accessors
+#' @aliases train.trendbreaker_model
+train.trendbreaker_model <- function(x, data, ...) {
   x$train(data)
 }

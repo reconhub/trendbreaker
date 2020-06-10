@@ -22,12 +22,12 @@
 #'   [`yardstick::rmse`](yardstick::rmse) for calculating RMSE; `yardstick` also
 #'   implements a range of other metrics for assessing model fit outlined at
 #'   \url{https://yardstick.tidymodels.org/};
-#'   [`?epichange_model`](epichange_model) for the different ways to build
-#'   `epichange_model` objects
+#'   [`?trendbreaker_model`](trendbreaker_model) for the different ways to build
+#'   `trendbreaker_model` objects
 #'
-#' @param model a model specified as an `epichange_model` object, as returned by
+#' @param model a model specified as an `trendbreaker_model` object, as returned by
 #'   `lm_model`, `glm_model`, `glm_nb_model`, `brms_model`; see
-#'   [`?epichange_model`](epichange_model) for details
+#'   [`?trendbreaker_model`](trendbreaker_model) for details
 #'
 #' @param data a `data.frame` containing data (including the response variable
 #'   and all predictors) used in `model`
@@ -49,9 +49,9 @@
 #'
 #' @param ... further arguments passed to [`stats::AIC`](stats::AIC)
 #'
-#' @param models a `list` of models specified as an `epichange_model` object, as
+#' @param models a `list` of models specified as an `trendbreaker_model` object, as
 #'   returned by `lm_model`, `glm_model`, `glm_nb_model`, `brms_model`; see
-#'   [`?epichange_model`](epichange_model) for details
+#'   [`?trendbreaker_model`](trendbreaker_model) for details
 #'
 #' @param method a `function` used to evaluate models: either
 #'   `evaluate_resampling` (default, better for selecting models with good

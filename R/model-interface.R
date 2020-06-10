@@ -1,7 +1,7 @@
-#' Modeling interface for epichange
+#' Modeling interface for trendbreaker
 #'
 #' These functions wrappers around various modelling tools to ensure a
-#' consistent input for *epichange* functions. See details for available model
+#' consistent input for *trendbreaker* functions. See details for available model
 #' interfaces.
 #'
 #' @details The following interfaces are available:
@@ -24,21 +24,21 @@
 #'
 #' @param family the model family to be used for the response variable
 #'
-#' @param x an `epichange_model` object
+#' @param x an `trendbreaker_model` object
 #'
 #' @param ... further arguments passed to other methods: `lm` for `lm_model`,
 #'   `glm` for `glm_model`, `MASS::glm_nb` for `glm_nb_model`, `brms::brm` for
 #'   `brms_model`
 #'
-#' @return  An `epichange_model` object (S3 class inheriting `list`), containing items
-#'   which can be accessed by various accessors - see `?epichange_model-accessors`
+#' @return  An `trendbreaker_model` object (S3 class inheriting `list`), containing items
+#'   which can be accessed by various accessors - see `?trendbreaker_model-accessors`
 #'
 #' @author Dirk Schumacher
 #'
-#' @aliases epichange_model epichange_models
+#' @aliases trendbreaker_model trendbreaker_models
 #'
 #' @export
-#' @rdname epichange_model
+#' @rdname trendbreaker_model
 #' @aliases glm_model
 glm_model <- function(formula, family, ...) {
   structure(
@@ -49,14 +49,14 @@ glm_model <- function(formula, family, ...) {
         model_fit(model, formula)
       }
     ))),
-    class = c("epichange_glm", "epichange_model")
+    class = c("trendbreaker_glm", "trendbreaker_model")
   )
 }
 
 
 
 #' @export
-#' @rdname epichange_model
+#' @rdname trendbreaker_model
 #' @aliases glm_nb_model
 glm_nb_model <- function(formula, ...) {
   structure(
@@ -67,14 +67,14 @@ glm_nb_model <- function(formula, ...) {
         model_fit(model, formula)
       }
     ))),
-    class = c("epichange_glm_nb", "epichange_model")
+    class = c("trendbreaker_glm_nb", "trendbreaker_model")
   )
 }
 
 
 
 #' @export
-#' @rdname epichange_model
+#' @rdname trendbreaker_model
 #' @aliases lm_model
 lm_model <- function(formula, ...) {
   structure(
@@ -85,14 +85,14 @@ lm_model <- function(formula, ...) {
         model_fit(model, formula)
       }
     ))),
-    class = c("epichange_lm", "epichange_model")
+    class = c("trendbreaker_lm", "trendbreaker_model")
   )
 }
 
 
 
 #' @export
-#' @rdname epichange_model
+#' @rdname trendbreaker_model
 #' @aliases brms_model
 brms_model <- function(formula, family, ...) {
   structure(
@@ -116,29 +116,29 @@ brms_model <- function(formula, family, ...) {
             append_observed_column(res, res[[col_name]])
           }
         )
-        class(res) <- c("epichange_model_fit", class(res))
+        class(res) <- c("trendbreaker_model_fit", class(res))
         res
       }
     ))),
-    class = c("epichange_brms_nb", "epichange_model")
+    class = c("trendbreaker_brms_nb", "trendbreaker_model")
   )
 }
 
 
 
 #' @export
-#' @rdname epichange_model
-#' @aliases format.epichange_model
-format.epichange_model <- function(x, ...) {
-  paste0("Untrained epichange model type: ", x[["model_class"]])
+#' @rdname trendbreaker_model
+#' @aliases format.trendbreaker_model
+format.trendbreaker_model <- function(x, ...) {
+  paste0("Untrained trendbreaker model type: ", x[["model_class"]])
 }
 
 
 
 #' @export
-#' @rdname epichange_model
-#' @aliases print.epichange_model
-print.epichange_model <- function(x, ...) {
+#' @rdname trendbreaker_model
+#' @aliases print.trendbreaker_model
+print.trendbreaker_model <- function(x, ...) {
   cat(format(x, ...))
 }
 
@@ -211,7 +211,7 @@ model_fit <- function(model, formula) {
       append_observed_column(res, res[[col_name]])
     }
   )
-  class(out) <- c("epichange_model_fit", class(out))
+  class(out) <- c("trendbreaker_model_fit", class(out))
   out
 }
 

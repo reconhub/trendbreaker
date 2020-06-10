@@ -1,6 +1,6 @@
 #' Detect outliers given a fitted model
 #'
-#' This function uses a trained model stored as an`epichange_model_fit` object
+#' This function uses a trained model stored as an`trendbreaker_model_fit` object
 #' to derive the prediction interval (PI) for a given alpha threshold; it
 #' classifies as outliers every data point falling outside the interval.
 #'
@@ -18,27 +18,27 @@
 #' @param data a `data.frame` containing data for which predictions are to be
 #'   derived
 #'
-#' @param model a fitted model as `epichange_model_fit` object; this can be
-#'   obtained by running `train()` on an `epichange_model` object
-#' (see `?epichange_model`) for details
+#' @param model a fitted model as `trendbreaker_model_fit` object; this can be
+#'   obtained by running `train()` on an `trendbreaker_model` object
+#' (see `?trendbreaker_model`) for details
 #' 
 #' @param alpha the alpha threshold to be used for prediction intervals,
 #'   defaulting to 0.05, i.e. 95% prediction intervals are derived
 #'
-#' @seealso [epichange_model](epichange_model) to create models,
-#' [epichange_model-accessors](epichange_model-accessors) for training them
+#' @seealso [trendbreaker_model](trendbreaker_model) to create models,
+#' [trendbreaker_model-accessors](trendbreaker_model-accessors) for training them
 #' 
 #' @author Thibaut Jombart, Dirk Schumacher
 #'
 #' 
 detect_outliers <- function(data, model, alpha = 0.05) {
-  if (inherits(model, "epichange_model")) {
+  if (inherits(model, "trendbreaker_model")) {
     msg <- paste("`model` has not been trained on data;",
                   "use `train()` to train your model, then detect outliers")
     stop(msg)
   }
-  if (!inherits(model, "epichange_model_fit")) {
-    msg <- sprintf("`model` should be an `epichange_model_fit` object, but is a `%s`",
+  if (!inherits(model, "trendbreaker_model_fit")) {
+    msg <- sprintf("`model` should be an `trendbreaker_model_fit` object, but is a `%s`",
                    paste(class(model), collapse = ", "))
     stop(msg)
   }

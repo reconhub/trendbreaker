@@ -10,9 +10,9 @@ detect_outliers(data, model, alpha = 0.05)
 \item{data}{a \code{data.frame} containing data for which predictions are to be
 derived}
 
-\item{model}{a fitted model as \code{epichange_model_fit} object; this can be
-obtained by running \code{train()} on an \code{epichange_model} object
-(see \code{?epichange_model}) for details}
+\item{model}{a fitted model as \code{trendbreaker_model_fit} object; this can be
+obtained by running \code{train()} on an \code{trendbreaker_model} object
+(see \code{?trendbreaker_model}) for details}
 
 \item{alpha}{the alpha threshold to be used for prediction intervals,
 defaulting to 0.05, i.e. 95\% prediction intervals are derived}
@@ -26,13 +26,13 @@ points within the PI, \code{increase} for outliers above the PI, and \code{decre
 for outliers below the PI.
 }
 \description{
-This function uses a trained model stored as an\code{epichange_model_fit} object
+This function uses a trained model stored as an\code{trendbreaker_model_fit} object
 to derive the prediction interval (PI) for a given alpha threshold; it
 classifies as outliers every data point falling outside the interval.
 }
 \seealso{
-\url{epichange_model} to create models,
-\url{epichange_model-accessors} for training them
+\url{trendbreaker_model} to create models,
+\url{trendbreaker_model-accessors} for training them
 }
 \author{
 Thibaut Jombart, Dirk Schumacher

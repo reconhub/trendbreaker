@@ -91,7 +91,7 @@ cowplot::plot_grid(plotlist = lapply(list_sims, plot), ncol = 1)
 
 
 # analyse data
-library(epichange)
+library(trendbreaker)
 
 # define candidate models
 models <- list(

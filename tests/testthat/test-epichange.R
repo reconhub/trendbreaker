@@ -1,4 +1,4 @@
-test_that("epichange works", {
+test_that("trendbreaker works", {
   model_constant <- lm_model(hp ~ 1)
   model1 <- glm_model(hp ~ 1 + cyl, poisson())
   model2 <- lm_model(hp ~ 1 + cyl)

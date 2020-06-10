@@ -22,9 +22,9 @@ evaluate_models(data, models, method = evaluate_resampling, ...)
 select_model(data, models, method = evaluate_resampling, ...)
 }
 \arguments{
-\item{model}{a model specified as an \code{epichange_model} object, as returned by
+\item{model}{a model specified as an \code{trendbreaker_model} object, as returned by
 \code{lm_model}, \code{glm_model}, \code{glm_nb_model}, \code{brms_model}; see
-\href{epichange_model}{\code{?epichange_model}} for details}
+\href{trendbreaker_model}{\code{?trendbreaker_model}} for details}
 
 \item{data}{a \code{data.frame} containing data (including the response variable
 and all predictors) used in \code{model}}
@@ -45,9 +45,9 @@ reliable / stable results, at the expense of computational time}
 
 \item{...}{further arguments passed to \url{stats::AIC}}
 
-\item{models}{a \code{list} of models specified as an \code{epichange_model} object, as
+\item{models}{a \code{list} of models specified as an \code{trendbreaker_model} object, as
 returned by \code{lm_model}, \code{glm_model}, \code{glm_nb_model}, \code{brms_model}; see
-\href{epichange_model}{\code{?epichange_model}} for details}
+\href{trendbreaker_model}{\code{?trendbreaker_model}} for details}
 
 \item{method}{a \code{function} used to evaluate models: either
 \code{evaluate_resampling} (default, better for selecting models with good
@@ -79,6 +79,6 @@ calculate RMSE.
 \url{yardstick::rmse} for calculating RMSE; \code{yardstick} also
 implements a range of other metrics for assessing model fit outlined at
 \url{https://yardstick.tidymodels.org/};
-\href{epichange_model}{\code{?epichange_model}} for the different ways to build
-\code{epichange_model} objects
+\href{trendbreaker_model}{\code{?trendbreaker_model}} for the different ways to build
+\code{trendbreaker_model} objects
 }

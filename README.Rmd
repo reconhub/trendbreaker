@@ -13,13 +13,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-# epichange
+# trendbreaker
 
 <!-- badges: start -->
-[![R build status](https://github.com/reconhub/epichange/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/epichange/actions)
+[![R build status](https://github.com/reconhub/trendbreaker/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/trendbreaker/actions)
 <!-- badges: end -->
 
-The *epichange* package implements tools for detecting changes in temporal
+The *trendbreaker* package implements tools for detecting changes in temporal
 trends of a single response variable. It provides a coherent interface to
 several modeling tools, alongside functions for model selection and outlier
 detection. It implements the **A**utomatic **S**election of **M**odels and
@@ -50,7 +50,7 @@ Once it is released on [CRAN](https://CRAN.R-project.org), you will be able to
 install the stable version of the package with:
 
 ``` r
-install.packages("epichange")
+install.packages("trendbreaker")
 ```
 
 The development version can be installed from [GitHub](https://github.com/) with:
@@ -59,14 +59,14 @@ The development version can be installed from [GitHub](https://github.com/) with
 if (!require(remotes)) {
   install.packages("remotes")
 }
-remotes::install_github("reconhub/epichange")
+remotes::install_github("reconhub/trendbreaker")
 ```
 
 The best place to start for using this package is to read the documentation of
 the function `asmodee` and run its example:
 
 ```{r eval = FALSE}
-library(epichange)
+library(trendbreaker)
 ?asmodee
 example(asmodee)
 ```
@@ -103,7 +103,7 @@ example stratified by geographic units.
 
 ```{r asmodee}
 
-library(epichange)
+library(trendbreaker)
 library(tidyverse)
 
 # load data
@@ -147,7 +147,7 @@ data in a time series.
 
 First we define some potential models:
 ```{r}
-library(epichange)
+library(trendbreaker)
 stan_cache <- tempfile() # stan compile to c++ and we cache the code
 models <- list(
   null = lm_model(hp ~ 1),
