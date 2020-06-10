@@ -1,6 +1,6 @@
 Package: trendbreaker
-Title: Detect Changes in Tempoeral Trends
-Version: 0.0.0.9000
+Title: Detect Changes in Temporal Trends
+Version: 0.0.1
 Authors@R: 
     c(
       person(
@@ -11,7 +11,9 @@ Authors@R:
       ),
       person(
         given = "Thibaut",
-        family = "Jombart", role = c("aut"), email = "thibautjombart@gmail.com"
+        family = "Jombart",
+	role = c("aut"),
+	email = "thibautjombart@gmail.com"
       )
     )
 Description: Provides tools for detecting changes in temporal trends of a single response variable. It provides a coherent interface to several modeling tools, alongside functions for model selection and outlier detection. It implements the Automatic Selection of Models and Outlier Detection for Epidemmics (ASMODEE), an algorithm originally designed for detecting changes in COVID-19 case incidence.
