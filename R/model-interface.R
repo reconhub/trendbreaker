@@ -49,7 +49,11 @@ glm_model <- function(formula, family, ...) {
   )
 }
 
+
+
 #' @export
+#' @rdname epichange_model
+#' @aliases glm_nb_model
 glm_nb_model <- function(formula, ...) {
   structure(
     eval(bquote(list(
@@ -63,7 +67,11 @@ glm_nb_model <- function(formula, ...) {
   )
 }
 
+
+
 #' @export
+#' @rdname epichange_model
+#' @aliases lm_model
 lm_model <- function(formula, ...) {
   structure(
     eval(bquote(list(
@@ -77,7 +85,11 @@ lm_model <- function(formula, ...) {
   )
 }
 
+
+
 #' @export
+#' @rdname epichange_model
+#' @aliases brms_model
 brms_model <- function(formula, family, ...) {
   structure(
     eval(bquote(list(
@@ -108,6 +120,31 @@ brms_model <- function(formula, family, ...) {
   )
 }
 
+
+
+#' @export
+#' @rdname epichange_model
+#' @aliases format.epichange_model
+format.epichange_model <- function(x, ...) {
+  paste0("Untrained epichange model type: ", x[["model_class"]])
+}
+
+
+
+#' @export
+#' @rdname epichange_model
+#' @aliases print.epichange_model
+print.epichange_model <- function(x, ...) {
+  cat(format(x, ...))
+}
+
+
+
+
+
+# =============
+# = INTERNALS =
+# =============
 add_prediction_interval <- function(model, data, alpha) {
   UseMethod("add_prediction_interval")
 }
@@ -177,14 +214,4 @@ model_fit <- function(model, formula) {
 append_observed_column <- function(data, value) {
   data[["observed"]] <- value
   data
-}
-
-#' @export
-format.epichange_model <- function(x, ...) {
-  paste0("Untrained epichange model type: ", x[["model_class"]])
-}
-
-#' @export
-print.epichange_model <- function(x, ...) {
-  cat(format(x, ...))
 }

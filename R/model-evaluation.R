@@ -3,13 +3,14 @@
 #' These functions provide tools for evaluating models, based on the goodness of
 #' fit or on predictive power. `evaluate_aic` evaluates the goodness of fit of a
 #' single model using Akaike's information criterion, measuring the deviance of
-#' the model while penalising its complexity. `evaluate_resampling` uses K-fold
-#' cross-validation and the Root Mean Square Error (RMSE) of testing sets to
-#' measure the predictive power of a single model. `evaluate_aic` is faster, but
-#' `evaluate_resampling` is better-suited to select best predicting
-#' models. `evaluate_models` uses either `evaluate_aic` or `evaluate_resampling`
-#' to compare a series of models. `select_model` does the same, but returns the
-#' 'best' model according to the chosen method.
+#' the model while penalising its complexity. `evaluate_resampling` uses
+#' repeated K-fold cross-validation and the Root Mean Square Error (RMSE) of
+#' testing sets to measure the predictive power of a single
+#' model. `evaluate_aic` is faster, but `evaluate_resampling` is better-suited
+#' to select best predicting models. `evaluate_models` uses either
+#' `evaluate_aic` or `evaluate_resampling` to compare a series of
+#' models. `select_model` does the same, but returns the 'best' model according
+#' to the chosen method.
 #'
 #' @details These functions wrap around existing functions from several
 #'   packages. `stats::AIC` is used in `evaluate_aic`, and `evaluate_resampling`

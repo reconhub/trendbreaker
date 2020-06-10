@@ -58,13 +58,14 @@ rather than predictive power)}
 These functions provide tools for evaluating models, based on the goodness of
 fit or on predictive power. \code{evaluate_aic} evaluates the goodness of fit of a
 single model using Akaike's information criterion, measuring the deviance of
-the model while penalising its complexity. \code{evaluate_resampling} uses K-fold
-cross-validation and the Root Mean Square Error (RMSE) of testing sets to
-measure the predictive power of a single model. \code{evaluate_aic} is faster, but
-\code{evaluate_resampling} is better-suited to select best predicting
-models. \code{evaluate_models} uses either \code{evaluate_aic} or \code{evaluate_resampling}
-to compare a series of models. \code{select_model} does the same, but returns the
-'best' model according to the chosen method.
+the model while penalising its complexity. \code{evaluate_resampling} uses
+repeated K-fold cross-validation and the Root Mean Square Error (RMSE) of
+testing sets to measure the predictive power of a single
+model. \code{evaluate_aic} is faster, but \code{evaluate_resampling} is better-suited
+to select best predicting models. \code{evaluate_models} uses either
+\code{evaluate_aic} or \code{evaluate_resampling} to compare a series of
+models. \code{select_model} does the same, but returns the 'best' model according
+to the chosen method.
 }
 \details{
 These functions wrap around existing functions from several

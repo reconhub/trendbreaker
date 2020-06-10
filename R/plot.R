@@ -26,6 +26,8 @@
 #'
 #' @param ... unused - present for compatibility with the `plot` generic
 #'
+#' @author Thibaut Jombart
+#' 
 #' @export
 #' @rdname plot.epichange
 #' @aliases plot.epichange

@@ -4,9 +4,24 @@
 \alias{glm_model}
 \alias{epichange_model}
 \alias{epichange_models}
+\alias{glm_nb_model}
+\alias{lm_model}
+\alias{brms_model}
+\alias{format.epichange_model}
+\alias{print.epichange_model}
 \title{Modeling interface for epichange}
 \usage{
 glm_model(formula, family, ...)
+
+glm_nb_model(formula, ...)
+
+lm_model(formula, ...)
+
+brms_model(formula, family, ...)
+
+\method{format}{epichange_model}(x, ...)
+
+\method{print}{epichange_model}(x, ...)
 }
 \arguments{
 \item{formula}{the formula of the model, with the response variable on the
