@@ -132,10 +132,6 @@ res <- asmodee(counts_overall, models, method = evaluate_aic)
 res
 plot(res, "date")
 
-# results with fixed value of 'k' (7 days)
-res_k7 <- asmodee(counts_overall, models, fixed_k = 7)
-plot(res_k7, "date")
-
 ```
 
 

@@ -11,7 +11,7 @@ status](https://github.com/reconhub/epichange/workflows/R-CMD-check/badge.svg)](
 
 The *epichange* package implements tools for detecting changes in
 temporal trends of a single response variable. It provides a coherent
-interface to several modeling tools, alonside functions for model
+interface to several modeling tools, alongside functions for model
 selection and outlier detection. It implements the **A**utomatic
 **S**election of **M**odels and **O**utlier **De**tection for
 **E**pidemmics (ASMODEE), an algorithm originally designed for detecting
@@ -154,8 +154,8 @@ res
 #>     col_name <- as.character(formula[[2]])
 #>     append_observed_column(res, res[[col_name]])
 #> }
-#> <bytecode: 0x55d459b4fba0>
-#> <environment: 0x55d45f6e7408>
+#> <bytecode: 0x55ed216eb4a0>
+#> <environment: 0x55ed2711e960>
 #> 
 #> attr(,"class")
 #> [1] "epichange_model_fit" "list"               
@@ -195,15 +195,6 @@ plot(res, "date")
 ```
 
 <img src="man/figures/README-asmodee-1.png" width="75%" />
-
-``` r
-
-# results with fixed value of 'k' (7 days)
-res_k7 <- asmodee(counts_overall, models, fixed_k = 7)
-plot(res_k7, "date")
-```
-
-<img src="man/figures/README-asmodee-2.png" width="75%" />
 
 ### Model selection
 
@@ -250,7 +241,7 @@ auto_select$leaderboard
 #> # A tibble: 5 x 4
 #>   model          huber_loss   mae  rmse
 #>   <chr>               <dbl> <dbl> <dbl>
-#> 1 brms_complex         18.1  18.6  18.6
+#> 1 brms_complex         18.4  18.9  18.9
 #> 2 glm_poisson          21.2  21.7  21.7
 #> 3 negbin_complex       22.8  23.3  23.3
 #> 4 lm_complex           26.2  26.7  26.7
