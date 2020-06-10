@@ -26,6 +26,8 @@
 #'
 #' @param ... unused - present for compatibility with the `plot` generic
 #'
+#' @author Thibaut Jombart
+#' 
 #' @export
 #' @rdname plot.epichange
 #' @aliases plot.epichange
@@ -65,10 +67,10 @@ plot.epichange <- function(x,
   ggplot2::ggplot(results, ggplot2::aes_string(x = x_axis, y = "count")) +
     ggplot2::theme_bw() +
     ggplot2::geom_vline(xintercept = train_limit, linetype = 2) +
-    ggplot2::geom_ribbon(ggplot2::aes(ymin = lower, ymax = upper),
+    ggplot2::geom_ribbon(ggplot2::aes_string(ymin = "lower", ymax = "upper"),
       alpha = 0.4, fill = col_model
     ) +
-    ggplot2::geom_point(ggplot2::aes(color = classification),
+    ggplot2::geom_point(ggplot2::aes_string(color = "classification"),
       size = point_size + results$outlier
     ) +
     ggplot2::geom_line(alpha = 0.3) +

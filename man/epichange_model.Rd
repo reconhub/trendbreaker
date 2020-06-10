@@ -4,9 +4,24 @@
 \alias{glm_model}
 \alias{epichange_model}
 \alias{epichange_models}
+\alias{glm_nb_model}
+\alias{lm_model}
+\alias{brms_model}
+\alias{format.epichange_model}
+\alias{print.epichange_model}
 \title{Modeling interface for epichange}
 \usage{
 glm_model(formula, family, ...)
+
+glm_nb_model(formula, ...)
+
+lm_model(formula, ...)
+
+brms_model(formula, family, ...)
+
+\method{format}{epichange_model}(x, ...)
+
+\method{print}{epichange_model}(x, ...)
 }
 \arguments{
 \item{formula}{the formula of the model, with the response variable on the
@@ -15,6 +30,10 @@ names used in the formula will need to be matched by columns in the \code{data}
 input to other functions}
 
 \item{family}{the model family to be used for the response variable}
+
+\item{...}{further arguments passed to other methods: \code{lm} for \code{lm_model},
+\code{glm} for \code{glm_model}, \code{MASS::glm_nb} for \code{glm_nb_model}, \code{brms::brm} for
+\code{brms_model}}
 
 \item{x}{an \code{epichange_model} object}
 }

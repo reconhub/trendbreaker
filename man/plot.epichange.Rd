@@ -43,3 +43,6 @@ The plotting method for \code{epichange} objects produces a \code{ggplot} object
 can then be modified using \code{ggplot2}. It accepts a few arguments for
 customising the graphs produced.
 }
+\author{
+Thibaut Jombart
+}

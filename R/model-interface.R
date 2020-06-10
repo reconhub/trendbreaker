@@ -26,6 +26,10 @@
 #'
 #' @param x an `epichange_model` object
 #'
+#' @param ... further arguments passed to other methods: `lm` for `lm_model`,
+#'   `glm` for `glm_model`, `MASS::glm_nb` for `glm_nb_model`, `brms::brm` for
+#'   `brms_model`
+#'
 #' @return  An `epichange_model` object (S3 class inheriting `list`), containing items
 #'   which can be accessed by various accessors - see `?epichange_model-accessors`
 #'
@@ -49,7 +53,11 @@ glm_model <- function(formula, family, ...) {
   )
 }
 
+
+
 #' @export
+#' @rdname epichange_model
+#' @aliases glm_nb_model
 glm_nb_model <- function(formula, ...) {
   structure(
     eval(bquote(list(
@@ -63,7 +71,11 @@ glm_nb_model <- function(formula, ...) {
   )
 }
 
+
+
 #' @export
+#' @rdname epichange_model
+#' @aliases lm_model
 lm_model <- function(formula, ...) {
   structure(
     eval(bquote(list(
@@ -77,7 +89,11 @@ lm_model <- function(formula, ...) {
   )
 }
 
+
+
 #' @export
+#' @rdname epichange_model
+#' @aliases brms_model
 brms_model <- function(formula, family, ...) {
   structure(
     eval(bquote(list(
@@ -108,6 +124,31 @@ brms_model <- function(formula, family, ...) {
   )
 }
 
+
+
+#' @export
+#' @rdname epichange_model
+#' @aliases format.epichange_model
+format.epichange_model <- function(x, ...) {
+  paste0("Untrained epichange model type: ", x[["model_class"]])
+}
+
+
+
+#' @export
+#' @rdname epichange_model
+#' @aliases print.epichange_model
+print.epichange_model <- function(x, ...) {
+  cat(format(x, ...))
+}
+
+
+
+
+
+# =============
+# = INTERNALS =
+# =============
 add_prediction_interval <- function(model, data, alpha) {
   UseMethod("add_prediction_interval")
 }
@@ -121,8 +162,8 @@ add_prediction_interval.negbin <- function(model, data, alpha) {
     data,
     tibble::tibble(
       pred = mu,
-      lower = qnbinom(alpha / 2, mu = mu, size = theta),
-      upper = qnbinom(1 - alpha / 2, mu = mu, size = theta),
+      lower = stats::qnbinom(alpha / 2, mu = mu, size = theta),
+      upper = stats::qnbinom(1 - alpha / 2, mu = mu, size = theta),
     )
   )
 }
@@ -177,14 +218,4 @@ model_fit <- function(model, formula) {
 append_observed_column <- function(data, value) {
   data[["observed"]] <- value
   data
-}
-
-#' @export
-format.epichange_model <- function(x, ...) {
-  paste0("Untrained epichange model type: ", x[["model_class"]])
-}
-
-#' @export
-print.epichange_model <- function(x, ...) {
-  cat(format(x, ...))
 }

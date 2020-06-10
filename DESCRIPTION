@@ -1,5 +1,5 @@
 Package: epichange
-Title: What the Package Does (One Line, Title Case)
+Title: Detect Changes in Tempoeral Trends
 Version: 0.0.0.9000
 Authors@R: 
     c(
@@ -14,7 +14,7 @@ Authors@R:
         family = "Jombart", role = c("aut"), email = "thibautjombart@gmail.com"
       )
     )
-Description: What the package does (one paragraph).
+Description: Provides tools for detecting changes in temporal trends of a single response variable. It provides a coherent interface to several modeling tools, alongside functions for model selection and outlier detection. It implements the Automatic Selection of Models and Outlier Detection for Epidemmics (ASMODEE), an algorithm originally designed for detecting changes in COVID-19 case incidence.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -23,7 +23,9 @@ RoxygenNote: 7.1.0
 Suggests: 
     testthat,
     MASS,
-    brms
+    brms,
+    cowplot,
+    tidyverse
 Imports: 
     dplyr,
     yardstick,

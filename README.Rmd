@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 The *epichange* package implements tools for detecting changes in temporal
 trends of a single response variable. It provides a coherent interface to
-several modeling tools, alonside functions for model selection and outlier
+several modeling tools, alongside functions for model selection and outlier
 detection. It implements the **A**utomatic **S**election of **M**odels and
 **O**utlier **De**tection for **E**pidemmics (ASMODEE), an algorithm originally
 designed for detecting changes in COVID-19 case incidence. 
@@ -131,10 +131,6 @@ counts_overall <- pathways_recent %>%
 res <- asmodee(counts_overall, models, method = evaluate_aic)
 res
 plot(res, "date")
-
-# results with fixed value of 'k' (7 days)
-res_k7 <- asmodee(counts_overall, models, fixed_k = 7)
-plot(res_k7, "date")
 
 ```
 
