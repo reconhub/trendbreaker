@@ -111,9 +111,9 @@ evaluate_models <- function(data, models, method = evaluate_resampling, ...) {
   out <- dplyr::bind_rows(out, .id = "model")
   tidyr::pivot_wider(
     out,
-    id_cols = model,
-    names_from = metric,
-    values_from = score
+    id_cols = "model",
+    names_from = "metric",
+    values_from = "score"
   )
 }
 
