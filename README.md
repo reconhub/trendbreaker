@@ -95,6 +95,14 @@ See `?asmodee` for further example stratified by geographic units.
 
 library(epichange)
 library(tidyverse)
+#> ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+#> ✔ ggplot2 3.3.1     ✔ purrr   0.3.4
+#> ✔ tibble  3.0.1     ✔ dplyr   1.0.0
+#> ✔ tidyr   1.1.0     ✔ stringr 1.4.0
+#> ✔ readr   1.3.1     ✔ forcats 0.5.0
+#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+#> ✖ dplyr::filter() masks stats::filter()
+#> ✖ dplyr::lag()    masks stats::lag()
 
 # load data
 data(nhs_pathways_covid19)
@@ -146,8 +154,8 @@ res
 #>     col_name <- as.character(formula[[2]])
 #>     append_observed_column(res, res[[col_name]])
 #> }
-#> <bytecode: 0x56176afd6500>
-#> <environment: 0x561779971f10>
+#> <bytecode: 0x55d459b4fba0>
+#> <environment: 0x55d45f6e7408>
 #> 
 #> attr(,"class")
 #> [1] "epichange_model_fit" "list"               
@@ -186,7 +194,7 @@ res
 plot(res, "date")
 ```
 
-<img src="man/figures/README-asmodee-1.png" width="100%" />
+<img src="man/figures/README-asmodee-1.png" width="75%" />
 
 ``` r
 
@@ -195,7 +203,7 @@ res_k7 <- asmodee(counts_overall, models, fixed_k = 7)
 plot(res_k7, "date")
 ```
 
-<img src="man/figures/README-asmodee-2.png" width="100%" />
+<img src="man/figures/README-asmodee-2.png" width="75%" />
 
 ### Model selection
 
@@ -242,7 +250,7 @@ auto_select$leaderboard
 #> # A tibble: 5 x 4
 #>   model          huber_loss   mae  rmse
 #>   <chr>               <dbl> <dbl> <dbl>
-#> 1 brms_complex         18.4  18.9  18.9
+#> 1 brms_complex         18.1  18.6  18.6
 #> 2 glm_poisson          21.2  21.7  21.7
 #> 3 negbin_complex       22.8  23.3  23.3
 #> 4 lm_complex           26.2  26.7  26.7
