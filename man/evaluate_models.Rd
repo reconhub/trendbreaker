@@ -4,6 +4,7 @@
 \alias{evaluate_resampling}
 \alias{evaluate_aic}
 \alias{evaluate_models}
+\alias{select_model}
 \title{Tools for model evaluation}
 \usage{
 evaluate_resampling(
@@ -17,6 +18,8 @@ evaluate_resampling(
 evaluate_aic(model, data, ...)
 
 evaluate_models(data, models, method = evaluate_resampling, ...)
+
+select_model(data, models, method = evaluate_resampling, ...)
 }
 \arguments{
 \item{model}{a model specified as an \code{epichange_model} object, as returned by

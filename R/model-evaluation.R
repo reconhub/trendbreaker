@@ -118,6 +118,8 @@ evaluate_models <- function(data, models, method = evaluate_resampling, ...) {
 
 
 #' @export
+#' @rdname evaluate_models
+#' @aliases select_model
 select_model <- function(data, models, method = evaluate_resampling, ...) {
   stats <- evaluate_models(data = data, models = models, method = method, ...)
   stats <- stats[order(stats[, 2, drop = TRUE]), ]
