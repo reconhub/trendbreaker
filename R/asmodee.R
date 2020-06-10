@@ -25,7 +25,7 @@
 #'   assess model fit penalised by model complexity. This approach is fast, but
 #'   only measures model fit rather than predictive ability.
 #'
-#' @author Thibaut Jombart and Dirk Schumacher, with input from Michael Höhle,
+#' @author Thibaut Jombart and Dirk Schumacher, with inputs from Michael Höhle,
 #'   Mark Jit, John Edmunds, Andre Charlett
 #' 
 #' @export
