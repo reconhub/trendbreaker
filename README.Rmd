@@ -46,13 +46,14 @@ with other projects and reflect a more general scope.
 
 ## Getting started
 
-You can install the released version of epichange from [CRAN](https://CRAN.R-project.org) with:
+Once it is released on [CRAN](https://CRAN.R-project.org), you will be able to
+install the stable version of the package with:
 
 ``` r
 install.packages("epichange")
 ```
 
-And the development version from [GitHub](https://github.com/) with:
+The development version can be installed from [GitHub](https://github.com/) with:
 
 ``` r
 if (!require(remotes)) {
@@ -92,62 +93,51 @@ The package implements the following main functions
 
 ### ASMODEE
 
-We illustrate 
+We illustrate ASMODEE using publicly available NHS pathways data recording
+self-reporting of potential COVID-19 cases in England (see `
+?nhs_pathways_covid19` for more information). ASMODEE would typically be more
+useful to investigate shifts in temporal trends from a large number of time
+series (e.g. at a fine geographic scale), but is this is purely for illustrative
+purposes, we use the full dataset for England. See `?asmodee` for further
+example stratified by geographic units.
 
 ```{r asmodee}
-if (require(cowplot) && require(tidyverse)) {
-  # load data
-  data(nhs_pathways_covid19)
 
-  # select last 28 days
-  first_date <- max(nhs_pathways_covid19$date, na.rm = TRUE) - 28
-  pathways_recent <- nhs_pathways_covid19 %>%
-    filter(date >= first_date)
-  
-  # define candidate models
-  models <- list(
-    regression = lm_model(count ~ day),
-    poisson_constant = glm_model(count ~ 1, family = "poisson"),
-    negbin_time = glm_nb_model(count ~ day),
-    negbin_time_weekday = glm_nb_model(count ~ day + weekday)
-  )
+library(epichange)
+library(tidyverse)
 
-  # analyses on all data
-  counts_overall <- pathways_recent %>%
-    group_by(date, day, weekday) %>%
-    summarise(count = sum(count))
+# load data
+data(nhs_pathways_covid19)
 
-  # results with automated detection of 'k'
-  res_overall <- asmodee(counts_overall, models, method = evaluate_aic)
-  res_overall
-  plot(res_overall, "date")
+# select last 6 weeks of data
+first_date <- max(nhs_pathways_covid19$date, na.rm = TRUE) - 6*7
+pathways_recent <- nhs_pathways_covid19 %>%
+  filter(date >= first_date)
 
-  # results with fixed value of 'k' (7 days)
-  res_overall_k7 <- asmodee(counts_overall, models, fixed_k = 7)
-  plot(res_overall_k7, "date")
+# define candidate models
+models <- list(
+  regression = lm_model(count ~ day),
+  poisson_constant = glm_model(count ~ 1, family = "poisson"),
+  negbin_time = glm_nb_model(count ~ day),
+  negbin_time_weekday = glm_nb_model(count ~ day + weekday)
+)
 
-  # analyses by NHS regions
-  counts_nhs_region <- pathways_recent %>%
-    group_by(nhs_region, date, day, weekday) %>%
-    summarise(count = sum(count)) %>%
-    complete(date, fill = list(count = 0)) %>% 
-    split(.$nhs_region)
+# analyses on all data
+counts_overall <- pathways_recent %>%
+  group_by(date, day, weekday) %>%
+  summarise(count = sum(count))
 
-  res_nhs_region <- lapply(counts_nhs_region,
-                           asmodee,
-                           models,
-                           method = evaluate_aic,
-                           alpha = 0.05)
+# results with automated detection of 'k'
+res <- asmodee(counts_overall, models, method = evaluate_aic)
+res
+plot(res, "date")
 
-  plots_nhs_region <- lapply(seq_along(res_nhs_region),
-                             function(i)
-                               plot(res_nhs_region[[i]], "date", point_size = 1, guide = FALSE) +
-                                 labs(subtitle = names(res_nhs_region)[i], x = NULL))
-  cowplot::plot_grid(plotlist = plots_nhs_region)
-
-}
+# results with fixed value of 'k' (7 days)
+res_k7 <- asmodee(counts_overall, models, fixed_k = 7)
+plot(res_k7, "date")
 
 ```
+
 
 ### Model selection
 
