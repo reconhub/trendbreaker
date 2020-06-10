@@ -158,8 +158,8 @@ add_prediction_interval.negbin <- function(model, data, alpha) {
     data,
     tibble::tibble(
       pred = mu,
-      lower = qnbinom(alpha / 2, mu = mu, size = theta),
-      upper = qnbinom(1 - alpha / 2, mu = mu, size = theta),
+      lower = stats::qnbinom(alpha / 2, mu = mu, size = theta),
+      upper = stats::qnbinom(1 - alpha / 2, mu = mu, size = theta),
     )
   )
 }
