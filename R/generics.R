@@ -8,6 +8,12 @@
 #' @seealso [epichange-accessors](epichange-accessors),
 #'   [epichange_model-accessors](epichange_model-accessors)
 #'
+#' @param x the object to access information from
+#'
+#' @param ... further arguments used in methods
+#'
+#' @param data a `data.frame` to be used as training set for the model
+#' 
 #' @rdname epichange-generics
 #' @aliases epichange-generics
 #' @export

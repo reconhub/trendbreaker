@@ -7,13 +7,15 @@
 \alias{predict.epichange_model_fit}
 \title{Accessors for epichange_model_fit objects}
 \usage{
-\method{get_model}{epichange_model_fit}(x)
+\method{get_model}{epichange_model_fit}(x, ...)
 
 \method{predict}{epichange_model_fit}(object, newdata, alpha = 0.05, ...)
 }
 \arguments{
 \item{x}{the output of functions \code{lm_model}, \code{glm_model}, or
 \code{glm_nb_model}}
+
+\item{...}{further arguments passed to other methods}
 
 \item{object}{an \code{epichange_model_fit} object}
 
@@ -22,9 +24,6 @@ derived}
 
 \item{alpha}{the alpha threshold to be used for prediction intervals,
 defaulting to 0.05, i.e. 95\% prediction intervals are derived}
-
-\item{model}{the output of functions \code{lm_model}, \code{glm_model}, or
-\code{glm_nb_model}}
 }
 \description{
 These functions can be used to access information stored in

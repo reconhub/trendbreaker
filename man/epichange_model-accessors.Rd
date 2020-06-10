@@ -4,25 +4,21 @@
 \alias{get_formula.epichange_model}
 \alias{epichange_model-accessors}
 \alias{epichange_model-class}
-\alias{get_formula}
 \alias{get_response.epichange_model}
-\alias{get_response}
 \alias{get_family.epichange_model}
-\alias{get_family}
 \alias{train.epichange_model}
-\alias{train}
 \title{Accessors for epichange_model objects}
 \usage{
-\method{get_formula}{epichange_model}(model, ...)
+\method{get_formula}{epichange_model}(x, ...)
 
-\method{get_response}{epichange_model}(model, ...)
+\method{get_response}{epichange_model}(x, ...)
 
-\method{get_family}{epichange_model}(model, ...)
+\method{get_family}{epichange_model}(x, ...)
 
-\method{train}{epichange_model}(model, data, ...)
+\method{train}{epichange_model}(x, data, ...)
 }
 \arguments{
-\item{model}{the output of functions \code{lm_model}, \code{glm_model}, or
+\item{x}{the output of functions \code{lm_model}, \code{glm_model}, or
 \code{glm_nb_model}}
 
 \item{...}{further arguments passed to other methods}

@@ -13,19 +13,17 @@
 #' 
 #' @author Thibaut Jombart, Dirk Schumacher
 #' 
-#' @param model the output of functions `lm_model`, `glm_model`, or
-#'   `glm_nb_model`
-#' 
 #' @param x the output of functions `lm_model`, `glm_model`, or
 #'   `glm_nb_model`
 #'
+#' @param ... further arguments passed to other methods
 #' 
 #' @aliases epichange_model_fit-accessors epichange_model_fit-class
 
 #' @export
 #' @rdname epichange_model_fit-accessors
 #' @aliases get_model.epichange_model_fit
-get_model.epichange_model_fit <- function(x) {
+get_model.epichange_model_fit <- function(x, ...) {
   x$model
 }
 

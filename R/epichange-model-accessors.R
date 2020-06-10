@@ -18,7 +18,7 @@
 #' 
 #' @author Thibaut Jombart, Dirk Schumacher
 #' 
-#' @param model the output of functions `lm_model`, `glm_model`, or
+#' @param x the output of functions `lm_model`, `glm_model`, or
 #'   `glm_nb_model`
 #' 
 #' @param data a `data.frame` to be used to train the model#'
@@ -29,36 +29,36 @@
 #' 
 #' @export
 #' @rdname epichange_model-accessors
-#' @aliases get_formula get_formula.epichange_model
-get_formula.epichange_model <- function(model, ...) {
-  as.list(environment(model$train))$formula
+#' @aliases get_formula.epichange_model
+get_formula.epichange_model <- function(x, ...) {
+  as.list(environment(x$train))$formula
 }
 
 
 #' @export
 #' @rdname epichange_model-accessors
-#' @aliases get_response get_response.epichange_model
-get_response.epichange_model <- function(model, ...) {
-  form <- get_formula(model)
+#' @aliases get_response.epichange_model
+get_response.epichange_model <- function(x, ...) {
+  form <- get_formula(x)
   as.character(form)[2]
 }
 
 
 #' @export
 #' @rdname epichange_model-accessors
-#' @aliases get_family get_family.epichange_model
-get_family.epichange_model <- function(model, ...) {
-  if (inherits(model, "epichange_lm")) {
+#' @aliases get_family.epichange_model
+get_family.epichange_model <- function(x, ...) {
+  if (inherits(x, "epichange_lm")) {
     "gaussian"
   } else {
-    as.list(environment(model$train))$family
+    as.list(environment(x$train))$family
   }
 }
 
 
 #' @export
 #' @rdname epichange_model-accessors
-#' @aliases train train.epichange_model
-train.epichange_model <- function(model, data, ...) {
-  model$train(data)
+#' @aliases train.epichange_model
+train.epichange_model <- function(x, data, ...) {
+  x$train(data)
 }

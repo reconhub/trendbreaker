@@ -28,6 +28,13 @@ get_family(x, ...)
 
 train(x, data, ...)
 }
+\arguments{
+\item{x}{the object to access information from}
+
+\item{...}{further arguments used in methods}
+
+\item{data}{a \code{data.frame} to be used as training set for the model}
+}
 \description{
 These are generic functions used by the \emph{epichange} package, mostly used for
 accessing content of various objects. See \code{?epichange-accessors} for methods
