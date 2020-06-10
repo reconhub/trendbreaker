@@ -26,6 +26,10 @@
 #'
 #' @param x an `epichange_model` object
 #'
+#' @param ... further arguments passed to other methods: `lm` for `lm_model`,
+#'   `glm` for `glm_model`, `MASS::glm_nb` for `glm_nb_model`, `brms::brm` for
+#'   `brms_model`
+#'
 #' @return  An `epichange_model` object (S3 class inheriting `list`), containing items
 #'   which can be accessed by various accessors - see `?epichange_model-accessors`
 #'

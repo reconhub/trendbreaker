@@ -10,18 +10,20 @@
 \alias{predict.epichange}
 \title{Accessors for epichange objects}
 \usage{
-\method{get_model}{epichange}(x)
+\method{get_model}{epichange}(x, ...)
 
-\method{get_k}{epichange}(x)
+\method{get_k}{epichange}(x, ...)
 
-\method{get_results}{epichange}(x)
+\method{get_results}{epichange}(x, ...)
 
-\method{get_outliers}{epichange}(x)
+\method{get_outliers}{epichange}(x, ...)
 
 \method{predict}{epichange}(object, newdata, alpha = 0.05, ...)
 }
 \arguments{
 \item{x}{an \code{epichange} object, as returned by \url{asmodee}}
+
+\item{...}{further arguments passed to other methods}
 
 \item{object}{an \code{epichange} object, as returned by \url{asmodee}}
 

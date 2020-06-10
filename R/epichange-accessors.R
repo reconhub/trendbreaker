@@ -29,11 +29,13 @@
 #' @aliases epichange-accessors epichange-class
 #'
 #' @param x an `epichange` object, as returned by [`asmodee`](asmodee)
-
+#'
+#' @param ... further arguments passed to other methods
+#' 
 #' @export
 #' @rdname epichange-accessors
 #' @aliases get_model.epichange
-get_model.epichange <- function(x) {
+get_model.epichange <- function(x, ...) {
   x$model
 }
 
@@ -41,7 +43,7 @@ get_model.epichange <- function(x) {
 #' @export
 #' @rdname epichange-accessors
 #' @aliases get_k.epichange
-get_k.epichange <- function(x) {
+get_k.epichange <- function(x, ...) {
   x$k
 }
 
@@ -49,7 +51,7 @@ get_k.epichange <- function(x) {
 #' @export
 #' @rdname epichange-accessors
 #' @aliases get_results.epichange
-get_results.epichange <- function(x) {
+get_results.epichange <- function(x, ...) {
   x$results
 }
 
@@ -57,7 +59,7 @@ get_results.epichange <- function(x) {
 #' @export
 #' @rdname epichange-accessors
 #' @aliases get_outliers.epichange
-get_outliers.epichange <- function(x) {
+get_outliers.epichange <- function(x, ...) {
   dplyr::filter(get_results(x), outlier)
 }
 

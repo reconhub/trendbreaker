@@ -31,6 +31,10 @@ input to other functions}
 
 \item{family}{the model family to be used for the response variable}
 
+\item{...}{further arguments passed to other methods: \code{lm} for \code{lm_model},
+\code{glm} for \code{glm_model}, \code{MASS::glm_nb} for \code{glm_nb_model}, \code{brms::brm} for
+\code{brms_model}}
+
 \item{x}{an \code{epichange_model} object}
 }
 \value{

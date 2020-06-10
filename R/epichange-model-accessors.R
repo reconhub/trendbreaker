@@ -23,12 +23,14 @@
 #' 
 #' @param data a `data.frame` to be used to train the model#'
 #' 
+#' @param ... further arguments passed to other methods
+#' 
 #' @aliases epichange_model-accessors epichange_model-class
-
+#' 
 #' @export
 #' @rdname epichange_model-accessors
 #' @aliases get_formula get_formula.epichange_model
-get_formula.epichange_model <- function(model) {
+get_formula.epichange_model <- function(model, ...) {
   as.list(environment(model$train))$formula
 }
 
@@ -36,7 +38,7 @@ get_formula.epichange_model <- function(model) {
 #' @export
 #' @rdname epichange_model-accessors
 #' @aliases get_response get_response.epichange_model
-get_response.epichange_model <- function(model) {
+get_response.epichange_model <- function(model, ...) {
   form <- get_formula(model)
   as.character(form)[2]
 }
@@ -45,7 +47,7 @@ get_response.epichange_model <- function(model) {
 #' @export
 #' @rdname epichange_model-accessors
 #' @aliases get_family get_family.epichange_model
-get_family.epichange_model <- function(model) {
+get_family.epichange_model <- function(model, ...) {
   if (inherits(model, "epichange_lm")) {
     "gaussian"
   } else {
@@ -57,6 +59,6 @@ get_family.epichange_model <- function(model) {
 #' @export
 #' @rdname epichange_model-accessors
 #' @aliases train train.epichange_model
-train.epichange_model <- function(model, data) {
+train.epichange_model <- function(model, data, ...) {
   model$train(data)
 }
