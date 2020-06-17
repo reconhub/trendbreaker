@@ -138,7 +138,7 @@ list_res_fixed_k <- lapply(
 ## FNR
 ## ability to infer true k
 
-library(cadet)
+library(caret)
 
 inferred_k <- lapply(list_res_free_k, sapply, function(e) e$k)
 inferred_k
@@ -233,14 +233,15 @@ ggplot(all_results, aes(x = metric, y = rate, color = method, fill = method)) +
 ## `x` is a `projections` object
 ## `f` is a function generating reporting 'n' onset -> reporting delays
 ## Note: this is getting very slow for large numbers of cases!
-add_reporting <- function(x, f) {
-  lapply(1:ncol(x), function(i) {
-    sim_as_dates <- rep(get_dates(x), x[, i])
-    out <- incidence::incidence(sim_as_dates + f(length(sim_as_dates)))
-    as.data.frame(out)
-  })
-}
+
+## add_reporting <- function(x, f) {
+##   lapply(1:ncol(x), function(i) {
+##     sim_as_dates <- rep(get_dates(x), x[, i])
+##     out <- incidence::incidence(sim_as_dates + f(length(sim_as_dates)))
+##     as.data.frame(out)
+##   })
+## }
 
 
-f_reporting <- function(n) rpois(n, lambda = 2)
-list_data <- lapply(list_res, add_reporting, f_reporting)
+## f_reporting <- function(n) rpois(n, lambda = 2)
+## list_data <- lapply(list_res, add_reporting, f_reporting)
