@@ -10,7 +10,7 @@ asmodee(
   alpha = 0.05,
   max_k = 7,
   fixed_k = NULL,
-  method = evaluate_resampling,
+  method = trending::evaluate_resampling,
   ...
 )
 }
@@ -78,7 +78,7 @@ only measures model fit rather than predictive ability.
 }
 \examples{
 
-if (require(cowplot) && require(tidyverse)) {
+if (require(cowplot) && require(tidyverse) && require(trending)) {
   # load data
   data(nhs_pathways_covid19)
 
@@ -86,7 +86,7 @@ if (require(cowplot) && require(tidyverse)) {
   first_date <- max(nhs_pathways_covid19$date, na.rm = TRUE) - 28
   pathways_recent <- nhs_pathways_covid19 \%>\%
     filter(date >= first_date)
-  
+
   # define candidate models
   models <- list(
     regression = lm_model(count ~ day),
@@ -113,7 +113,7 @@ if (require(cowplot) && require(tidyverse)) {
   counts_nhs_region <- pathways_recent \%>\%
     group_by(nhs_region, date, day, weekday) \%>\%
     summarise(count = sum(count)) \%>\%
-    complete(date, fill = list(count = 0)) \%>\% 
+    complete(date, fill = list(count = 0)) \%>\%
     split(.$nhs_region)
 
   res_nhs_region <- lapply(counts_nhs_region,

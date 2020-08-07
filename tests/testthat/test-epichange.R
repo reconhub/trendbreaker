@@ -1,8 +1,8 @@
 test_that("trendbreaker works", {
-  model_constant <- lm_model(hp ~ 1)
-  model1 <- glm_model(hp ~ 1 + cyl, poisson())
-  model2 <- lm_model(hp ~ 1 + cyl)
-  model3 <- glm_nb_model(hp ~ 1 + cyl)
+  model_constant <- trending::lm_model(hp ~ 1)
+  model1 <- trending::glm_model(hp ~ 1 + cyl, poisson)
+  model2 <- trending::lm_model(hp ~ 1 + cyl)
+  model3 <- trending::glm_nb_model(hp ~ 1 + cyl)
   models <- list(
     null = model_constant,
     glm_poisson = model1,
@@ -10,7 +10,7 @@ test_that("trendbreaker works", {
     negbin = model3
   )
   expect_silent(
-    res <- asmodee(mtcars, models, method = evaluate_aic)
+    res <- asmodee(mtcars, models, method = trending::evaluate_aic)
   )
   expect_true(res$k >= 0)
   expect_true(is.logical(res$results$outlier))

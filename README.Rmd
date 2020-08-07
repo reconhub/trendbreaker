@@ -103,7 +103,7 @@ purposes, we use the full dataset for England. See `?asmodee` for further
 example stratified by geographic units.
 
 ```{r asmodee}
-
+library(trending)
 library(trendbreaker)
 library(tidyverse)
 
@@ -148,7 +148,6 @@ data in a time series.
 
 First we define some potential models:
 ```{r}
-library(trendbreaker)
 stan_cache <- tempfile() # stan compile to c++ and we cache the code
 models <- list(
   null = lm_model(hp ~ 1),

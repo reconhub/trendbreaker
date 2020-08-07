@@ -10,7 +10,7 @@
 \alias{predict.trendbreaker}
 \title{Accessors for trendbreaker objects}
 \usage{
-\method{get_model}{trendbreaker}(x, ...)
+get_model.trendbreaker(x, ...)
 
 \method{get_k}{trendbreaker}(x, ...)
 

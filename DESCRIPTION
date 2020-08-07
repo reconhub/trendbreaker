@@ -21,18 +21,16 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: 
     testthat,
-    MASS,
-    brms,
     cowplot,
-    tidyverse
+    tidyverse,
+    stats
 Imports: 
     dplyr,
-    yardstick,
-    rsample,
     ggplot2,
-    tidyr,
-    ciTools,
-    tibble
+    tibble,
+    trending,
+Remotes: :
+    reconhub/trending

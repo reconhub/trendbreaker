@@ -27,9 +27,9 @@
 #'
 #' @author Thibaut Jombart and Dirk Schumacher, with inputs from Michael Höhle,
 #'   Mark Jit, John Edmunds, Andre Charlett
-#' 
+#'
 #' @export
-#' 
+#'
 #' @param data A `data.frame` or a `tibble` containing the response and
 #'   explanatory variables used in the `models`.
 #'
@@ -62,10 +62,10 @@
 #'
 #' @return An `trendbreaker` object (S3 class inheriting `list`), containing items
 #'   which can be accessed by various accessors - see `?trendbreaker-accessors`
-#' 
+#'
 #' @examples
 #'
-#' if (require(cowplot) && require(tidyverse)) {
+#' if (require(cowplot) && require(tidyverse) && require(trending)) {
 #'   # load data
 #'   data(nhs_pathways_covid19)
 #'
@@ -73,7 +73,7 @@
 #'   first_date <- max(nhs_pathways_covid19$date, na.rm = TRUE) - 28
 #'   pathways_recent <- nhs_pathways_covid19 %>%
 #'     filter(date >= first_date)
-#'   
+#'
 #'   # define candidate models
 #'   models <- list(
 #'     regression = lm_model(count ~ day),
@@ -100,7 +100,7 @@
 #'   counts_nhs_region <- pathways_recent %>%
 #'     group_by(nhs_region, date, day, weekday) %>%
 #'     summarise(count = sum(count)) %>%
-#'     complete(date, fill = list(count = 0)) %>% 
+#'     complete(date, fill = list(count = 0)) %>%
 #'     split(.$nhs_region)
 #'
 #'   res_nhs_region <- lapply(counts_nhs_region,
@@ -122,7 +122,7 @@ asmodee <- function(data,
                     alpha = 0.05,
                     max_k = 7,
                     fixed_k = NULL,
-                    method = evaluate_resampling,
+                    method = trending::evaluate_resampling,
                     ...) {
 
   n <- nrow(data)
@@ -131,7 +131,7 @@ asmodee <- function(data,
   ## 1. (default) auto-detection of the value of 'k', in which case we use the
   ## `detect_changepoint` routine to select the 'best' value of `k`
   ## 2. use a user-specified value of `k`, passed through the `fixed_k` argument
-  
+
   if (is.null(fixed_k)) {
     res_changepoint <- detect_changepoint(
       data = data,
@@ -152,11 +152,11 @@ asmodee <- function(data,
     k <- as.integer(max(fixed_k, 0L))
     n_train <- n - k
     data_train <- data[seq_len(n_train), ]
-    selected_model <- select_model(data = data_train,
+    selected_model <- trending::select_model(data = data_train,
                                    models = models,
                                    method = method,
                                    ...)$best_model
-    selected_model <- selected_model$train(data_train)
+    selected_model <- trending::fit(selected_model,data_train)
     selected_k <- k
   }
 
@@ -176,7 +176,7 @@ asmodee <- function(data,
                            size = n,
                            prob = alpha,
                            lower.tail = FALSE)
-  
+
   out <- list(
     k = selected_k,
     model = selected_model,

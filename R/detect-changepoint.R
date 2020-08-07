@@ -6,18 +6,18 @@
 #' training set (before the last `k` points) ii) the number of outliers in the
 #' last `k` points. Note that for each value of `k` investigated, model
 #' selection is performed as described in `?asmodee`.
-#' 
+#'
 #' @inheritParams asmodee
 #'
 #' @author Thibaut Jombart
 #'
 #' @seealso [asmodee](asmodee)
-#' 
+#'
 #' @export
 #'
 
 detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
-                               method = evaluate_resampling, ...) {
+                               method = trending::evaluate_resampling, ...) {
   res <- vector(mode = "list", length = max_k + 1)
   res_models <- vector(mode = "list", length = max_k + 1)
 
@@ -37,13 +37,13 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
     data_train <- data[seq_len(n_train), , drop = FALSE]
 
     ## select best model on training data
-    current_model <- select_model(
+    current_model <- trending::select_model(
       models = models,
       data = data_train,
       method = method,
       ...
     )$best_model
-    current_model <- train(current_model, data_train)
+    current_model <- trending::fit(current_model, data_train)
 
     ## find outliers in entire dataset
     outliers <-  detect_outliers(
@@ -53,7 +53,7 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
     )$outlier
     outliers_train <- outliers & (1:n <= n_train)
     outliers_test <- outliers & (1:n > n_train)
-    
+
 
     # Calculate model score for the current value of 'k'; the score is defined
     # as the sum of two components:
@@ -62,12 +62,12 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
     #
     # the model with the highest score will be retained; in case of ties, then
     # the first component is used to break ties
-    
+
     n_outliers_train <- sum(outliers_train, na.rm = TRUE)
     n_non_outliers_train <- n_train - n_outliers_train
     n_outliers_test <- sum(outliers_test, na.rm = TRUE)
     model_score <- n_non_outliers_train + n_outliers_test
-    
+
     ## save outputs
     res[[k + 1]] <- data.frame(
       k = k,
