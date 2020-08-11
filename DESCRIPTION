@@ -12,8 +12,15 @@ Authors@R:
       person(
         given = "Thibaut",
         family = "Jombart",
-	role = c("aut"),
-	email = "thibautjombart@gmail.com"
+	      role = c("aut"),
+	      email = "thibautjombart@gmail.com"
+      ),
+      person(
+        given = "Tim",
+        family = "Taylor",
+        role = c("ctb"),
+        email = "tim.taylor@hiddenelephants.co.uk", 
+        comment = c(ORCID = "0000-0002-8587-7113")
       )
     )
 Description: Provides tools for detecting changes in temporal trends of a single response variable. It provides a coherent interface to several modeling tools, alongside functions for model selection and outlier detection. It implements the Automatic Selection of Models and Outlier Detection for Epidemmics (ASMODEE), an algorithm originally designed for detecting changes in COVID-19 case incidence.
@@ -24,13 +31,15 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
     testthat,
-    cowplot,
     tidyverse,
-    stats
+    stats,
+    incidence2
 Imports: 
     dplyr,
     ggplot2,
+    cowplot,
     tibble,
     trending,
 Remotes: :
+    reconhub/incidence2
     reconhub/trending

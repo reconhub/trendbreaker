@@ -16,5 +16,10 @@ Authors:
   \item Thibaut Jombart \email{thibautjombart@gmail.com}
 }
 
+Other contributors:
+\itemize{
+  \item Tim Taylor \email{tim.taylor@hiddenelephants.co.uk} (\href{https://orcid.org/0000-0002-8587-7113}{ORCID}) [contributor]
+}
+
 }
 \keyword{internal}

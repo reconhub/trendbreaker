@@ -4,15 +4,7 @@
 \alias{asmodee}
 \title{Automatic Selection of Models Outlier DEtection for Epidemics (ASMODEE)}
 \usage{
-asmodee(
-  data,
-  models,
-  alpha = 0.05,
-  max_k = 7,
-  fixed_k = NULL,
-  method = trending::evaluate_resampling,
-  ...
-)
+asmodee(data, models, alpha, max_k, fixed_k, method, ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} or a \code{tibble} containing the response and
@@ -129,6 +121,7 @@ if (require(cowplot) && require(tidyverse) && require(trending)) {
   cowplot::plot_grid(plotlist = plots_nhs_region)
 
 }
+
 }
 \author{
 Thibaut Jombart and Dirk Schumacher, with inputs from Michael Höhle,

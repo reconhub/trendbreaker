@@ -8,8 +8,11 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  fig.align = "center",
   fig.path = "man/figures/README-",
-  out.width = "75%"
+  echo = TRUE,
+  fig.width = 8,
+  fig.height = 6
 )
 ```
 
@@ -91,17 +94,13 @@ The package implements the following main functions
 ### ASMODEE
 
 We illustrate ASMODEE using publicly available NHS pathways data recording
-self-reporting of potential COVID-19 cases in England (see `
-?nhs_pathways_covid19` for more information). ASMODEE would typically be more
-useful to investigate shifts in temporal trends from a large number of time
-series (e.g. at a fine geographic scale), but is this is purely for illustrative
-purposes, we use the full dataset for England. See `?asmodee` for further
-example stratified by geographic units.
+self-reporting of potential COVID-19 cases in England 
+(see `?nhs_pathways_covid19` for more information). 
 
 ```{r asmodee}
-library(trending)
-library(trendbreaker)
-library(tidyverse)
+library(trending)     # for model interface
+library(trendbreaker) # for ASMODEE
+library(dplyr)        # for data manipulation
 
 # load data
 data(nhs_pathways_covid19)
@@ -128,5 +127,39 @@ counts_overall <- pathways_recent %>%
 res <- asmodee(counts_overall, models, method = evaluate_aic)
 res
 plot(res, "date")
+```
 
+ASMODEE would typically be more useful to investigate shifts in temporal trends
+from a large number of time series (e.g. at a fine geographic scale).  To make
+this sort of analysis easier *trendbreaker* also works with 
+[*incidence2*](https://github.com/reconhub/incidence2/) objects.  To illustrate
+this we can consider trends over NHS regions.
+
+```{r incidence2}
+library(incidence2)   # for `incidence()` objects
+
+# select last 6 weeks of data
+first_date <- max(nhs_pathways_covid19$date, na.rm = TRUE) - 6*7
+pathways_recent <- filter(nhs_pathways_covid19, date >= first_date)
+
+# create incidence object with extra variables
+lookup <- select(pathways_recent, date, day, weekday) %>%  distinct()
+
+dat <-
+  pathways_recent %>%
+  as_incidence(date_index = date, counts_var = count, group_vars = nhs_region) %>%
+  left_join(lookup, by = "date")
+
+# define candidate models
+models <- list(
+  regression = lm_model(count ~ day),
+  poisson_constant = glm_model(count ~ 1, family = "poisson"),
+  negbin_time = glm_nb_model(count ~ day),
+  negbin_time_weekday = glm_nb_model(count ~ day + weekday)
+)
+
+# analyses on all data
+res <- asmodee(dat, models, method = evaluate_aic)
+
+plot(res, "date")
 ```

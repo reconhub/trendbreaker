@@ -116,14 +116,19 @@
 #'   cowplot::plot_grid(plotlist = plots_nhs_region)
 #'
 #' }
+#'
+asmodee <- function(data, models, alpha, max_k, fixed_k, method, ...) {
+  UseMethod("asmodee", data)
+}
 
-asmodee <- function(data,
-                    models,
-                    alpha = 0.05,
-                    max_k = 7,
-                    fixed_k = NULL,
-                    method = trending::evaluate_resampling,
-                    ...) {
+#' @export
+asmodee.data.frame <- function(data,
+                               models,
+                               alpha = 0.05,
+                               max_k = 7,
+                               fixed_k = NULL,
+                               method = trending::evaluate_resampling,
+                               ...) {
 
   n <- nrow(data)
 
@@ -189,3 +194,35 @@ asmodee <- function(data,
   class(out) <- c("trendbreaker", class(out))
   out
 }
+
+#' @export
+asmodee.incidence2 <- function(data,
+                               models,
+                               alpha = 0.05,
+                               max_k = 7,
+                               fixed_k = NULL,
+                               method = trending::evaluate_resampling,
+                               ...) {
+
+  groups <- incidence2::get_group_names(data)
+  if (!is.null(groups)) {
+    f_groups <- lapply(suppressMessages(data[groups]), factor, exclude = NULL)
+    split_dat <- split(data, f_groups, sep = "-")
+  } else {
+    split_dat = list(data)
+  }
+
+  out <- lapply(split_dat,
+                asmodee.data.frame,
+                models = models,
+                method = method,
+                alpha = alpha,
+                fixed_k = fixed_k,
+                ...)
+
+  names(out) <- names(split_dat)
+  class(out) <- "trendbreaker_incidence2"
+  out
+}
+
+

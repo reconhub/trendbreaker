@@ -2,9 +2,21 @@
 % Please edit documentation in R/plot.R
 \name{plot.trendbreaker}
 \alias{plot.trendbreaker}
+\alias{plot.trendbreaker_incidence2}
 \title{Plotting method for trendbreaker objects}
 \usage{
 \method{plot}{trendbreaker}(
+  x,
+  x_axis,
+  point_size = 2,
+  col_normal = "#8B8B8C",
+  col_increase = "#CB3355",
+  col_decrease = "#32AB96",
+  guide = TRUE,
+  ...
+)
+
+\method{plot}{trendbreaker_incidence2}(
   x,
   x_axis,
   point_size = 2,

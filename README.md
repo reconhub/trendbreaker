@@ -80,24 +80,20 @@ The package implements the following main functions
 
 We illustrate ASMODEE using publicly available NHS pathways data
 recording self-reporting of potential COVID-19 cases in England (see
-`?nhs_pathways_covid19` for more information). ASMODEE would typically
-be more useful to investigate shifts in temporal trends from a large
-number of time series (e.g. at a fine geographic scale), but is this is
-purely for illustrative purposes, we use the full dataset for England.
-See `?asmodee` for further example stratified by geographic units.
+`?nhs_pathways_covid19` for more information).
 
 ``` r
-library(trending)
-library(trendbreaker)
-library(tidyverse)
-#> ── Attaching packages ──────────────────────────────────────────────── tidyverse 1.3.0 ──
-#> ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-#> ✓ tibble  3.0.3     ✓ dplyr   1.0.1
-#> ✓ tidyr   1.1.1     ✓ stringr 1.4.0
-#> ✓ readr   1.3.1     ✓ forcats 0.5.0
-#> ── Conflicts ─────────────────────────────────────────────────── tidyverse_conflicts() ──
-#> x dplyr::filter() masks stats::filter()
-#> x dplyr::lag()    masks stats::lag()
+library(trending)     # for model interface
+library(trendbreaker) # for ASMODEE
+library(dplyr)        # for data manipulation
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 
 # load data
 data(nhs_pathways_covid19)
@@ -155,8 +151,8 @@ res
 #>       col_name <- as.character(formula[[2]])
 #>       append_observed_column(res, res[[col_name]])
 #>     }
-#> <bytecode: 0x564c6531fd50>
-#> <environment: 0x564c694262a8>
+#> <bytecode: 0x55faf7e52148>
+#> <environment: 0x55fafb853688>
 #> 
 #> attr(,"class")
 #> [1] "trending_model_fit" "list"              
@@ -195,4 +191,41 @@ res
 plot(res, "date")
 ```
 
-<img src="man/figures/README-asmodee-1.png" width="75%" />
+<img src="man/figures/README-asmodee-1.png" style="display: block; margin: auto;" />
+
+ASMODEE would typically be more useful to investigate shifts in temporal
+trends from a large number of time series (e.g. at a fine geographic
+scale). To make this sort of analysis easier *trendbreaker* also works
+with [*incidence2*](https://github.com/reconhub/incidence2/) objects. To
+illustrate this we can consider trends over NHS regions.
+
+``` r
+library(incidence2)   # for `incidence()` objects
+
+# select last 6 weeks of data
+first_date <- max(nhs_pathways_covid19$date, na.rm = TRUE) - 6*7
+pathways_recent <- filter(nhs_pathways_covid19, date >= first_date)
+
+# create incidence object with extra variables
+lookup <- select(pathways_recent, date, day, weekday) %>%  distinct()
+
+dat <-
+  pathways_recent %>%
+  as_incidence(date_index = date, counts_var = count, group_vars = nhs_region) %>%
+  left_join(lookup, by = "date")
+
+# define candidate models
+models <- list(
+  regression = lm_model(count ~ day),
+  poisson_constant = glm_model(count ~ 1, family = "poisson"),
+  negbin_time = glm_nb_model(count ~ day),
+  negbin_time_weekday = glm_nb_model(count ~ day + weekday)
+)
+
+# analyses on all data
+res <- asmodee(dat, models, method = evaluate_aic)
+
+plot(res, "date")
+```
+
+<img src="man/figures/README-incidence2-1.png" style="display: block; margin: auto;" />

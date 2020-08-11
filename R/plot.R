@@ -14,10 +14,10 @@
 #' @param col_normal the color to be used for non-outlying observations,
 #'   i.e. observations falling within the prediction interval of the estimated
 #'   temporal trend
-#' 
+#'
 #' @param col_increase the color to be used for outlying observations which are
 #'   above the prediction interval of the estimated temporal trend
-#' 
+#'
 #' @param col_decrease the color to be used for outlying observations which are
 #'   below the prediction interval of the estimated temporal trend
 #'
@@ -27,7 +27,7 @@
 #' @param ... unused - present for compatibility with the `plot` generic
 #'
 #' @author Thibaut Jombart
-#' 
+#'
 #' @export
 #' @rdname plot.trendbreaker
 #' @aliases plot.trendbreaker
@@ -42,10 +42,11 @@ plot.trendbreaker <- function(x,
                            ...) {
   ## ensure that x_axis is the name of a variable
   results <- get_results(x)
+  results <- as.data.frame(results)
   if (is.numeric(x_axis)) {
     x_axis <- names(results)[x_axis]
   }
-    
+
   n <- nrow(results)
   n_train <- n - get_k(x)
   if (n_train < n) {
@@ -78,3 +79,38 @@ plot.trendbreaker <- function(x,
     ggplot2::theme(legend.position = "bottom") +
     ggplot2::guides(color = custom_guide)
 }
+
+#' @export
+#' @rdname plot.trendbreaker
+#' @aliases plot.trendbreaker_incidence2
+plot.trendbreaker_incidence2 <- function(x,
+                              x_axis,
+                              point_size = 2,
+                              col_normal = "#8B8B8C",
+                              col_increase = "#CB3355",
+                              col_decrease = "#32AB96",
+                              guide = TRUE,
+                              ...) {
+  plots <-
+    mapply(
+      function(y, z) {
+        g <- plot(y, x_axis, point_size, col_normal, col_increase, col_decrease, guide, ...)
+        g + ggplot2::theme(legend.position = "none") + ggplot2::labs(subtitle = z, x = NULL)
+      },
+      x,
+      names(x),
+      SIMPLIFY = FALSE
+    )
+
+
+
+  legend <- cowplot::get_legend(
+    plots[[1]] + ggplot2::theme(legend.position = "bottom")
+  )
+
+  cplots <- cowplot::plot_grid(plotlist = plots)
+  cowplot::plot_grid(cplots, legend, ncol = 1, rel_heights = c(1,0.1))
+
+
+}
+
