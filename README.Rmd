@@ -21,11 +21,10 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 The *trendbreaker* package implements tools for detecting changes in temporal
-trends of a single response variable. It provides a coherent interface to
-several modeling tools, alongside functions for model selection and outlier
-detection. It implements the **A**utomatic **S**election of **M**odels and
-**O**utlier **De**tection for **E**pidemmics (ASMODEE), an algorithm originally
-designed for detecting changes in COVID-19 case incidence. 
+trends of a single response variable. It implements the **A**utomatic 
+**S**election of **M**odels and **O**utlier **De**tection for **E**pidemmics 
+(ASMODEE), an algorithm originally designed for detecting changes in COVID-19 
+case incidence. 
 
 ASMODEE proceeds by:
 
@@ -80,9 +79,6 @@ The package implements the following main functions
 * `asmodee`: implements the Automatic Selection of Models and Outlier DEtection
   for Epidemics
   
-* `select_model`: a function to select the best-fitting/best-predicting model
-  from a range of user-specified models
-  
 * `detect_changepoint`: a function to detect the points at which recent data
   deviate from previous temporal trends using a fitted model and
   data
@@ -133,46 +129,4 @@ res <- asmodee(counts_overall, models, method = evaluate_aic)
 res
 plot(res, "date")
 
-```
-
-
-### Model selection
-
-You can define a number of different regression models using a common interface.
-Once defined you can use different strategies to select the
-best-fitting/best-predicting model.
-
-As an example we try to predict `hp` of the famous `mtcars` dataset.  Of course,
-this is just a toy example. Usually you would use the package to predict counts
-data in a time series.
-
-First we define some potential models:
-```{r}
-stan_cache <- tempfile() # stan compile to c++ and we cache the code
-models <- list(
-  null = lm_model(hp ~ 1),
-  glm_poisson = glm_model(hp ~ 1 + cyl + drat + wt + qsec + am, poisson),
-  lm_complex = lm_model(hp ~ 1 + cyl + drat + wt + qsec + am),
-  negbin_complex = glm_nb_model(hp ~ 1 + cyl + drat + wt + qsec + am),
-  brms_complex = brms_model(
-    hp ~ 1 + cyl + drat + wt + qsec + am,
-    family = brms::negbinomial(),
-    file = stan_cache
-  )
-)
-```
-
-Then we evaluate them using [N-Fold cross validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)).
-
-```{r, message=FALSE, warning=FALSE}
-# we do CV and evaluate three loss function:
-# Root-mean-squared error, the huber-loss and mean absolute error.
-# The package works with `yardstick` by default.
-out <- capture.output( # no log output in readme :)
-  auto_select <- select_model(mtcars, models,
-    method = evaluate_resampling,
-    metrics = list(yardstick::rmse, yardstick::huber_loss, yardstick::mae)
-  )
-)
-auto_select$leaderboard
 ```

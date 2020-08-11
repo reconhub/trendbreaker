@@ -11,12 +11,10 @@ status](https://github.com/reconhub/trendbreaker/workflows/R-CMD-check/badge.svg
 <!-- badges: end -->
 
 The *trendbreaker* package implements tools for detecting changes in
-temporal trends of a single response variable. It provides a coherent
-interface to several modeling tools, alongside functions for model
-selection and outlier detection. It implements the **A**utomatic
-**S**election of **M**odels and **O**utlier **De**tection for
-**E**pidemmics (ASMODEE), an algorithm originally designed for detecting
-changes in COVID-19 case incidence.
+temporal trends of a single response variable. It implements the
+**A**utomatic **S**election of **M**odels and **O**utlier **De**tection
+for **E**pidemmics (ASMODEE), an algorithm originally designed for
+detecting changes in COVID-19 case incidence.
 
 ASMODEE proceeds by:
 
@@ -70,10 +68,6 @@ The package implements the following main functions
 
   - `asmodee`: implements the Automatic Selection of Models and Outlier
     DEtection for Epidemics
-
-  - `select_model`: a function to select the
-    best-fitting/best-predicting model from a range of user-specified
-    models
 
   - `detect_changepoint`: a function to detect the points at which
     recent data deviate from previous temporal trends using a fitted
@@ -161,8 +155,8 @@ res
 #>       col_name <- as.character(formula[[2]])
 #>       append_observed_column(res, res[[col_name]])
 #>     }
-#> <bytecode: 0x55f5de1d0470>
-#> <environment: 0x55f5e20b97c8>
+#> <bytecode: 0x564c6531fd50>
+#> <environment: 0x564c694262a8>
 #> 
 #> attr(,"class")
 #> [1] "trending_model_fit" "list"              
@@ -202,54 +196,3 @@ plot(res, "date")
 ```
 
 <img src="man/figures/README-asmodee-1.png" width="75%" />
-
-### Model selection
-
-You can define a number of different regression models using a common
-interface. Once defined you can use different strategies to select the
-best-fitting/best-predicting model.
-
-As an example we try to predict `hp` of the famous `mtcars` dataset. Of
-course, this is just a toy example. Usually you would use the package to
-predict counts data in a time series.
-
-First we define some potential models:
-
-``` r
-stan_cache <- tempfile() # stan compile to c++ and we cache the code
-models <- list(
-  null = lm_model(hp ~ 1),
-  glm_poisson = glm_model(hp ~ 1 + cyl + drat + wt + qsec + am, poisson),
-  lm_complex = lm_model(hp ~ 1 + cyl + drat + wt + qsec + am),
-  negbin_complex = glm_nb_model(hp ~ 1 + cyl + drat + wt + qsec + am),
-  brms_complex = brms_model(
-    hp ~ 1 + cyl + drat + wt + qsec + am,
-    family = brms::negbinomial(),
-    file = stan_cache
-  )
-)
-```
-
-Then we evaluate them using [N-Fold cross
-validation](https://en.wikipedia.org/wiki/Cross-validation_\(statistics\)).
-
-``` r
-# we do CV and evaluate three loss function:
-# Root-mean-squared error, the huber-loss and mean absolute error.
-# The package works with `yardstick` by default.
-out <- capture.output( # no log output in readme :)
-  auto_select <- select_model(mtcars, models,
-    method = evaluate_resampling,
-    metrics = list(yardstick::rmse, yardstick::huber_loss, yardstick::mae)
-  )
-)
-auto_select$leaderboard
-#> # A tibble: 5 x 4
-#>   model          huber_loss   mae  rmse
-#>   <chr>               <dbl> <dbl> <dbl>
-#> 1 brms_complex         18.1  18.6  18.6
-#> 2 glm_poisson          21.2  21.7  21.7
-#> 3 negbin_complex       22.8  23.3  23.3
-#> 4 lm_complex           26.2  26.7  26.7
-#> 5 null                 57.8  58.3  58.3
-```
