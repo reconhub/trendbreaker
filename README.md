@@ -151,8 +151,8 @@ res
 #>       col_name <- as.character(formula[[2]])
 #>       append_observed_column(res, res[[col_name]])
 #>     }
-#> <bytecode: 0x55faf7e52148>
-#> <environment: 0x55fafb853688>
+#> <bytecode: 0x5632905e4230>
+#> <environment: 0x56329475cf70>
 #> 
 #> attr(,"class")
 #> [1] "trending_model_fit" "list"              
