@@ -92,30 +92,41 @@ plot.trendbreaker_incidence2 <- function(x,
                               guide = TRUE,
                               ...) {
 
-  # check incidence2 and cowplot packages are present
-  check_suggests("incidence2")
-  check_suggests("cowplot")
+  # if length one use normal plot function
+  if (length(x) == 1) {
+    plot(x[[1]],
+         x_axis = x_axis,
+         point_size = point_size,
+         col_normal = col_normal,
+         col_increase = col_increase,
+         col_decrease = col_decrease,
+         guide = guide,
+         ...)
+  } else {
 
-  plots <-
-    mapply(
-      function(y, z) {
-        g <- plot(y, x_axis, point_size, col_normal, col_increase, col_decrease, guide, ...)
-        g + ggplot2::theme(legend.position = "none") + ggplot2::labs(subtitle = z, x = NULL)
-      },
-      x,
-      names(x),
-      SIMPLIFY = FALSE
+    # check incidence2 and cowplot packages are present
+    check_suggests("incidence2")
+    check_suggests("cowplot")
+
+    plots <-
+      mapply(
+        function(y, z) {
+          g <- plot(y, x_axis, point_size, col_normal, col_increase, col_decrease, guide, ...)
+          g + ggplot2::theme(legend.position = "none") + ggplot2::labs(subtitle = z, x = NULL)
+        },
+        x,
+        names(x),
+        SIMPLIFY = FALSE
+      )
+
+
+
+    legend <- cowplot::get_legend(
+      plots[[1]] + ggplot2::theme(legend.position = "bottom")
     )
 
-
-
-  legend <- cowplot::get_legend(
-    plots[[1]] + ggplot2::theme(legend.position = "bottom")
-  )
-
-  cplots <- cowplot::plot_grid(plotlist = plots)
-  cowplot::plot_grid(cplots, legend, ncol = 1, rel_heights = c(1,0.1))
-
-
+    cplots <- cowplot::plot_grid(plotlist = plots)
+    cowplot::plot_grid(cplots, legend, ncol = 1, rel_heights = c(1,0.1))
+  }
 }
 
