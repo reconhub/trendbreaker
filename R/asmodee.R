@@ -203,6 +203,8 @@ asmodee.incidence2 <- function(data,
                                fixed_k = NULL,
                                method = trending::evaluate_resampling,
                                ...) {
+  # check incidence2 package is present
+  check_suggests("incidence2")
 
   groups <- incidence2::get_group_names(data)
   if (!is.null(groups)) {

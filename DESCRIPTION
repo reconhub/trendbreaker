@@ -33,11 +33,11 @@ Suggests:
     testthat,
     tidyverse,
     stats,
-    incidence2
+    incidence2,
+    cowplot,
 Imports: 
     dplyr,
     ggplot2,
-    cowplot,
     tibble,
     trending,
 Remotes: :

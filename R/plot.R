@@ -91,6 +91,11 @@ plot.trendbreaker_incidence2 <- function(x,
                               col_decrease = "#32AB96",
                               guide = TRUE,
                               ...) {
+
+  # check incidence2 and cowplot packages are present
+  check_suggests("incidence2")
+  check_suggests("cowplot")
+
   plots <-
     mapply(
       function(y, z) {
