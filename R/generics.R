@@ -33,9 +33,3 @@ get_results <- function(x, ...) {
 get_outliers <- function(x, ...) {
   UseMethod("get_outliers", x)
 }
-
-#' @export
-#' @rdname trendbreaker-generics
-train <- function(x, data, ...) {
-  UseMethod("train", x)
-}

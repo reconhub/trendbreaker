@@ -5,7 +5,6 @@
 \alias{trendbreaker-generics}
 \alias{get_results}
 \alias{get_outliers}
-\alias{train}
 \title{S3 generics for trendbreaker}
 \usage{
 get_k(x, ...)
@@ -13,8 +12,6 @@ get_k(x, ...)
 get_results(x, ...)
 
 get_outliers(x, ...)
-
-train(x, data, ...)
 }
 \arguments{
 \item{x}{the object to access information from}
