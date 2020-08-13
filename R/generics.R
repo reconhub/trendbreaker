@@ -12,7 +12,7 @@
 #'
 #' @param ... further arguments used in methods
 #'
-#' @param data a `data.frame` to be used as training set for the model
+#' @param x a `data.frame` to be used as training set for the model
 #'
 #' @rdname trendbreaker-generics
 #' @aliases trendbreaker-generics

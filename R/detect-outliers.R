@@ -35,7 +35,7 @@ detect_outliers <- function(data, model, alpha = 0.05) {
     stop(msg)
   }
   if (!inherits(model, "trending_model_fit")) {
-    msg <- sprintf("`model` should be an `trendbreaker_model_fit` object, but is a `%s`",
+    msg <- sprintf("`model` should be an `trending_model_fit` object, but is a `%s`",
                    paste(class(model), collapse = ", "))
     stop(msg)
   }

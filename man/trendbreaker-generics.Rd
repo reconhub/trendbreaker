@@ -14,11 +14,9 @@ get_results(x, ...)
 get_outliers(x, ...)
 }
 \arguments{
-\item{x}{the object to access information from}
+\item{x}{a \code{data.frame} to be used as training set for the model}
 
 \item{...}{further arguments used in methods}
-
-\item{data}{a \code{data.frame} to be used as training set for the model}
 }
 \description{
 These are generic functions used by the \emph{trendbreaker} package, mostly used for
