@@ -1,4 +1,3 @@
-
 #' Accessors for trendbreaker objects
 #'
 #' These functions can be used to access information stored in `trendbreaker`
@@ -32,13 +31,13 @@
 #'
 #' @param ... further arguments passed to other methods
 #'
+#'
 #' @export
 #' @rdname trendbreaker-accessors
 #' @aliases get_model.trendbreaker
 get_model.trendbreaker <- function(x, ...) {
   x$model
 }
-
 
 #' @export
 #' @rdname trendbreaker-accessors
@@ -75,3 +74,6 @@ get_outliers.trendbreaker <- function(x, ...) {
 predict.trendbreaker <- function(object, newdata, alpha = 0.05, ...) {
   trending::get_model(object)$predict(newdata = newdata, alpha = alpha)
 }
+
+
+

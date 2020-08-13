@@ -10,4 +10,14 @@ NULL
 #'@importFrom stats predict
 NULL
 
+#'@importFrom trending get_model
+NULL
+
+
+
+
+
+
+
+
 

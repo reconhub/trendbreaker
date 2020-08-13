@@ -35,6 +35,7 @@ Suggests:
     stats,
     incidence2,
     cowplot,
+    outbreaks
 Imports: 
     dplyr,
     ggplot2,
