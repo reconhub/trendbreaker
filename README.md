@@ -198,6 +198,7 @@ dat <-
 
 # define candidate models
 models <- list(
+  linear_time = lm_model(count ~ day),
   poisson_constant = glm_model(count ~ 1, family = "poisson"),
   negbin_time = glm_nb_model(count ~ day),
   negbin_time_weekday = glm_nb_model(count ~ day + weekday)
