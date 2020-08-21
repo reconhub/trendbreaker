@@ -215,12 +215,16 @@ asmodee.incidence2 <- function(data,
   }
 
   out <- lapply(split_dat,
-                asmodee.data.frame,
-                models = models,
-                method = method,
-                alpha = alpha,
-                fixed_k = fixed_k,
-                ...)
+                function(x) {
+                  x <- suppressMessages(as.data.frame(x))
+                  asmodee(
+                    x,
+                    models = models,
+                    method = method,
+                    alpha = alpha,
+                    fixed_k = fixed_k,
+                    ...)
+                })
 
   names(out) <- names(split_dat)
   class(out) <- "trendbreaker_incidence2"

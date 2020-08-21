@@ -148,11 +148,11 @@ lookup <- select(pathways_recent, date, day, weekday) %>%  distinct()
 dat <-
   pathways_recent %>%
   as_incidence(date_index = date, counts_var = count, group_vars = nhs_region) %>%
-  left_join(lookup, by = "date")
+  left_join(lookup, by = "date") %>% 
+  filter(!is.na(nhs_region))
 
 # define candidate models
 models <- list(
-  regression = lm_model(count ~ day),
   poisson_constant = glm_model(count ~ 1, family = "poisson"),
   negbin_time = glm_nb_model(count ~ day),
   negbin_time_weekday = glm_nb_model(count ~ day + weekday)

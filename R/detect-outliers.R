@@ -42,10 +42,10 @@ detect_outliers <- function(data, model, alpha = 0.05) {
   preds <- predict(model, new_data = data, alpha = alpha)
   out <- dplyr::mutate(
     preds,
-    outlier = .data$observed < .data$lower | .data$observed > .data$upper,
+    outlier = .data$observed < .data$`lower-pi` | .data$observed > .data$`upper-pi`,
     classification = dplyr::case_when(
-      .data$observed < .data$lower ~ "decrease",
-      .data$observed > .data$upper ~ "increase",
+      .data$observed < .data$`lower-pi` ~ "decrease",
+      .data$observed > .data$`upper-pi` ~ "increase",
       TRUE ~ "normal"
     ),
     classification = factor(.data$classification,

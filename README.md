@@ -121,70 +121,51 @@ counts_overall <- pathways_recent %>%
 res <- asmodee(counts_overall, models, method = evaluate_aic)
 res
 #> $k
-#> [1] 7
+#> [1] 0
 #> 
 #> $model
-#> $model
+#> Fitted trending model:
 #> 
-#> Call:  MASS::glm.nb(formula = count ~ day + weekday, data = data, init.theta = 76.80468966, 
+#> 
+#> Call:  MASS::glm.nb(formula = count ~ day + weekday, data = data, init.theta = 43.15973225, 
 #>     link = log)
 #> 
 #> Coefficients:
 #>    (Intercept)             day   weekdaymonday  weekdayweekend  
-#>       10.81062        -0.02057         0.24398        -0.11588  
+#>       11.08605        -0.02695         0.20493        -0.13056  
 #> 
-#> Degrees of Freedom: 35 Total (i.e. Null);  32 Residual
-#> Null Deviance:       186.5 
-#> Residual Deviance: 36.09     AIC: 665.4
-#> 
-#> $predict
-#> function(newdata, alpha = 0.05) {
-#>       suppressWarnings(
-#>         suppressMessages(
-#>           res <- add_prediction_interval(
-#>             data = newdata,
-#>             model = model,
-#>             alpha = alpha
-#>           )
-#>         )
-#>       )
-#>       col_name <- as.character(formula[[2]])
-#>       append_observed_column(res, res[[col_name]])
-#>     }
-#> <bytecode: 0x5632905e4230>
-#> <environment: 0x56329475cf70>
-#> 
-#> attr(,"class")
-#> [1] "trending_model_fit" "list"              
-#> 
+#> Degrees of Freedom: 42 Total (i.e. Null);  39 Residual
+#> Null Deviance:       250.7 
+#> Residual Deviance: 43.18     AIC: 806.4
 #> $n_outliers
-#> [1] 9
+#> [1] 0
 #> 
 #> $n_outliers_train
-#> [1] 2
+#> [1] 0
 #> 
 #> $n_outliers_recent
-#> [1] 7
+#> [1] 0
 #> 
 #> $p_value
-#> [1] 4.076898e-05
+#> [1] 0.8898169
 #> 
 #> $results
-#> # A tibble: 43 x 10
+#> # A tibble: 43 x 12
 #> # Groups:   date, day [43]
-#>    date         day weekday count   pred lower upper observed outlier
-#>    <date>     <int> <fct>   <int>  <dbl> <dbl> <dbl>    <int> <lgl>  
-#>  1 2020-04-16    29 rest_o… 29497 27288. 21520 33729    29497 FALSE  
-#>  2 2020-04-17    30 rest_o… 27007 26733. 21082 33043    27007 FALSE  
-#>  3 2020-04-18    31 weekend 25453 23323. 18392 28829    25453 FALSE  
-#>  4 2020-04-19    32 weekend 23387 22848. 18018 28243    23387 FALSE  
-#>  5 2020-04-20    33 monday  29287 32078. 25299 39648    29287 FALSE  
-#>  6 2020-04-21    34 rest_o… 23134 24621. 19417 30434    23134 FALSE  
-#>  7 2020-04-22    35 rest_o… 21803 24120. 19021 29815    21803 FALSE  
-#>  8 2020-04-23    36 rest_o… 22298 23629. 18634 29208    22298 FALSE  
-#>  9 2020-04-24    37 rest_o… 22027 23148. 18254 28613    22027 FALSE  
-#> 10 2020-04-25    38 weekend 18861 20196. 15925 24965    18861 FALSE  
-#> # … with 33 more rows, and 1 more variable: classification <fct>
+#>    date         day weekday count   pred `lower-ci` `upper-ci` `lower-pi`
+#>    <date>     <int> <fct>   <int>  <dbl>      <dbl>      <dbl>      <dbl>
+#>  1 2020-04-16    29 rest_o… 29497 29866.     27061.     32962.      17496
+#>  2 2020-04-17    30 rest_o… 27007 29072.     26418.     31993.      17080
+#>  3 2020-04-18    31 weekend 25453 24835.     22278.     27687.      14403
+#>  4 2020-04-19    32 weekend 23387 24175.     21733.     26891.      14050
+#>  5 2020-04-20    33 monday  29287 32913.     28675.     37777.      18540
+#>  6 2020-04-21    34 rest_o… 23134 26101.     23980.     28409.      15504
+#>  7 2020-04-22    35 rest_o… 21803 25407.     23402.     27583.      15130
+#>  8 2020-04-23    36 rest_o… 22298 24731.     22837.     26783.      14764
+#>  9 2020-04-24    37 rest_o… 22027 24074.     22283.     26009.      14406
+#> 10 2020-04-25    38 weekend 18861 20565.     18697.     22620.      12087
+#> # … with 33 more rows, and 4 more variables: `upper-pi` <dbl>, observed <int>,
+#> #   outlier <lgl>, classification <fct>
 #> 
 #> attr(,"class")
 #> [1] "trendbreaker" "list"
@@ -212,11 +193,11 @@ lookup <- select(pathways_recent, date, day, weekday) %>%  distinct()
 dat <-
   pathways_recent %>%
   as_incidence(date_index = date, counts_var = count, group_vars = nhs_region) %>%
-  left_join(lookup, by = "date")
+  left_join(lookup, by = "date") %>% 
+  filter(!is.na(nhs_region))
 
 # define candidate models
 models <- list(
-  regression = lm_model(count ~ day),
   poisson_constant = glm_model(count ~ 1, family = "poisson"),
   negbin_time = glm_nb_model(count ~ day),
   negbin_time_weekday = glm_nb_model(count ~ day + weekday)

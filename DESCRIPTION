@@ -43,4 +43,4 @@ Imports:
     trending,
 Remotes: :
     reconhub/incidence2
-    reconhub/trending
+    reconhub/trending@noci
