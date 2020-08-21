@@ -41,6 +41,6 @@ Imports:
     ggplot2,
     tibble,
     trending,
-Remotes: :
-    reconhub/incidence2
+Remotes:
+    reconhub/incidence2,
     reconhub/trending@noci
