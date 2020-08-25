@@ -40,7 +40,7 @@ Imports:
     dplyr,
     ggplot2,
     tibble,
-    trending,
-Remotes: :
-    reconhub/incidence2
+    trending
+Remotes:
+    reconhub/incidence2,
     reconhub/trending
