@@ -192,7 +192,7 @@ lookup <- select(pathways_recent, date, day, weekday) %>%  distinct()
 
 dat <-
   pathways_recent %>%
-  as_incidence(date_index = date, counts_var = count, group_vars = nhs_region) %>%
+  incidence(date_index = date, groups = nhs_region, cnt = count) %>%
   left_join(lookup, by = "date") %>% 
   filter(!is.na(nhs_region))
 
