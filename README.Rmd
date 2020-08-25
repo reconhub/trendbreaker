@@ -135,7 +135,7 @@ this sort of analysis easier *trendbreaker* also works with
 [*incidence2*](https://github.com/reconhub/incidence2/) objects.  To illustrate
 this we can consider trends over NHS regions.
 
-```{r incidence2}
+```{r, incidence2, message=FALSE}
 library(incidence2)   # for `incidence()` objects
 
 # select last 6 weeks of data
