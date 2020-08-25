@@ -205,6 +205,25 @@ models <- list(
 
 # analyses on all data
 res <- asmodee(dat, models, method = evaluate_aic)
+#> Note: incidence2 class dropped in returned object
+#> 
+#> Note: incidence2 class dropped in returned object
+#> 
+#> Note: incidence2 class dropped in returned object
+#> 
+#> Note: incidence2 class dropped in returned object
+#> 
+#> Note: incidence2 class dropped in returned object
+#> 
+#> Note: incidence2 class dropped in returned object
+#> 
+#> Note: incidence2 class dropped in returned object
+#> 
+#> Note: incidence2 class dropped in returned object
+#> 
+#> Note: incidence2 class dropped in returned object
+#> 
+#> Note: incidence2 class dropped in returned object
 #> Warning in qnbinom(alpha/2, mu = data$`lower-ci`, size = theta + qnorm(alpha/2)
 #> * : NaNs produced
 #> Warning in qnbinom(1 - alpha/2, mu = data$`upper-ci`, size = theta +
