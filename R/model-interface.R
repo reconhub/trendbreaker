@@ -188,7 +188,7 @@ add_prediction_interval.brmsfit <- function(model, data, alpha) {
 add_prediction_interval.default <- function(model, data, alpha) {
   suppressWarnings(
     ciTools::add_pi(
-      tb = data,
+      df = data,
       fit = model,
       alpha = alpha,
       names = c("lower", "upper")
