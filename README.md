@@ -86,14 +86,6 @@ recording self-reporting of potential COVID-19 cases in England (see
 library(trending)     # for model interface
 library(trendbreaker) # for ASMODEE
 library(dplyr)        # for data manipulation
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 
 # load data
 data(nhs_pathways_covid19)
@@ -121,50 +113,50 @@ counts_overall <- pathways_recent %>%
 res <- asmodee(counts_overall, models, method = evaluate_aic)
 res
 #> $k
-#> [1] 7
+#> [1] 0
 #> 
 #> $model
 #> Fitted trending model:
 #> 
 #> 
-#> Call:  MASS::glm.nb(formula = count ~ day + weekday, data = data, init.theta = 76.80468966, 
+#> Call:  MASS::glm.nb(formula = count ~ day + weekday, data = data, init.theta = 43.15973225, 
 #>     link = log)
 #> 
 #> Coefficients:
 #>    (Intercept)             day   weekdaymonday  weekdayweekend  
-#>       10.81062        -0.02057         0.24398        -0.11588  
+#>         11.086          -0.027           0.205          -0.131  
 #> 
-#> Degrees of Freedom: 35 Total (i.e. Null);  32 Residual
-#> Null Deviance:       186.5 
-#> Residual Deviance: 36.09     AIC: 665.4
+#> Degrees of Freedom: 42 Total (i.e. Null);  39 Residual
+#> Null Deviance:       251 
+#> Residual Deviance: 43.2  AIC: 806
 #> $n_outliers
-#> [1] 9
+#> [1] 1
 #> 
 #> $n_outliers_train
-#> [1] 2
+#> [1] 1
 #> 
 #> $n_outliers_recent
-#> [1] 7
+#> [1] 0
 #> 
 #> $p_value
-#> [1] 4.076898e-05
+#> [1] 0.6405
 #> 
 #> $results
-#> # A tibble: 43 x 10
-#> # Groups:   date, day [43]
-#>    date         day weekday count   pred `lower-pi` `upper-pi` observed outlier
-#>    <date>     <int> <fct>   <int>  <dbl>      <dbl>      <dbl>    <int> <lgl>  
-#>  1 2020-04-16    29 rest_o… 29497 27288.      21520      33729    29497 FALSE  
-#>  2 2020-04-17    30 rest_o… 27007 26733.      21082      33043    27007 FALSE  
-#>  3 2020-04-18    31 weekend 25453 23323.      18392      28829    25453 FALSE  
-#>  4 2020-04-19    32 weekend 23387 22848.      18018      28243    23387 FALSE  
-#>  5 2020-04-20    33 monday  29287 32078.      25299      39648    29287 FALSE  
-#>  6 2020-04-21    34 rest_o… 23134 24621.      19417      30434    23134 FALSE  
-#>  7 2020-04-22    35 rest_o… 21803 24120.      19021      29815    21803 FALSE  
-#>  8 2020-04-23    36 rest_o… 22298 23629.      18634      29208    22298 FALSE  
-#>  9 2020-04-24    37 rest_o… 22027 23148.      18254      28613    22027 FALSE  
-#> 10 2020-04-25    38 weekend 18861 20196.      15925      24965    18861 FALSE  
-#> # … with 33 more rows, and 1 more variable: classification <fct>
+#> # A tibble: 43 x 12
+#>    date         day weekday count   pred `lower-ci` `upper-ci` `lower-pi`
+#>    <date>     <int> <fct>   <int>  <dbl>      <dbl>      <dbl>      <dbl>
+#>  1 2020-04-16    29 rest_o… 29497 29866.     26976.     33066.      19529
+#>  2 2020-04-17    30 rest_o… 27007 29072.     26337.     32091.      19067
+#>  3 2020-04-18    31 weekend 25453 24835.     22200.     27783.      16071
+#>  4 2020-04-19    32 weekend 23387 24175.     21659.     26983.      15679
+#>  5 2020-04-20    33 monday  29287 32913.     28548.     37944.      20668
+#>  6 2020-04-21    34 rest_o… 23134 26101.     23915.     28486.      17313
+#>  7 2020-04-22    35 rest_o… 21803 25407.     23341.     27656.      16897
+#>  8 2020-04-23    36 rest_o… 22298 24731.     22779.     26851.      16490
+#>  9 2020-04-24    37 rest_o… 22027 24074.     22227.     26073.      16091
+#> 10 2020-04-25    38 weekend 18861 20565.     18640.     22689.      13493
+#> # … with 33 more rows, and 4 more variables: `upper-pi` <dbl>, observed <int>,
+#> #   outlier <lgl>, classification <fct>
 #> 
 #> attr(,"class")
 #> [1] "trendbreaker" "list"
@@ -191,7 +183,7 @@ lookup <- select(pathways_recent, date, day, weekday) %>%  distinct()
 
 dat <-
   pathways_recent %>%
-  incidence(date_index = date, groups = nhs_region, cnt = count) %>%
+  incidence(date_index = date, groups = nhs_region, count = count) %>%
   left_join(lookup, by = "date")
 
 # define candidate models
