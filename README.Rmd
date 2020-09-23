@@ -147,7 +147,7 @@ lookup <- select(pathways_recent, date, day, weekday) %>%  distinct()
 
 dat <-
   pathways_recent %>%
-  incidence(date_index = date, groups = nhs_region, cnt = count) %>%
+  incidence(date_index = date, groups = nhs_region, count = count) %>%
   left_join(lookup, by = "date")
 
 # define candidate models
