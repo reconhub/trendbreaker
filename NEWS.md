@@ -1,4 +1,14 @@
 
+version 0.2.0 (23 September 2020)
+----------------------------
+
+### Fixes
+
+* fixed an issue in argument names coming from an API change in
+  `ciTools::add_pi`
+
+
+
 version 0.1.0 (10 June 2020)
 ----------------------------
 
