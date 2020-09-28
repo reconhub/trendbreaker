@@ -68,7 +68,7 @@ plot.trendbreaker <- function(x,
   ggplot2::ggplot(results, ggplot2::aes(x = .data[[x_axis]], y = .data$count)) +
     ggplot2::theme_bw() +
     ggplot2::geom_vline(xintercept = train_limit, linetype = 2) +
-    ggplot2::geom_ribbon(ggplot2::aes(ymin = .data$`lower-pi`, ymax = .data$`upper-pi`),
+    ggplot2::geom_ribbon(ggplot2::aes(ymin = .data$lower_pi, ymax = .data$upper_pi),
       alpha = 0.4, fill = col_model
     ) +
     ggplot2::geom_point(ggplot2::aes(color = .data$classification),
