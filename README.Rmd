@@ -98,7 +98,6 @@ self-reporting of potential COVID-19 cases in England
 (see `?nhs_pathways_covid19` for more information). 
 
 ```{r asmodee}
-library(trending)     # for model interface
 library(trendbreaker) # for ASMODEE
 library(dplyr)        # for data manipulation
 
