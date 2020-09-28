@@ -7,7 +7,7 @@
 ## usethis namespace: end
 NULL
 
-#'@importFrom stats predict
+#'@importFrom stats predict formula
 NULL
 
 #'@importFrom trending get_model

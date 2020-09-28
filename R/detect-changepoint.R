@@ -17,7 +17,7 @@
 #'
 
 detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
-                               method = trending::evaluate_resampling, ...) {
+                               method = trendeval::evaluate_resampling, ...) {
   res <- vector(mode = "list", length = max_k + 1)
   res_models <- vector(mode = "list", length = max_k + 1)
 
@@ -37,7 +37,7 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
     data_train <- data[seq_len(n_train), , drop = FALSE]
 
     ## select best model on training data
-    current_model <- trending::select_model(
+    current_model <- trendeval::select_model(
       models = models,
       data = data_train,
       method = method,

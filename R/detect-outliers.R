@@ -39,13 +39,14 @@ detect_outliers <- function(data, model, alpha = 0.05) {
                    paste(class(model), collapse = ", "))
     stop(msg)
   }
+  observed <- as.character(formula(model$model))[2]
   preds <- predict(model, new_data = data, alpha = alpha)
   out <- dplyr::mutate(
     preds,
-    outlier = .data$observed < .data$`lower-pi` | .data$observed > .data$`upper-pi`,
+    outlier = .data[[observed]] < .data$lower_pi | .data[[observed]] > .data$upper_pi,
     classification = dplyr::case_when(
-      .data$observed < .data$`lower-pi` ~ "decrease",
-      .data$observed > .data$`upper-pi` ~ "increase",
+      .data[[observed]] < .data$lower_pi ~ "decrease",
+      .data[[observed]] > .data$upper_pi ~ "increase",
       TRUE ~ "normal"
     ),
     classification = factor(.data$classification,

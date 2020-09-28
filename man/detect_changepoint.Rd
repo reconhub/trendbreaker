@@ -9,7 +9,7 @@ detect_changepoint(
   models,
   alpha = 0.05,
   max_k = 7,
-  method = trending::evaluate_resampling,
+  method = trendeval::evaluate_resampling,
   ...
 )
 }

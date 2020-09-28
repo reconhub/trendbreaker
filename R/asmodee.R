@@ -127,7 +127,7 @@ asmodee.data.frame <- function(data,
                                alpha = 0.05,
                                max_k = 7,
                                fixed_k = NULL,
-                               method = trending::evaluate_resampling,
+                               method = trendeval::evaluate_resampling,
                                ...) {
 
   n <- nrow(data)
@@ -157,7 +157,7 @@ asmodee.data.frame <- function(data,
     k <- as.integer(max(fixed_k, 0L))
     n_train <- n - k
     data_train <- data[seq_len(n_train), ]
-    selected_model <- trending::select_model(data = data_train,
+    selected_model <- trendeval::select_model(data = data_train,
                                    models = models,
                                    method = method,
                                    ...)$best_model
@@ -201,7 +201,7 @@ asmodee.incidence2 <- function(data,
                                alpha = 0.05,
                                max_k = 7,
                                fixed_k = NULL,
-                               method = trending::evaluate_resampling,
+                               method = trendeval::evaluate_resampling,
                                ...) {
   # check incidence2 package is present
   check_suggests("incidence2")

@@ -40,7 +40,8 @@ Imports:
     dplyr,
     ggplot2,
     tibble,
-    trending
+    trending,
+    trendeval
 Remotes:
-    reconhub/incidence2,
-    reconhub/trending@04012bc
+    reconhub/trending,
+    reconhub/trendeval
