@@ -44,4 +44,5 @@ Imports:
     trendeval
 Remotes:
     reconhub/trending,
-    reconhub/trendeval
+    reconhub/trendeval,
+    reconhub/incidence2
