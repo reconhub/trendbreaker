@@ -123,8 +123,7 @@ res
 #> [1] 0
 #> 
 #> $model
-#> Fitted trending model:
-#> 
+#> $fitted_model
 #> 
 #> Call:  MASS::glm.nb(formula = count ~ day + weekday, data = data, init.theta = 43.15973225, 
 #>     link = log)
@@ -136,6 +135,26 @@ res
 #> Degrees of Freedom: 42 Total (i.e. Null);  39 Residual
 #> Null Deviance:       250.7 
 #> Residual Deviance: 43.18     AIC: 806.4
+#> 
+#> $predict
+#> function (newdata, alpha = 0.05, add_pi = TRUE, uncertain = TRUE) 
+#> {
+#>     if (missing(newdata)) {
+#>         newdata <- model$model
+#>     }
+#>     result <- add_confidence_interval(model, newdata, alpha)
+#>     if (add_pi) {
+#>         result <- add_prediction_interval(model, result, alpha, 
+#>             uncertain)
+#>     }
+#>     result
+#> }
+#> <bytecode: 0x55f182f5c100>
+#> <environment: 0x55f180fe5fa0>
+#> 
+#> attr(,"class")
+#> [1] "trending_model_fit" "list"              
+#> 
 #> $n_outliers
 #> [1] 1
 #> 
@@ -151,18 +170,18 @@ res
 #> $results
 #> # A tibble: 43 x 11
 #> # Groups:   date, day [43]
-#>    date         day weekday count   pred lower_ci upper_ci lower_pi upper_pi
-#>    <date>     <int> <fct>   <int>  <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
-#>  1 2020-04-16    29 rest_o… 29497 29866.   26976.   33066.    19529    43643
-#>  2 2020-04-17    30 rest_o… 27007 29072.   26337.   32091.    19067    42355
-#>  3 2020-04-18    31 weekend 25453 24835.   22200.   27783.    16071    36671
-#>  4 2020-04-19    32 weekend 23387 24175.   21659.   26983.    15679    35615
-#>  5 2020-04-20    33 monday  29287 32913.   28548.   37944.    20668    50079
-#>  6 2020-04-21    34 rest_o… 23134 26101.   23915.   28486.    17313    37599
-#>  7 2020-04-22    35 rest_o… 21803 25407.   23341.   27656.    16897    36502
-#>  8 2020-04-23    36 rest_o… 22298 24731.   22779.   26851.    16490    35441
-#>  9 2020-04-24    37 rest_o… 22027 24074.   22227.   26073.    16091    34414
-#> 10 2020-04-25    38 weekend 18861 20565.   18640.   22689.    13493    29949
+#>    date         day weekday count estimate lower_ci upper_ci lower_pi upper_pi
+#>    <date>     <int> <fct>   <int>    <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
+#>  1 2020-04-16    29 rest_o… 29497   29866.   26976.   33066.    19529    43643
+#>  2 2020-04-17    30 rest_o… 27007   29072.   26337.   32091.    19067    42355
+#>  3 2020-04-18    31 weekend 25453   24835.   22200.   27783.    16071    36671
+#>  4 2020-04-19    32 weekend 23387   24175.   21659.   26983.    15679    35615
+#>  5 2020-04-20    33 monday  29287   32913.   28548.   37944.    20668    50079
+#>  6 2020-04-21    34 rest_o… 23134   26101.   23915.   28486.    17313    37599
+#>  7 2020-04-22    35 rest_o… 21803   25407.   23341.   27656.    16897    36502
+#>  8 2020-04-23    36 rest_o… 22298   24731.   22779.   26851.    16490    35441
+#>  9 2020-04-24    37 rest_o… 22027   24074.   22227.   26073.    16091    34414
+#> 10 2020-04-25    38 weekend 18861   20565.   18640.   22689.    13493    29949
 #> # … with 33 more rows, and 2 more variables: outlier <lgl>,
 #> #   classification <fct>
 #> 

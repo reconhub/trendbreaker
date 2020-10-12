@@ -39,7 +39,7 @@ detect_outliers <- function(data, model, alpha = 0.05) {
                    paste(class(model), collapse = ", "))
     stop(msg)
   }
-  observed <- as.character(formula(model$model))[2]
+  observed <- as.character(formula(model$fitted_model))[2]
   preds <- predict(model, new_data = data, alpha = alpha)
   out <- dplyr::mutate(
     preds,
