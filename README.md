@@ -8,6 +8,8 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3888494.svg)](https://doi.org/10.5281/zenodo.3888494)
 [![R build
 status](https://github.com/reconhub/trendbreaker/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/trendbreaker/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/reconhub/trendbreaker/branch/master/graph/badge.svg)](https://codecov.io/gh/reconhub/trendbreaker?branch=master)
 <!-- badges: end -->
 
 The *trendbreaker* package implements tools for detecting changes in
@@ -149,8 +151,8 @@ res
 #>     }
 #>     result
 #> }
-#> <bytecode: 0x55f182f5c100>
-#> <environment: 0x55f180fe5fa0>
+#> <bytecode: 0x5584e542ddf0>
+#> <environment: 0x5584e34bd2f0>
 #> 
 #> attr(,"class")
 #> [1] "trending_model_fit" "list"              
