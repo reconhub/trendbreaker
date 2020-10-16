@@ -151,8 +151,8 @@ res
 #>     }
 #>     result
 #> }
-#> <bytecode: 0x5584e542ddf0>
-#> <environment: 0x5584e34bd2f0>
+#> <bytecode: 0x5635f5346a80>
+#> <environment: 0x5635f3378d70>
 #> 
 #> attr(,"class")
 #> [1] "trending_model_fit" "list"              
