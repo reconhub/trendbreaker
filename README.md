@@ -142,7 +142,7 @@ res
 #> function (newdata, alpha = 0.05, add_pi = TRUE, uncertain = TRUE) 
 #> {
 #>     if (missing(newdata)) {
-#>         newdata <- model$model
+#>         newdata <- data[all.vars(formula(model))]
 #>     }
 #>     result <- add_confidence_interval(model, newdata, alpha)
 #>     if (add_pi) {
@@ -151,8 +151,8 @@ res
 #>     }
 #>     result
 #> }
-#> <bytecode: 0x5635f5346a80>
-#> <environment: 0x5635f3378d70>
+#> <bytecode: 0x563eb79747c8>
+#> <environment: 0x563eba1816d0>
 #> 
 #> attr(,"class")
 #> [1] "trending_model_fit" "list"              
