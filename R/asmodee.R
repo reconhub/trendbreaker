@@ -234,23 +234,20 @@ asmodee.incidence2 <- function(data,
 
 is_ok <- function(x, include_warnings = FALSE) {
   e <- suppressMessages(
-    lapply(x[["error"]], function(y) !is.null(y))
+    vapply(x[["error"]], function(y) !is.null(y), logical(1))
   )
 
-
-  ok <- !Reduce(`|`, e)
   idx <- !names(x) == "error"
-  x <- x[ok, idx]
+  x <- x[!e, idx]
 
 
   if (!include_warnings) {
     w <- suppressMessages(
-      lapply(x[["warning"]], function(y) !is.null(y))
+      vapply(x[["warning"]], function(y) !is.null(y), logical(1))
     )
 
-    ok <- !Reduce(`|`, w)
     idx <- !names(x) == "warning"
-    x <- x[ok, idx]
+    x <- x[!w, idx]
   }
   x
 }
