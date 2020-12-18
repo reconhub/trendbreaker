@@ -72,7 +72,7 @@ get_outliers.trendbreaker <- function(x, ...) {
 #' @param alpha the alpha threshold to be used for prediction intervals,
 #'   defaulting to 0.05, i.e. 95% prediction intervals are derived
 predict.trendbreaker <- function(object, newdata, alpha = 0.05, ...) {
-  trending::get_model(object)$predict(newdata = newdata, alpha = alpha)
+  get_model(object)$predict(newdata = newdata, alpha = alpha)
 }
 
 

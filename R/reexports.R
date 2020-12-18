@@ -22,14 +22,14 @@ trending::glm_nb_model
 #' @name brms_model
 trending::brms_model
 
-#' @title Model evaluation
-#' @importFrom trending evaluate_resampling
-#' @export
-#' @name evaluate_resampling
-trending::evaluate_resampling
-
-#' @title Model evaluation
-#' @importFrom trending evaluate_aic
+#' @title Evaluate aic
+#' @importFrom trendeval evaluate_aic
 #' @export
 #' @name evaluate_aic
-trending::evaluate_aic
+trendeval::evaluate_aic
+
+#' @title Evaluate resampling
+#' @importFrom trendeval evaluate_resampling
+#' @export
+#' @name evaluate_resampling
+trendeval::evaluate_resampling

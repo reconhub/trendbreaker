@@ -23,7 +23,12 @@ Authors@R:
         comment = c(ORCID = "0000-0002-8587-7113")
       )
     )
-Description: Provides tools for detecting changes in temporal trends of a single response variable. It provides a coherent interface to several modeling tools, alongside functions for model selection and outlier detection. It implements the Automatic Selection of Models and Outlier Detection for Epidemmics (ASMODEE), an algorithm originally designed for detecting changes in COVID-19 case incidence.
+Description: Provides tools for detecting changes in temporal trends of a single
+  response variable. It provides a coherent interface to several modeling tools,
+   alongside functions for model selection and outlier detection. It implements
+   the Automatic Selection of Models and Outlier Detection for Epidemmics
+   (ASMODEE), an algorithm originally designed for detecting changes in COVID-19
+   case incidence.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -35,12 +40,11 @@ Suggests:
     stats,
     incidence2,
     cowplot,
-    outbreaks
+    outbreaks,
+    covr
 Imports: 
     dplyr,
     ggplot2,
     tibble,
-    trending
-Remotes:
-    reconhub/incidence2,
-    reconhub/trending@04012bc
+    trending,
+    trendeval

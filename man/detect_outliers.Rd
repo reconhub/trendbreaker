@@ -10,8 +10,8 @@ detect_outliers(data, model, alpha = 0.05)
 \item{data}{a \code{data.frame} containing data for which predictions are to be
 derived}
 
-\item{model}{a fitted model as \code{\link[trending:trending_model]{trending::trending_model_fit}} object;
-this can be obtained by running \code{\link[trending:trending-generics]{trending::fit()}} on a
+\item{model}{a fitted model as \code{\link[trending:fit]{trending::trending_model_fit}} object;
+this can be obtained by running \code{\link[trending:fit]{trending::fit()}} on a
 \code{\link[trending:trending_model]{trending::trending_model}}.}
 
 \item{alpha}{the alpha threshold to be used for prediction intervals,

@@ -10,22 +10,22 @@ test_that("trendbreaker accessors", {
     lm_trend = model2
   )
 
-  res <- asmodee(dat, models, method = trending::evaluate_aic, fixed_k = 1)
+  res <- asmodee(dat, models, method = trendeval::evaluate_aic, fixed_k = 1)
   expect_output(print(get_model(res)), "y ~ x")
   expect_equal(get_k(res), 1)
 
-  nms <- c(colnames(dat), "pred", "lower-ci", "upper-ci", "lower-pi",
-           "upper-pi", "observed", "outlier", "classification")
+  nms <- c(colnames(dat), "estimate", "lower_ci", "upper_ci", "lower_pi",
+           "upper_pi", "outlier", "classification")
 
   expect_equal(names(get_results(res)), nms)
 
   outliers <- get_outliers(res)
   expect_equal(nrow(outliers), 0)
-  expect_equal(ncol(outliers), 10)
+  expect_equal(ncol(outliers), 9)
 
   pred <- predict(res, dat)
-  nms <- c(colnames(dat), "pred", "lower-ci", "upper-ci", "lower-pi", "upper-pi", "observed")
-  expect_equal(pred$pred, y)
+  nms <- c(colnames(dat), "estimate", "lower_ci", "upper_ci", "lower_pi", "upper_pi")
+  expect_equal(pred$estimate, y)
   expect_equal(names(pred), nms)
 
 })

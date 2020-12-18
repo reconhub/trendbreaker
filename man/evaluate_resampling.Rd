@@ -3,13 +3,13 @@
 \docType{import}
 \name{evaluate_resampling}
 \alias{evaluate_resampling}
-\title{Model evaluation}
+\title{Evaluate resampling}
 \keyword{internal}
 \description{
 These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{trending}{\code{\link[trending:evaluate_models]{evaluate_resampling}}}
+  \item{trendeval}{\code{\link[trendeval:evaluate_models]{evaluate_resampling}}}
 }}
 
