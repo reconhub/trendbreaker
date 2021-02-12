@@ -12,6 +12,7 @@ asmodee(
   fixed_k,
   method,
   include_warnings,
+  simulate_pi,
   uncertain,
   ...
 )
@@ -47,6 +48,9 @@ but possibly less good a selecting models with the best predictive power.}
 
 \item{include_warnings}{Include results in output that triggered warnings but
 not errors.  Defaults to \code{FALSE}.}
+
+\item{simulate_pi}{Should the ciTools package be used to simulate prediction
+intervals for glm models.  Default FALSE.}
 
 \item{uncertain}{Only used for glm models.  Default TRUE.  If FALSE
 uncertainty in the fitted parameters is ignored when generating the

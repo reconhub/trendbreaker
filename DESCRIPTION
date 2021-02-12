@@ -48,3 +48,5 @@ Imports:
     tibble,
     trending,
     trendeval
+Remotes:
+    trending@bootstrap

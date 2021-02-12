@@ -124,7 +124,7 @@ counts_overall <- pathways_recent %>%
   summarise(count = sum(count))
 
 # results with automated detection of 'k'
-res <- asmodee(counts_overall, models, method = evaluate_aic)
+res <- asmodee(counts_overall, models, method = evaluate_aic, simulate_pi = TRUE)
 res
 plot(res, "date")
 ```

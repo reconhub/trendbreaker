@@ -61,6 +61,9 @@
 #' @param include_warnings Include results in output that triggered warnings but
 #'   not errors.  Defaults to `FALSE`.
 #'
+#' @param simulate_pi Should the ciTools package be used to simulate prediction
+#'   intervals for glm models.  Default FALSE.
+#'
 #' @param uncertain Only used for glm models.  Default TRUE.  If FALSE
 #'   uncertainty in the fitted parameters is ignored when generating the
 #'   prediction intervals.
@@ -125,7 +128,7 @@
 #' }
 #'
 asmodee <- function(data, models, alpha, max_k, fixed_k, method,
-                    include_warnings, uncertain, ...) {
+                    include_warnings, simulate_pi, uncertain, ...) {
   UseMethod("asmodee", data)
 }
 
@@ -137,6 +140,7 @@ asmodee.data.frame <- function(data,
                                fixed_k = NULL,
                                method = trendeval::evaluate_resampling,
                                include_warnings = FALSE,
+                               simulate_pi = FALSE,
                                uncertain = TRUE,
                                ...) {
 
@@ -178,6 +182,7 @@ asmodee.data.frame <- function(data,
   res_outliers <- detect_outliers(data = data,
                                   model = selected_model,
                                   alpha = alpha,
+                                  simulate_pi = simulate_pi,
                                   uncertain = uncertain)
 
 
@@ -212,6 +217,7 @@ asmodee.incidence2 <- function(data,
                                fixed_k = NULL,
                                method = trendeval::evaluate_resampling,
                                include_warnings = FALSE,
+                               simulate_pi = FALSE,
                                uncertain = TRUE,
                                ...) {
   # check incidence2 package is present
@@ -232,6 +238,7 @@ asmodee.incidence2 <- function(data,
                 alpha = alpha,
                 fixed_k = fixed_k,
                 include_warnings = include_warnings,
+                simulate_pi = simulate_pi,
                 uncertain = uncertain,
                 ...)
 
