@@ -61,6 +61,10 @@
 #' @param include_warnings Include results in output that triggered warnings but
 #'   not errors.  Defaults to `FALSE`.
 #'
+#' @param uncertain Only used for glm models.  Default TRUE.  If FALSE
+#'   uncertainty in the fitted parameters is ignored when generating the
+#'   prediction intervals.
+#'
 #' @param ... Further arguments passed to `method`.
 #'
 #' @return An `trendbreaker` object (S3 class inheriting `list`), containing items
@@ -121,7 +125,7 @@
 #' }
 #'
 asmodee <- function(data, models, alpha, max_k, fixed_k, method,
-                    include_warnings, ...) {
+                    include_warnings, uncertain, ...) {
   UseMethod("asmodee", data)
 }
 
@@ -133,6 +137,7 @@ asmodee.data.frame <- function(data,
                                fixed_k = NULL,
                                method = trendeval::evaluate_resampling,
                                include_warnings = FALSE,
+                               uncertain = TRUE,
                                ...) {
 
   n <- nrow(data)
@@ -172,7 +177,8 @@ asmodee.data.frame <- function(data,
   ## find outliers
   res_outliers <- detect_outliers(data = data,
                                   model = selected_model,
-                                  alpha = alpha)
+                                  alpha = alpha,
+                                  uncertain = uncertain)
 
 
   ## form output
@@ -206,6 +212,7 @@ asmodee.incidence2 <- function(data,
                                fixed_k = NULL,
                                method = trendeval::evaluate_resampling,
                                include_warnings = FALSE,
+                               uncertain = TRUE,
                                ...) {
   # check incidence2 package is present
   check_suggests("incidence2")
@@ -225,6 +232,7 @@ asmodee.incidence2 <- function(data,
                 alpha = alpha,
                 fixed_k = fixed_k,
                 include_warnings = include_warnings,
+                uncertain = uncertain,
                 ...)
 
   names(out) <- names(split_dat)

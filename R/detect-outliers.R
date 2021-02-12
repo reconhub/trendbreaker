@@ -25,10 +25,13 @@
 #' @param alpha the alpha threshold to be used for prediction intervals,
 #'   defaulting to 0.05, i.e. 95% prediction intervals are derived
 #'
+#' @param ... additional arguments passed to the underlying model prediction
+#'   function
+#'
 #' @author Thibaut Jombart, Dirk Schumacher
 #'
 #'
-detect_outliers <- function(data, model, alpha = 0.05) {
+detect_outliers <- function(data, model, alpha = 0.05, ...) {
   if (inherits(model, "trending_model")) {
     msg <- paste("`model` has not been trained on data;",
                   "use `train()` to train your model, then detect outliers")
@@ -40,7 +43,7 @@ detect_outliers <- function(data, model, alpha = 0.05) {
     stop(msg)
   }
   observed <- as.character(formula(model$fitted_model))[2]
-  preds <- predict(model, new_data = data, alpha = alpha)
+  preds <- predict(model, new_data = data, alpha = alpha, ...)
   out <- dplyr::mutate(
     preds,
     outlier = .data[[observed]] < .data$lower_pi | .data[[observed]] > .data$upper_pi,

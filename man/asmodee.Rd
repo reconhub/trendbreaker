@@ -4,7 +4,17 @@
 \alias{asmodee}
 \title{Automatic Selection of Models Outlier DEtection for Epidemics (ASMODEE)}
 \usage{
-asmodee(data, models, alpha, max_k, fixed_k, method, include_warnings, ...)
+asmodee(
+  data,
+  models,
+  alpha,
+  max_k,
+  fixed_k,
+  method,
+  include_warnings,
+  uncertain,
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} or a \code{tibble} containing the response and
@@ -37,6 +47,10 @@ but possibly less good a selecting models with the best predictive power.}
 
 \item{include_warnings}{Include results in output that triggered warnings but
 not errors.  Defaults to \code{FALSE}.}
+
+\item{uncertain}{Only used for glm models.  Default TRUE.  If FALSE
+uncertainty in the fitted parameters is ignored when generating the
+prediction intervals.}
 
 \item{...}{Further arguments passed to \code{method}.}
 }

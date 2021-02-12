@@ -4,7 +4,7 @@
 \alias{detect_outliers}
 \title{Detect outliers given a fitted model}
 \usage{
-detect_outliers(data, model, alpha = 0.05)
+detect_outliers(data, model, alpha = 0.05, ...)
 }
 \arguments{
 \item{data}{a \code{data.frame} containing data for which predictions are to be
@@ -16,6 +16,9 @@ this can be obtained by running \code{\link[trending:fit]{trending::fit()}} on a
 
 \item{alpha}{the alpha threshold to be used for prediction intervals,
 defaulting to 0.05, i.e. 95\% prediction intervals are derived}
+
+\item{...}{additional arguments passed to the underlying model prediction
+function}
 }
 \value{
 A \code{data.frame} containing the original data, the mean model
