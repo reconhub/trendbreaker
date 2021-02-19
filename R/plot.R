@@ -92,7 +92,7 @@ plot.trendbreaker_incidence2 <- function(x,
                               guide = TRUE,
                               ...) {
 
-  x_axis <- x$m$date_index
+  x_axis <- x[[1]]$date_index
   
   # if length one use normal plot function
   if (length(x) == 1) {

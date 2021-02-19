@@ -42,27 +42,28 @@ test_that("asmodee works with data.frame", {
 
 test_that("asmodee works with incidence2 object", {
   dat <- outbreaks::ebola_sim_clean$linelist
+  dat <- dat[dat$date_of_onset > as.Date("2014-09-01"), ]
 
-  model1 <- trending::lm_model(count ~ date_index)
+  model1 <- trending::glm_model(count ~ date_index, "poisson")
   model2 <- trending::glm_nb_model(count ~ date_index)
   models <- list(
     lm_trend = model1,
     glm_nb_trend = model2
   )
 
-  # ungrouped incidence
+  ## ungrouped incidence
   x <- incidence2::incidence(dat, date_index = date_of_onset)
-  res <- asmodee(x, models, method = trendeval::evaluate_aic)
+  res <- asmodee(x, models, method = trendeval::evaluate_aic, fixed_k = 7)
 
-  expect_true(res[[1]]$k >= 0)
+  expect_equal(res[[1]]$k, 7)
   expect_true(is.logical(res[[1]]$results$outlier))
   expect_true(!anyNA(res[[1]]$results$outlier))
 
   # grouped incidence
-  x <- incidence2::incidence(dat, date_index = date_of_onset, groups = gender)
-  res <- asmodee(x, models, method = trendeval::evaluate_aic)
+  x <- incidence2::incidence(dat, groups = hospital, date_index = date_of_onset)
+  res <- asmodee(x, models, method = trendeval::evaluate_aic, fixed_k = 7)
 
-  expect_true(res[[2]]$k >= 0)
+  expect_equal(res[[2]]$k, 7)
   expect_true(is.logical(res[[2]]$results$outlier))
   expect_true(!anyNA(res[[2]]$results$outlier))
 
