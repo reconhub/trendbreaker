@@ -16,26 +16,37 @@
 #' @export
 #'
 
-detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
+detect_changepoint <- function(data, models, date_index,
+                               alpha = 0.05, max_k = 7,
                                method = trendeval::evaluate_resampling,
                                include_warnings = FALSE, ...) {
+
+  ## identify the date column for subsetting data
+  date_index <- rlang::enquo(date_index)
+  idx <- tidyselect::eval_select(date_index, data)
+  date_index <- names(data)[idx]
+  dates <- data[[date_index]]
+
+  ## prep output (empty)
   res <- vector(mode = "list", length = max_k + 1)
   res_models <- vector(mode = "list", length = max_k + 1)
 
-  n <- nrow(data)
-  if (max_k > (n - 4)) {
+  n_dates <- length(unique(dates))
+  if (max_k > (n_dates - 4)) {
     msg <- sprintf(
       "`max_k` (%d) is too high for the dataset size (%d)",
       max_k,
-      n
+      n_dates
     )
     stop(msg)
   }
 
   for (k in 0:max_k) {
     ## isolate training data
-    n_train <- n - k
-    data_train <- data[seq_len(n_train), , drop = FALSE]
+    ## the 'set...' function adds a '$training' column to the data (logical
+    ## indicating if the corresponding row belongs to the training set'
+    data <- set_training_data(data, date_index, k)
+    data_train <- get_training_data(data, date_index, k)
 
     ## select best model on training data
     current_model <- select_model(
@@ -53,9 +64,7 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
       data = data,
       alpha = alpha
     )$outlier
-    outliers_train <- outliers & (1:n <= n_train)
-    outliers_test <- outliers & (1:n > n_train)
-
+  
 
     # Calculate model score for the current value of 'k'; the score is defined
     # as the sum of two components:
@@ -65,9 +74,10 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
     # the model with the highest score will be retained; in case of ties, then
     # the first component is used to break ties
 
-    n_outliers_train <- sum(outliers_train, na.rm = TRUE)
-    n_non_outliers_train <- n_train - n_outliers_train
-    n_outliers_test <- sum(outliers_test, na.rm = TRUE)
+    n_outliers_train <- sum(outliers & data$training, na.rm = TRUE)
+    n_non_outliers_train <- sum(!outliers & data$training, na.rm = TRUE)
+    n_outliers_test <- sum(outliers & !data$training, na.rm = TRUE)
+    n_non_outliers_test <- sum(!outliers & !data$training, na.rm = TRUE)
     model_score <- n_non_outliers_train + n_outliers_test
 
     ## save outputs
@@ -76,7 +86,7 @@ detect_changepoint <- function(data, models, alpha = 0.05, max_k = 7,
       n_outliers_train = n_outliers_train,
       n_non_outliers_train = n_non_outliers_train,
       n_outliers_test = n_outliers_test,
-      n_non_outliers_test = k - n_outliers_test,
+      n_non_outliers_test = n_non_outliers_test,
       model_score = model_score
     )
     res_models[[k + 1]] <- current_model

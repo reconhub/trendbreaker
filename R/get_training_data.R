@@ -16,6 +16,11 @@
 
 set_training_data <- function(x, date_index, k) {
 
+  if (k <= 0) {
+    x$training <- rep(TRUE, nrow(x))
+    return(x)
+  }
+  
   ## get time, sort unique values by decreasing order, and find the k-th value;
   ## this will set the (exclusive) upper bound of data retained in the training
   ## set
@@ -46,8 +51,7 @@ set_training_data <- function(x, date_index, k) {
 #'   set. These will be the last `k` unique values of the `time` column.
 
 get_training_data <- function(x, date_index, k) {
-  onames <- names(x)
   x <- set_training_data(x, date_index, k)
-  x[x$training, onames, drop = FALSE]
-
+  var_to_keep <- names(x) != "training"
+  x[x$training, var_to_keep, drop = FALSE]
 }

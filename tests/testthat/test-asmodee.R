@@ -1,7 +1,9 @@
 test_that("asmodee works with data.frame", {
 
   data(nhs_pathways_covid19)
-  to_keep <- nhs_pathways_covid19$date >= as.Date("2020-05-01")
+  to_keep <- nhs_pathways_covid19$date >= as.Date("2020-05-01") &
+    !is.na(nhs_pathways_covid19$nhs_region) & 
+    nhs_pathways_covid19$nhs_region == "London"
   x <- nhs_pathways_covid19[to_keep, ]
   
   models <- list(
@@ -12,23 +14,22 @@ test_that("asmodee works with data.frame", {
       nb_weekday_region = trending::glm_nb_model(count ~ nhs_region + weekday + date)
   )
 
-  # fixed_k = 7
+  ## fixed_k = 7
   res <- asmodee(x, models, "date",
                  method = trendeval::evaluate_aic,
                  fixed_k = 7)
-  expect_true(res2$k == 7)
-  expect_true(is.logical(res2$results$outlier))
-  expect_true(!anyNA(res2$results$outlier))
-  
-  ## # fixed_k = NULL
-  ## expect_silent(
-  ##   res <- asmodee(mtcars, models, method = trendeval::evaluate_aic)
-  ## )
-  expect_true(res$k >= 0)
+  expect_true(res$k == 7)
   expect_true(is.logical(res$results$outlier))
   expect_true(!anyNA(res$results$outlier))
 
-  # fixed_k not proper input
+  ## optimize k
+  expect_silent(
+      res <- asmodee(x, models, "date",
+                     method = trendeval::evaluate_aic,
+                     max_k = 1)
+  )
+
+  ## fixed_k not proper input
   expect_error(
     asmodee(mtcars, models, method = trendeval::evaluate_aic, fixed_k = "bob"),
     "`fixed_k` must be a finite number"
@@ -42,8 +43,8 @@ test_that("asmodee works with data.frame", {
 test_that("asmodee works with incidence2 object", {
   dat <- outbreaks::ebola_sim_clean$linelist
 
-  model1 <- trending::lm_model(count ~ date)
-  model2 <- trending::glm_nb_model(count ~ date)
+  model1 <- trending::lm_model(count ~ date_index)
+  model2 <- trending::glm_nb_model(count ~ date_index)
   models <- list(
     lm_trend = model1,
     glm_nb_trend = model2

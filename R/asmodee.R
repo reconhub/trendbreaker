@@ -157,12 +157,11 @@ asmodee.data.frame <- function(data,
   ##  units in date_index; this is externalised in get_training_data()
   ##  2. performing automated model selection using the training set
   ##  3. deriving prediction intervals and classifying outliers
-  
+
   date_index <- rlang::enquo(date_index)
   idx <- tidyselect::eval_select(date_index, data)
   date_index <- names(data)[idx]
-  
-  n <- nrow(data)
+  dates <- data[[date_index]]
 
   ## There are two modes for this function:
   ## 1. (default) auto-detection of the value of 'k', in which case we use the
@@ -173,6 +172,7 @@ asmodee.data.frame <- function(data,
     res_changepoint <- detect_changepoint(
       data = data,
       models = models,
+      date_index = date_index,
       alpha = alpha,
       max_k = max_k,
       method = method,
@@ -187,17 +187,21 @@ asmodee.data.frame <- function(data,
       msg <- "`fixed_k` must be a finite number"
       stop(msg)
     }
-    k <- as.integer(max(fixed_k, 0L))
-    data <- set_training_data(data, date_index, k)
-    data_train <- get_training_data(data, date_index, k)
-    last_training_date <- max(data_train[[date_index]], na.rm = TRUE)
-    not_training <- !data$training
-    first_testing_date <- min(data[[date_index]][not_training], na.rm = TRUE)
-    
+    selected_k <- as.integer(max(fixed_k, 0L))
+    data_train <- get_training_data(data, date_index, selected_k)
     selected_model <- select_model(data_train, models, method, include_warnings, ...)
     selected_model <- trending::fit(selected_model, data_train)
-    selected_k <- k
   }
+
+  ## keep track of which data are training / testing and boundary dates
+  data <- set_training_data(data, date_index, selected_k)
+  training <- data$training
+  last_training_date <- max(dates[training], na.rm = TRUE)
+  first_testing_date <- NULL
+  if (selected_k > 0) {
+    first_testing_date <- min(dates[!training], na.rm = TRUE)
+  }
+
 
   ## find outliers
   res_outliers <- detect_outliers(data = data,
@@ -213,7 +217,7 @@ asmodee.data.frame <- function(data,
                            na.rm = TRUE)
   n_outliers_train <-  n_outliers - n_outliers_recent
   p_value <- stats::pbinom(n_outliers,
-                           size = n,
+                           size = nrow(data),
                            prob = alpha,
                            lower.tail = FALSE)
 
@@ -252,7 +256,7 @@ asmodee.incidence2 <- function(data,
     f_groups <- lapply(suppressMessages(data[groups]), factor, exclude = NULL)
     split_dat <- split(data, f_groups, sep = "-")
   } else {
-    split_dat = list(data)
+    split_dat <- list(data)
   }
 
   out <- lapply(split_dat,
@@ -261,6 +265,7 @@ asmodee.incidence2 <- function(data,
                 date_index = "date_index",
                 method = method,
                 alpha = alpha,
+                max_k = max_k,
                 fixed_k = fixed_k,
                 include_warnings = include_warnings,
                 simulate_pi = simulate_pi,
@@ -291,5 +296,3 @@ is_ok <- function(x, include_warnings = FALSE) {
   }
   x
 }
-
-

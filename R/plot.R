@@ -85,7 +85,6 @@ plot.trendbreaker <- function(x,
 #' @rdname plot.trendbreaker
 #' @aliases plot.trendbreaker_incidence2
 plot.trendbreaker_incidence2 <- function(x,
-                              x_axis = x$date_index,
                               point_size = 2,
                               col_normal = "#8B8B8C",
                               col_increase = "#CB3355",
@@ -93,6 +92,8 @@ plot.trendbreaker_incidence2 <- function(x,
                               guide = TRUE,
                               ...) {
 
+  x_axis <- x$m$date_index
+  
   # if length one use normal plot function
   if (length(x) == 1) {
     plot(x[[1]],
