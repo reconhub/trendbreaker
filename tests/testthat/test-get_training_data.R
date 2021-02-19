@@ -26,5 +26,7 @@ test_that("get_training_data throws appropriate errors", {
   dat <- data.frame(x, y)
   dat_rnd <- dat[sample(1:10), ]
 
+  msg <-  "`k` is too large: no point left in training set"
   expect_error(get_training_data(dat, "x", 10), msg)
+  
 })
