@@ -188,7 +188,12 @@ asmodee.data.frame <- function(data,
       stop(msg)
     }
     k <- as.integer(max(fixed_k, 0L))
+    data <- set_training_data(data, date_index, k)
     data_train <- get_training_data(data, date_index, k)
+    last_training_date <- max(data_train[[date_index]], na.rm = TRUE)
+    not_training <- !data$training
+    first_testing_date <- min(data[[date_index]][not_training], na.rm = TRUE)
+    
     selected_model <- select_model(data_train, models, method, include_warnings, ...)
     selected_model <- trending::fit(selected_model, data_train)
     selected_k <- k
@@ -204,7 +209,8 @@ asmodee.data.frame <- function(data,
 
   ## form output
   n_outliers <- sum(res_outliers$outlier, na.rm = TRUE)
-  n_outliers_recent <- sum(utils::tail(res_outliers$outlier, selected_k), na.rm = TRUE)
+  n_outliers_recent <- sum(utils::tail(res_outliers$outlier, selected_k),
+                           na.rm = TRUE)
   n_outliers_train <-  n_outliers - n_outliers_recent
   p_value <- stats::pbinom(n_outliers,
                            size = n,
@@ -219,7 +225,9 @@ asmodee.data.frame <- function(data,
     n_outliers_recent = n_outliers_recent,
     p_value = p_value,
     results = res_outliers,
-    date_index = date_index
+    date_index = date_index,
+    last_training_date = last_training_date,
+    first_testing_date = first_testing_date
   )
   class(out) <- c("trendbreaker", class(out))
   out
@@ -250,6 +258,7 @@ asmodee.incidence2 <- function(data,
   out <- lapply(split_dat,
                 asmodee.data.frame,
                 models = models,
+                date_index = "date_index",
                 method = method,
                 alpha = alpha,
                 fixed_k = fixed_k,

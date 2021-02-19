@@ -49,9 +49,9 @@ plot.trendbreaker <- function(x,
   }
 
   n <- nrow(results)
-  n_train <- n - get_k(x)
-  if (n_train < n) {
-    train_limit <- mean(results[n_train:(n_train + 1), x_axis, drop = TRUE])
+  if (get_k(x) > 0) {
+    train_limit <- x$last_training_date +
+      as.numeric((x$first_testing_date - x$last_training_date) / 2)
   } else {
     train_limit <- NULL
   }
