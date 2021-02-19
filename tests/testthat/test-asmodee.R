@@ -28,13 +28,6 @@ test_that("asmodee works with data.frame", {
                      method = trendeval::evaluate_aic,
                      max_k = 1)
   )
-
-  ## fixed_k not proper input
-  expect_error(
-    asmodee(mtcars, models, method = trendeval::evaluate_aic, fixed_k = "bob"),
-    "`fixed_k` must be a finite number"
-  )
-
   
 })
 
@@ -67,6 +60,4 @@ test_that("asmodee works with incidence2 object", {
   expect_true(is.logical(res[[2]]$results$outlier))
   expect_true(!anyNA(res[[2]]$results$outlier))
 
-
 })
-

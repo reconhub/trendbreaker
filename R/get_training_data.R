@@ -9,7 +9,7 @@
 #'
 #' @param x A `data.frame` or a `tibble`.
 #'
-#' @param time_name The name of the variable in `df` to be used as time.
+#' @param date_index The name of the variable in `df` to be used as time.
 #'
 #' @param k The number of the last data points to exclude from the training
 #'   set. These will be the last `k` unique values of the `time` column.
@@ -43,12 +43,7 @@ set_training_data <- function(x, date_index, k) {
 #' This function removes the last 'k' time units from a dataset to define a
 #' training set. Time is known through the name of a column indicating time.
 #'
-#' @param x A `data.frame` or a `tibble`.
-#'
-#' @param time_name The name of the variable in `df` to be used as time.
-#'
-#' @param k The number of the last data points to exclude from the training
-#'   set. These will be the last `k` unique values of the `time` column.
+#' @inheritParams set_training_data
 
 get_training_data <- function(x, date_index, k) {
   x <- set_training_data(x, date_index, k)

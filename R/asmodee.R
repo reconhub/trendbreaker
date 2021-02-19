@@ -130,8 +130,7 @@
 #'
 #' }
 #'
-asmodee <- function(data, models, date_index, alpha, max_k, fixed_k, method,
-                    include_warnings, simulate_pi, uncertain, ...) {
+asmodee <- function(data, models, ...) {
   UseMethod("asmodee", data)
 }
 

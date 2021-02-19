@@ -12,7 +12,7 @@ test_that("errors", {
 
   # detect_changepoint error
   expect_error(
-    asmodee(dat, models, method = trending::evaluate_aic),
+    asmodee(dat, models, x, method = trending::evaluate_aic),
     "`max_k` (7) is too high for the dataset size (10)",
     fixed = TRUE
   )

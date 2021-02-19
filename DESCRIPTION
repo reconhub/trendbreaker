@@ -47,6 +47,8 @@ Imports:
     ggplot2,
     tibble,
     trending,
-    trendeval
+    trendeval,
+    rlang,
+    tidyselect
 Remotes:
     trending@bootstrap
