@@ -7,7 +7,8 @@
 #' @param x an `trendbreaker` object, as returned by `asmodee`
 #'
 #' @param x_axis the name or position of the variable in `get_results(x)` to be
-#'   used on the x-axis, which represents time
+#'   used on the x-axis, which represents time; defaults to the date provided
+#'   when calling `asmodee`
 #'
 #' @param point_size the size of the points to be used; defaults to 2
 #'
@@ -33,7 +34,7 @@
 #' @aliases plot.trendbreaker
 
 plot.trendbreaker <- function(x,
-                           x_axis,
+                           x_axis = x$date_index,
                            point_size = 2,
                            col_normal = "#8B8B8C",
                            col_increase = "#CB3355",
@@ -84,7 +85,7 @@ plot.trendbreaker <- function(x,
 #' @rdname plot.trendbreaker
 #' @aliases plot.trendbreaker_incidence2
 plot.trendbreaker_incidence2 <- function(x,
-                              x_axis,
+                              x_axis = x$date_index,
                               point_size = 2,
                               col_normal = "#8B8B8C",
                               col_increase = "#CB3355",
