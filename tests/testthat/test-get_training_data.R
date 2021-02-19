@@ -5,6 +5,9 @@ test_that("get_training_data works", {
   dat <- data.frame(x, y)
   dat_rnd <- dat[sample(1:10), ]
 
+  expect_identical(set_training_data(dat, "x", 1)$training,
+                   rep(c(TRUE, FALSE), c(9, 1)))
+  
   expect_identical(get_training_data(dat, "x", 7), dat[1:3, ])
   expect_identical(get_training_data(dat, "x", 7),
                    get_training_data(dat_rnd, "x", 7))
