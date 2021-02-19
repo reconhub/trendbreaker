@@ -1,34 +1,40 @@
 test_that("asmodee works with data.frame", {
-  model_constant <- trending::lm_model(hp ~ 1)
-  model1 <- trending::glm_model(hp ~ 1 + cyl, poisson)
-  model2 <- trending::lm_model(hp ~ 1 + cyl)
-  model3 <- trending::glm_nb_model(hp ~ 1 + cyl)
+
+  data(nhs_pathways_covid19)
+  to_keep <- nhs_pathways_covid19$date >= as.Date("2020-05-01")
+  x <- nhs_pathways_covid19[to_keep, ]
+  
   models <- list(
-    null = model_constant,
-    glm_poisson = model1,
-    lm_trend = model2,
-    negbin = model3
+      cst_pois = trending::glm_model(count ~ 1, "poisson"),
+      pois = trending::glm_model(count ~ date, "poisson"),
+      pois_weekday = trending::glm_model(count ~ weekday + date, "poisson"),
+      nb_weekday = trending::glm_nb_model(count ~ weekday + date),
+      nb_weekday_region = trending::glm_nb_model(count ~ nhs_region + weekday + date)
   )
 
-  # fixed_k = NULL
-  expect_silent(
-    res <- asmodee(mtcars, models, method = trendeval::evaluate_aic)
-  )
+  # fixed_k = 7
+  res <- asmodee(x, models, "date",
+                 method = trendeval::evaluate_aic,
+                 fixed_k = 7)
+  expect_true(res2$k == 7)
+  expect_true(is.logical(res2$results$outlier))
+  expect_true(!anyNA(res2$results$outlier))
+  
+  ## # fixed_k = NULL
+  ## expect_silent(
+  ##   res <- asmodee(mtcars, models, method = trendeval::evaluate_aic)
+  ## )
   expect_true(res$k >= 0)
   expect_true(is.logical(res$results$outlier))
   expect_true(!anyNA(res$results$outlier))
 
-  # fixed_k as character
+  # fixed_k not proper input
   expect_error(
     asmodee(mtcars, models, method = trendeval::evaluate_aic, fixed_k = "bob"),
     "`fixed_k` must be a finite number"
   )
 
-  # fixed_k = 7
-  res2 <- asmodee(mtcars, models, method = trendeval::evaluate_aic, fixed_k = 7)
-  expect_true(res2$k == 7)
-  expect_true(is.logical(res2$results$outlier))
-  expect_true(!anyNA(res2$results$outlier))
+  
 })
 
 

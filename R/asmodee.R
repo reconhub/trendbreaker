@@ -25,8 +25,8 @@
 #'   assess model fit penalised by model complexity. This approach is fast, but
 #'   only measures model fit rather than predictive ability.
 #'
-#' @author Thibaut Jombart and Dirk Schumacher, with inputs from Michael Höhle,
-#'   Mark Jit, John Edmunds, Andre Charlett
+#' @author Thibaut Jombart, Dirk Schumacher and Tim Taylor, with inputs from
+#'   Michael Höhle, Mark Jit, John Edmunds, Andre Charlett, Stéphane Ghozzi
 #'
 #' @export
 #'
@@ -62,14 +62,14 @@
 #'   but possibly less good a selecting models with the best predictive power.
 #'
 #' @param include_warnings Include results in output that triggered warnings but
-#'   not errors.  Defaults to `FALSE`.
+#'   not errors. Defaults to `FALSE`.
 #'
 #' @param simulate_pi Should the ciTools package be used to simulate prediction
-#'   intervals for glm models.  Default FALSE.
+#'   intervals for glm models. Defaults to TRUE.
 #'
-#' @param uncertain Only used for glm models.  Default TRUE.  If FALSE
-#'   uncertainty in the fitted parameters is ignored when generating the
-#'   prediction intervals.
+#' @param uncertain Only used for glm models. If FALSE uncertainty in the fitted
+#'   parameters is ignored when generating the prediction intervals. Defaults to
+#'   fALSE.
 #'
 #' @param ... Further arguments passed to `method`.
 #'
@@ -130,7 +130,7 @@
 #'
 #' }
 #'
-asmodee <- function(data, models, alpha, max_k, fixed_k, method,
+asmodee <- function(data, models, date_index, alpha, max_k, fixed_k, method,
                     include_warnings, simulate_pi, uncertain, ...) {
   UseMethod("asmodee", data)
 }
@@ -144,8 +144,8 @@ asmodee.data.frame <- function(data,
                                fixed_k = NULL,
                                method = trendeval::evaluate_resampling,
                                include_warnings = FALSE,
-                               simulate_pi = TRUE,
-                               uncertain = FALSE,
+                               simulate_pi = FALSE,
+                               uncertain = TRUE,
                                ...) {
 
   ## As the method relies on a 'time' variable for defining training/testing
@@ -159,12 +159,11 @@ asmodee.data.frame <- function(data,
   ##  3. deriving prediction intervals and classifying outliers
   
   date_index <- rlang::enquo(date_index)
-  idx <- tidyselect::eval_select(date_index, x)
-  date_index <- names(x)[idx]
+  idx <- tidyselect::eval_select(date_index, data)
+  date_index <- names(data)[idx]
   
   n <- nrow(data)
 
-  
   ## There are two modes for this function:
   ## 1. (default) auto-detection of the value of 'k', in which case we use the
   ## `detect_changepoint` routine to select the 'best' value of `k`
@@ -191,10 +190,9 @@ asmodee.data.frame <- function(data,
     k <- as.integer(max(fixed_k, 0L))
     data_train <- get_training_data(data, date_index, k)
     selected_model <- select_model(data_train, models, method, include_warnings, ...)
-    selected_model <- trending::fit(selected_model,data_train)
+    selected_model <- trending::fit(selected_model, data_train)
     selected_k <- k
   }
-
 
   ## find outliers
   res_outliers <- detect_outliers(data = data,
@@ -220,7 +218,8 @@ asmodee.data.frame <- function(data,
     n_outliers_train = n_outliers_train,
     n_outliers_recent = n_outliers_recent,
     p_value = p_value,
-    results = res_outliers
+    results = res_outliers,
+    date_index = date_index
   )
   class(out) <- c("trendbreaker", class(out))
   out
