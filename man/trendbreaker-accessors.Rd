@@ -4,6 +4,8 @@
 \alias{get_model.trendbreaker}
 \alias{trendbreaker-accessors}
 \alias{trendbreaker-class}
+\alias{get_formula.trendbreaker}
+\alias{get_response.trendbreaker}
 \alias{get_k.trendbreaker}
 \alias{get_results.trendbreaker}
 \alias{get_outliers.trendbreaker}
@@ -11,6 +13,10 @@
 \title{Accessors for trendbreaker objects}
 \usage{
 \method{get_model}{trendbreaker}(x, ...)
+
+\method{get_formula}{trendbreaker}(x, ...)
+
+\method{get_response}{trendbreaker}(x, ...)
 
 \method{get_k}{trendbreaker}(x, ...)
 
@@ -43,6 +49,8 @@ The following accessors are available:
 \item \code{get_model()}: fitted model capturing the temporal trend in the data as an
 \code{trendbreaker_model_fit} object
 \item \code{get_k()}: number of recent days excluded from the temporal trend
+\item \code{get_formula()}: formula of the retained fitted model
+\item \code{get_response()}: response variable of the model
 \item \code{get_results()}: main \code{data.frame} containing the original data, the
 predicted values with lower and upper bounds for the prediction interval, a
 \code{logical} variable \code{outlier} which is \code{TRUE} for data points falling outside

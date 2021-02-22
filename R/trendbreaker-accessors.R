@@ -10,6 +10,10 @@
 #'
 #' * `get_k()`: number of recent days excluded from the temporal trend
 #'
+#' * `get_formula()`: formula of the retained fitted model
+#'
+#' * `get_response()`: response variable of the model
+#'
 #' * `get_results()`: main `data.frame` containing the original data, the
 #' predicted values with lower and upper bounds for the prediction interval, a
 #' `logical` variable `outlier` which is `TRUE` for data points falling outside
@@ -32,12 +36,35 @@
 #' @param ... further arguments passed to other methods
 #'
 #'
+#' @importFrom trending get_model
 #' @export
 #' @rdname trendbreaker-accessors
 #' @aliases get_model.trendbreaker
 get_model.trendbreaker <- function(x, ...) {
   x$model
 }
+
+
+
+#' @importFrom trending get_formula
+#' @export
+#' @rdname trendbreaker-accessors
+#' @aliases get_formula.trendbreaker
+get_formula.trendbreaker <- function(x, ...) {
+  formula(get_model(x)$fitted_model)
+}
+
+
+
+#' @importFrom trending get_response
+#' @export
+#' @rdname trendbreaker-accessors
+#' @aliases get_response.trendbreaker
+get_response.trendbreaker <- function(x, ...) {
+  as.character(get_formula(x))[2]
+}
+
+
 
 #' @export
 #' @rdname trendbreaker-accessors

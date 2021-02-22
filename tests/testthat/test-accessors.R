@@ -11,9 +11,12 @@ test_that("trendbreaker accessors", {
   )
 
   res <- asmodee(dat, models, x, method = trendeval::evaluate_aic, fixed_k = 1)
-  expect_output(print(get_model(res)), "y ~ x")
+  expect_identical(get_model(res), res$model)
   expect_equal(get_k(res), 1)
+  expect_identical(get_formula(res), formula(res$model$fitted_model))
+  expect_identical(get_response(res), "y")
 
+  
   nms <- c(colnames(dat), "training", "estimate", "lower_ci", "upper_ci", "lower_pi",
            "upper_pi", "outlier", "classification")
 

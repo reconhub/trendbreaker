@@ -34,13 +34,13 @@
 #' @aliases plot.trendbreaker
 
 plot.trendbreaker <- function(x,
-                           x_axis = x$date_index,
-                           point_size = 2,
-                           col_normal = "#8B8B8C",
-                           col_increase = "#CB3355",
-                           col_decrease = "#32AB96",
-                           guide = TRUE,
-                           ...) {
+                              x_axis = x$date_index,
+                              point_size = 2,
+                              col_normal = "#8B8B8C",
+                              col_increase = "#CB3355",
+                              col_decrease = "#32AB96",
+                              guide = TRUE,
+                              ...) {
   ## ensure that x_axis is the name of a variable
   results <- get_results(x)
   results <- as.data.frame(results)

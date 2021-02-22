@@ -1,17 +1,19 @@
 test_that("asmodee works with data.frame", {
 
   data(nhs_pathways_covid19)
-  to_keep <- nhs_pathways_covid19$date >= as.Date("2020-05-01") &
-    !is.na(nhs_pathways_covid19$nhs_region) & 
-    nhs_pathways_covid19$nhs_region == "London"
-  x <- nhs_pathways_covid19[to_keep, ]
+  x <- dplyr::filter(nhs_pathways_covid19,
+                     date >= as.Date("2020-05-01"),
+                     nhs_region == "London")
+  x <- dplyr::group_by(x, date, nhs_region)
+  x <- dplyr::summarise(x, n = sum(count))
   
+ 
   models <- list(
-      cst_pois = trending::glm_model(count ~ 1, "poisson"),
-      pois = trending::glm_model(count ~ date, "poisson"),
-      pois_weekday = trending::glm_model(count ~ weekday + date, "poisson"),
-      nb_weekday = trending::glm_nb_model(count ~ weekday + date),
-      nb_weekday_region = trending::glm_nb_model(count ~ nhs_region + weekday + date)
+      cst_pois = trending::glm_model(n ~ 1, "poisson"),
+      pois = trending::glm_model(n ~ date, "poisson"),
+      pois_weekday = trending::glm_model(n ~ weekday + date, "poisson"),
+      nb_weekday = trending::glm_nb_model(n ~ weekday + date),
+      nb_weekday_region = trending::glm_nb_model(n ~ nhs_region + weekday + date)
   )
 
   ## fixed_k = 7
