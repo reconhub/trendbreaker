@@ -6,31 +6,50 @@ test_that("asmodee works with data.frame", {
                      nhs_region == "London")
   x <- dplyr::group_by(x, date, weekday, nhs_region)
   x <- dplyr::summarise(x, n = sum(count))
-  
- 
+
   models <- list(
       cst_pois = trending::glm_model(n ~ 1, "poisson"),
       pois = trending::glm_model(n ~ date, "poisson"),
       pois_weekday = trending::glm_model(n ~ weekday + date, "poisson"),
-      nb_weekday = trending::glm_nb_model(n ~ weekday + date),
-      nb_weekday_region = trending::glm_nb_model(n ~ nhs_region + weekday + date)
+      nb_weekday = trending::glm_nb_model(n ~ weekday + date)
   )
-
+  
   ## fixed_k = 7
   res <- asmodee(x, models, "date",
                  method = trendeval::evaluate_aic,
                  fixed_k = 7)
-  expect_true(res$k == 7)
+  expect_equal(res$k, 7)
   expect_true(is.logical(res$results$outlier))
   expect_true(!anyNA(res$results$outlier))
 
   ## optimize k
-  expect_silent(
-      res <- asmodee(x, models, "date",
-                     method = trendeval::evaluate_aic,
-                     max_k = 1)
-  )
-  
+  res <- asmodee(x, models, "date",
+                 method = trendeval::evaluate_aic,
+                 max_k = 2)
+  expect_equal(res$k, 0)
+  expect_true(is.logical(res$results$outlier))
+  expect_true(!anyNA(res$results$outlier))
+
+   ## fixed_k, different pi estimation
+  res <- asmodee(x, models, "date",
+                 method = trendeval::evaluate_aic,
+                 fixed_k = 3,
+                 simulate_pi = FALSE,
+                 uncertain = TRUE
+                 )
+  expect_equal(res$k, 3)
+  expect_true(is.logical(res$results$outlier))
+  expect_true(!anyNA(res$results$outlier))
+
+  ## using 4-fold  cross validation
+  res <- asmodee(x, models,
+                 "date",
+                 fixed_k = 0,
+                 v = 4)
+  expect_equal(res$k, 0)
+  expect_true(is.logical(res$results$outlier))
+  expect_true(!anyNA(res$results$outlier))
+
 })
 
 

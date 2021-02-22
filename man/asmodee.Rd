@@ -2,9 +2,38 @@
 % Please edit documentation in R/asmodee.R
 \name{asmodee}
 \alias{asmodee}
+\alias{asmodee.data.frame}
+\alias{asmodee.incidence2}
 \title{Automatic Selection of Models Outlier DEtection for Epidemics (ASMODEE)}
 \usage{
 asmodee(data, models, ...)
+
+\method{asmodee}{data.frame}(
+  data,
+  models,
+  date_index,
+  alpha = 0.05,
+  max_k = 7,
+  fixed_k = NULL,
+  method = trendeval::evaluate_resampling,
+  simulate_pi = TRUE,
+  uncertain = FALSE,
+  include_warnings = FALSE,
+  ...
+)
+
+\method{asmodee}{incidence2}(
+  data,
+  models,
+  alpha = 0.05,
+  max_k = 7,
+  fixed_k = NULL,
+  method = trendeval::evaluate_resampling,
+  simulate_pi = TRUE,
+  uncertain = FALSE,
+  include_warnings = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} or a \code{tibble} containing the response and
@@ -40,15 +69,15 @@ uses cross-validation and, by default, RMSE to assess model fit.
 \code{evaluate_aic} uses Akaike's Information Criterion instead, which is faster
 but possibly less good a selecting models with the best predictive power.}
 
-\item{include_warnings}{Include results in output that triggered warnings but
-not errors. Defaults to \code{FALSE}.}
-
 \item{simulate_pi}{Should the ciTools package be used to simulate prediction
 intervals for glm models. Defaults to TRUE.}
 
 \item{uncertain}{Only used for glm models. If FALSE uncertainty in the fitted
 parameters is ignored when generating the prediction intervals. Defaults to
-fALSE.}
+FALSE.}
+
+\item{include_warnings}{Include results in output that triggered warnings but
+not errors. Defaults to \code{FALSE}.}
 }
 \value{
 An \code{trendbreaker} object (S3 class inheriting \code{list}), containing items
