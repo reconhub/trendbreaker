@@ -2,9 +2,9 @@ test_that("asmodee works with data.frame", {
 
   data(nhs_pathways_covid19)
   x <- dplyr::filter(nhs_pathways_covid19,
-                     date >= as.Date("2020-05-01"),
+                     date >= as.Date("2020-04-01"),
                      nhs_region == "London")
-  x <- dplyr::group_by(x, date, nhs_region)
+  x <- dplyr::group_by(x, date, weekday, nhs_region)
   x <- dplyr::summarise(x, n = sum(count))
   
  
@@ -37,7 +37,7 @@ test_that("asmodee works with data.frame", {
 
 test_that("asmodee works with incidence2 object", {
   dat <- outbreaks::ebola_sim_clean$linelist
-  dat <- dat[dat$date_of_onset > as.Date("2014-09-01"), ]
+  dat <- dat[dat$date_of_onset > as.Date("2014-10-01"), ]
 
   model1 <- trending::glm_model(count ~ date_index, "poisson")
   model2 <- trending::glm_nb_model(count ~ date_index)
@@ -54,11 +54,22 @@ test_that("asmodee works with incidence2 object", {
   expect_true(is.logical(res[[1]]$results$outlier))
   expect_true(!anyNA(res[[1]]$results$outlier))
 
-  # grouped incidence
+  ## grouped incidence
   x <- incidence2::incidence(dat, groups = hospital, date_index = date_of_onset)
   res <- asmodee(x, models, method = trendeval::evaluate_aic, fixed_k = 7)
 
   expect_equal(res[[2]]$k, 7)
+  expect_true(is.logical(res[[2]]$results$outlier))
+  expect_true(!anyNA(res[[2]]$results$outlier))
+
+  
+  ## grouped incidence, weekly data
+  x <- incidence2::incidence(dat, "monday week",
+                             groups = hospital,
+                             date_index = date_of_onset)
+  res <- asmodee(x, models, method = trendeval::evaluate_aic, fixed_k = 3)
+
+  expect_equal(res[[2]]$k, 3)
   expect_true(is.logical(res[[2]]$results$outlier))
   expect_true(!anyNA(res[[2]]$results$outlier))
 

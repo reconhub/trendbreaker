@@ -44,14 +44,22 @@ plot.trendbreaker <- function(x,
   ## ensure that x_axis is the name of a variable
   results <- get_results(x)
   results <- as.data.frame(results)
+  response <- get_response(x)
   if (is.numeric(x_axis)) {
     x_axis <- names(results)[x_axis]
   }
+  dates <- results[[x_axis]]
 
   n <- nrow(results)
   if (get_k(x) > 0) {
-    train_limit <- x$last_training_date +
-      as.numeric((x$first_testing_date - x$last_training_date) / 2)
+    if (inherits(dates, "grate")) {
+      ## note: for 'grate' objects, we cannot place the vertical dashed line
+      ## between two time units, so it will be placed at the first testing date
+      train_limit <- x$first_testing_date
+    } else {
+      train_limit <- x$last_training_date +
+        as.numeric((x$first_testing_date - x$last_training_date) / 2)
+    }
   } else {
     train_limit <- NULL
   }
@@ -66,7 +74,7 @@ plot.trendbreaker <- function(x,
   )
 
   custom_guide <- if (guide) ggplot2::guide_legend(override.aes = list(size = c(4, 4, 3))) else FALSE
-  ggplot2::ggplot(results, ggplot2::aes(x = .data[[x_axis]], y = .data$count)) +
+  ggplot2::ggplot(results, ggplot2::aes(x = .data[[x_axis]], y = .data[[response]])) +
     ggplot2::theme_bw() +
     ggplot2::geom_vline(xintercept = train_limit, linetype = 2) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = .data$lower_pi, ymax = .data$upper_pi),
