@@ -7,7 +7,8 @@
 #' @param x an `trendbreaker` object, as returned by `asmodee`
 #'
 #' @param x_axis the name or position of the variable in `get_results(x)` to be
-#'   used on the x-axis, which represents time
+#'   used on the x-axis, which represents time; defaults to the date provided
+#'   when calling `asmodee`
 #'
 #' @param point_size the size of the points to be used; defaults to 2
 #'
@@ -33,24 +34,32 @@
 #' @aliases plot.trendbreaker
 
 plot.trendbreaker <- function(x,
-                           x_axis,
-                           point_size = 2,
-                           col_normal = "#8B8B8C",
-                           col_increase = "#CB3355",
-                           col_decrease = "#32AB96",
-                           guide = TRUE,
-                           ...) {
+                              x_axis = x$date_index,
+                              point_size = 2,
+                              col_normal = "#8B8B8C",
+                              col_increase = "#CB3355",
+                              col_decrease = "#32AB96",
+                              guide = TRUE,
+                              ...) {
   ## ensure that x_axis is the name of a variable
   results <- get_results(x)
   results <- as.data.frame(results)
+  response <- get_response(x)
   if (is.numeric(x_axis)) {
     x_axis <- names(results)[x_axis]
   }
+  dates <- results[[x_axis]]
 
   n <- nrow(results)
-  n_train <- n - get_k(x)
-  if (n_train < n) {
-    train_limit <- mean(results[n_train:(n_train + 1), x_axis, drop = TRUE])
+  if (get_k(x) > 0) {
+    if (inherits(dates, "grate")) {
+      ## note: for 'grate' objects, we cannot place the vertical dashed line
+      ## between two time units, so it will be placed at the first testing date
+      train_limit <- x$first_testing_date
+    } else {
+      train_limit <- x$last_training_date +
+        as.numeric((x$first_testing_date - x$last_training_date) / 2)
+    }
   } else {
     train_limit <- NULL
   }
@@ -65,7 +74,7 @@ plot.trendbreaker <- function(x,
   )
 
   custom_guide <- if (guide) ggplot2::guide_legend(override.aes = list(size = c(4, 4, 3))) else FALSE
-  ggplot2::ggplot(results, ggplot2::aes(x = .data[[x_axis]], y = .data$count)) +
+  ggplot2::ggplot(results, ggplot2::aes(x = .data[[x_axis]], y = .data[[response]])) +
     ggplot2::theme_bw() +
     ggplot2::geom_vline(xintercept = train_limit, linetype = 2) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = .data$lower_pi, ymax = .data$upper_pi),
@@ -84,7 +93,6 @@ plot.trendbreaker <- function(x,
 #' @rdname plot.trendbreaker
 #' @aliases plot.trendbreaker_incidence2
 plot.trendbreaker_incidence2 <- function(x,
-                              x_axis,
                               point_size = 2,
                               col_normal = "#8B8B8C",
                               col_increase = "#CB3355",
@@ -92,6 +100,8 @@ plot.trendbreaker_incidence2 <- function(x,
                               guide = TRUE,
                               ...) {
 
+  x_axis <- x[[1]]$date_index
+  
   # if length one use normal plot function
   if (length(x) == 1) {
     plot(x[[1]],

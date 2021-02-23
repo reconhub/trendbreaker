@@ -7,7 +7,7 @@
 \usage{
 \method{plot}{trendbreaker}(
   x,
-  x_axis,
+  x_axis = x$date_index,
   point_size = 2,
   col_normal = "#8B8B8C",
   col_increase = "#CB3355",
@@ -18,7 +18,6 @@
 
 \method{plot}{trendbreaker_incidence2}(
   x,
-  x_axis,
   point_size = 2,
   col_normal = "#8B8B8C",
   col_increase = "#CB3355",
@@ -31,7 +30,8 @@
 \item{x}{an \code{trendbreaker} object, as returned by \code{asmodee}}
 
 \item{x_axis}{the name or position of the variable in \code{get_results(x)} to be
-used on the x-axis, which represents time}
+used on the x-axis, which represents time; defaults to the date provided
+when calling \code{asmodee}}
 
 \item{point_size}{the size of the points to be used; defaults to 2}
 
