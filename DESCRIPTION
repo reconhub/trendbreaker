@@ -51,4 +51,5 @@ Imports:
     rlang,
     tidyselect
 Remotes:
-    trending@bootstrap
+    trending@bootstrap,
+    incidence2
