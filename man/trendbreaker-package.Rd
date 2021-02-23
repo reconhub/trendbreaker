@@ -9,7 +9,7 @@
 Provides tools for detecting changes in temporal trends of a single
   response variable. It provides a coherent interface to several modeling tools,
    alongside functions for model selection and outlier detection. It implements
-   the Automatic Selection of Models and Outlier Detection for Epidemmics
+   the Automatic Selection of Models and Outlier Detection for Epidemics
    (ASMODEE), an algorithm originally designed for detecting changes in COVID-19
    case incidence.
 }

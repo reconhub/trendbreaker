@@ -114,10 +114,11 @@ asmodee <- function(data, models, ...) {
 #'   time.
 #'
 #' @param method A function used to evaluate model fit. Current choices are
-#'   `evaluate_resampling` (default) and `evaluate_aic`. `evaluate_resampling`
-#'   uses cross-validation and, by default, RMSE to assess model fit.
-#'   `evaluate_aic` uses Akaike's Information Criterion instead, which is faster
-#'   but possibly less good a selecting models with the best predictive power.
+#'   `evaluate_aic` (default) and `evaluate_resampling`. `evaluate_aic` uses
+#'   Akaike's Information Criterion instead, which is faster but possibly less
+#'   good a selecting models with the best predictive power.
+#'   `evaluate_resampling` uses cross-validation and, by default, RMSE to assess
+#'   model fit.
 #'
 #' @param include_warnings Include results in output that triggered warnings but
 #'   not errors. Defaults to `FALSE`.
@@ -135,7 +136,7 @@ asmodee.data.frame <- function(data,
                                alpha = 0.05,
                                max_k = 7,
                                fixed_k = NULL,
-                               method = trendeval::evaluate_resampling,
+                               method = trendeval::evaluate_aic,
                                simulate_pi = TRUE,
                                uncertain = FALSE,
                                include_warnings = FALSE,
@@ -242,7 +243,7 @@ asmodee.incidence2 <- function(data,
                                alpha = 0.05,
                                max_k = 7,
                                fixed_k = NULL,
-                               method = trendeval::evaluate_resampling,
+                               method = trendeval::evaluate_aic,
                                simulate_pi = TRUE,
                                uncertain = FALSE,
                                include_warnings = FALSE,

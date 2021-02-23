@@ -37,10 +37,11 @@ longer fit the previous trend. Larger values will require more computation
 from the method. Only used if \code{fixed_k} is \code{NULL}.}
 
 \item{method}{A function used to evaluate model fit. Current choices are
-\code{evaluate_resampling} (default) and \code{evaluate_aic}. \code{evaluate_resampling}
-uses cross-validation and, by default, RMSE to assess model fit.
-\code{evaluate_aic} uses Akaike's Information Criterion instead, which is faster
-but possibly less good a selecting models with the best predictive power.}
+\code{evaluate_aic} (default) and \code{evaluate_resampling}. \code{evaluate_aic} uses
+Akaike's Information Criterion instead, which is faster but possibly less
+good a selecting models with the best predictive power.
+\code{evaluate_resampling} uses cross-validation and, by default, RMSE to assess
+model fit.}
 
 \item{include_warnings}{Include results in output that triggered warnings but
 not errors. Defaults to \code{FALSE}.}

@@ -16,7 +16,6 @@ test_that("asmodee works with data.frame", {
   
   ## fixed_k = 7
   res <- asmodee(x, models, "date",
-                 method = trendeval::evaluate_aic,
                  fixed_k = 7)
   expect_equal(res$k, 7)
   expect_true(is.logical(res$results$outlier))
@@ -24,7 +23,6 @@ test_that("asmodee works with data.frame", {
 
   ## optimize k
   res <- asmodee(x, models, "date",
-                 method = trendeval::evaluate_aic,
                  max_k = 2)
   expect_equal(res$k, 0)
   expect_true(is.logical(res$results$outlier))
@@ -32,7 +30,6 @@ test_that("asmodee works with data.frame", {
 
    ## fixed_k, different pi estimation
   res <- asmodee(x, models, "date",
-                 method = trendeval::evaluate_aic,
                  fixed_k = 3,
                  simulate_pi = FALSE,
                  uncertain = TRUE
@@ -45,6 +42,7 @@ test_that("asmodee works with data.frame", {
   res <- asmodee(x, models,
                  "date",
                  fixed_k = 0,
+                 method = trendeval::evaluate_resampling,
                  v = 4)
   expect_equal(res$k, 0)
   expect_true(is.logical(res$results$outlier))
@@ -67,7 +65,7 @@ test_that("asmodee works with incidence2 object", {
 
   ## ungrouped incidence
   x <- incidence2::incidence(dat, date_index = date_of_onset)
-  res <- asmodee(x, models, method = trendeval::evaluate_aic, fixed_k = 7)
+  res <- asmodee(x, models, fixed_k = 7)
 
   expect_equal(res[[1]]$k, 7)
   expect_true(is.logical(res[[1]]$results$outlier))
@@ -75,7 +73,7 @@ test_that("asmodee works with incidence2 object", {
 
   ## grouped incidence
   x <- incidence2::incidence(dat, groups = hospital, date_index = date_of_onset)
-  res <- asmodee(x, models, method = trendeval::evaluate_aic, fixed_k = 7)
+  res <- asmodee(x, models, fixed_k = 7)
 
   expect_equal(res[[2]]$k, 7)
   expect_true(is.logical(res[[2]]$results$outlier))
@@ -86,7 +84,7 @@ test_that("asmodee works with incidence2 object", {
   x <- incidence2::incidence(dat, "monday week",
                              groups = hospital,
                              date_index = date_of_onset)
-  res <- asmodee(x, models, method = trendeval::evaluate_aic, fixed_k = 3)
+  res <- asmodee(x, models, fixed_k = 3)
 
   expect_equal(res[[2]]$k, 3)
   expect_true(is.logical(res[[2]]$results$outlier))

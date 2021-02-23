@@ -15,7 +15,7 @@ asmodee(data, models, ...)
   alpha = 0.05,
   max_k = 7,
   fixed_k = NULL,
-  method = trendeval::evaluate_resampling,
+  method = trendeval::evaluate_aic,
   simulate_pi = TRUE,
   uncertain = FALSE,
   include_warnings = FALSE,
@@ -28,7 +28,7 @@ asmodee(data, models, ...)
   alpha = 0.05,
   max_k = 7,
   fixed_k = NULL,
-  method = trendeval::evaluate_resampling,
+  method = trendeval::evaluate_aic,
   simulate_pi = TRUE,
   uncertain = FALSE,
   include_warnings = FALSE,
@@ -64,10 +64,11 @@ case ASMODEE detects \code{k} automatically, at the expense of computational
 time.}
 
 \item{method}{A function used to evaluate model fit. Current choices are
-\code{evaluate_resampling} (default) and \code{evaluate_aic}. \code{evaluate_resampling}
-uses cross-validation and, by default, RMSE to assess model fit.
-\code{evaluate_aic} uses Akaike's Information Criterion instead, which is faster
-but possibly less good a selecting models with the best predictive power.}
+\code{evaluate_aic} (default) and \code{evaluate_resampling}. \code{evaluate_aic} uses
+Akaike's Information Criterion instead, which is faster but possibly less
+good a selecting models with the best predictive power.
+\code{evaluate_resampling} uses cross-validation and, by default, RMSE to assess
+model fit.}
 
 \item{simulate_pi}{Should the ciTools package be used to simulate prediction
 intervals for glm models. Defaults to TRUE.}
