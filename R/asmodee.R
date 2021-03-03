@@ -181,6 +181,7 @@ asmodee.data.frame <- function(data,
       msg <- "`fixed_k` must be a finite number"
       stop(msg)
     }
+    
     selected_k <- as.integer(max(fixed_k, 0L))
     data_train <- get_training_data(data, date_index, selected_k)
     selected_model <- select_model(data_train, models, method, include_warnings, ...)
