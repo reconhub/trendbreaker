@@ -92,12 +92,18 @@ plot.trendbreaker <- function(x,
 #' @export
 #' @rdname plot.trendbreaker
 #' @aliases plot.trendbreaker_incidence2
+#' @param nrow (for `trendbreaker_incidence2` plots) the number of rows for the
+#'   grid plot
+#' @param ncol (for `trendbreaker_incidence2` plots) the number of columns for the
+#'   grid plot
 plot.trendbreaker_incidence2 <- function(x,
                               point_size = 2,
                               col_normal = "#8B8B8C",
                               col_increase = "#CB3355",
                               col_decrease = "#32AB96",
                               guide = TRUE,
+                              nrow = NULL,
+                              ncol = NULL,
                               ...) {
 
   x_axis <- x[[1]]$date_index
@@ -135,7 +141,7 @@ plot.trendbreaker_incidence2 <- function(x,
       plots[[1]] + ggplot2::theme(legend.position = "bottom")
     )
 
-    cplots <- cowplot::plot_grid(plotlist = plots)
+    cplots <- cowplot::plot_grid(plotlist = plots, nrow = nrow, ncol = ncol)
     cowplot::plot_grid(cplots, legend, ncol = 1, rel_heights = c(1,0.1))
   }
 }

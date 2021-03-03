@@ -23,6 +23,8 @@
   col_increase = "#CB3355",
   col_decrease = "#32AB96",
   guide = TRUE,
+  nrow = NULL,
+  ncol = NULL,
   ...
 )
 }
@@ -49,6 +51,12 @@ below the prediction interval of the estimated temporal trend}
 the plot (\code{TRUE}, default) or not (\code{FALSE})}
 
 \item{...}{unused - present for compatibility with the \code{plot} generic}
+
+\item{nrow}{(for \code{trendbreaker_incidence2} plots) the number of rows for the
+grid plot}
+
+\item{ncol}{(for \code{trendbreaker_incidence2} plots) the number of columns for the
+grid plot}
 }
 \description{
 The plotting method for \code{trendbreaker} objects produces a \code{ggplot} object, which
