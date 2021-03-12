@@ -10,6 +10,7 @@
 \alias{get_results.trendbreaker}
 \alias{get_outliers.trendbreaker}
 \alias{predict.trendbreaker}
+\alias{[.trendbreaker_incidence2}
 \title{Accessors for trendbreaker objects}
 \usage{
 \method{get_model}{trendbreaker}(x, ...)
@@ -25,6 +26,8 @@
 \method{get_outliers}{trendbreaker}(x, ...)
 
 \method{predict}{trendbreaker}(object, newdata, alpha = 0.05, ...)
+
+\method{[}{trendbreaker_incidence2}(x, i)
 }
 \arguments{
 \item{x}{an \code{trendbreaker} object, as returned by \url{asmodee}}
@@ -38,6 +41,8 @@ derived}
 
 \item{alpha}{the alpha threshold to be used for prediction intervals,
 defaulting to 0.05, i.e. 95\% prediction intervals are derived}
+
+\item{i}{a subset of dates to retain}
 }
 \description{
 These functions can be used to access information stored in \code{trendbreaker}

@@ -104,3 +104,16 @@ predict.trendbreaker <- function(object, newdata, alpha = 0.05, ...) {
 
 
 
+
+
+#' @export
+#' @rdname trendbreaker-accessors
+#' @param i a subset of dates to retain
+
+"[.trendbreaker_incidence2" <- function(x, i){
+  oclass <- class(x)
+  class(x) <- "list"
+  out <- x[i]
+  class(out) <- oclass
+  out
+}

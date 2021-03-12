@@ -34,3 +34,28 @@ test_that("trendbreaker accessors", {
 })
 
 
+
+
+test_that("trendbreaker_incidence2 subsetting", {
+
+  dat <- outbreaks::ebola_sim_clean$linelist
+  dat <- dat[dat$date_of_onset > as.Date("2014-10-01"), ]
+
+  model1 <- trending::glm_model(count ~ date_index, "poisson")
+  model2 <- trending::glm_nb_model(count ~ date_index)
+  models <- list(
+    lm_trend = model1,
+    glm_nb_trend = model2
+  )
+
+  ## ungrouped incidence
+  x <- incidence2::incidence(dat,
+                             groups = hospital,
+                             date_index = date_of_onset)
+  res <- asmodee(x, models, fixed_k = 7)
+
+  expect_identical(class(res), class(res[1]))
+  expect_identical(names(res)[c(1,3)],
+                   names(res[c(1,3)]))
+  
+})
