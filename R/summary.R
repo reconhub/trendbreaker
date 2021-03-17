@@ -11,7 +11,17 @@
 #' @param ... further arguments to be passed to other functions (currently ignored)
 #'
 #' @return a `data.frame` containing the following colums:
-#' * 
+#' * n_recent: number of data points in recent set
+#' * n_recent_increases: number of recent increases
+#' * n_recent_decreases: number of recent decreases
+#' * n_recent_outliers: number of recent outliers
+#' * n_training: number of data points in training set
+#' * n_training_increases: number of increases in training set
+#' * n_training_decreases: number of decreases in training set
+#' * n_training_outliers: number of outliers in training set
+#'
+#' @rdname summary.trendbreaker
+#' 
 summary.trendbreaker <- function(object, ...) {
   x <- object$results
   n_recent <- sum(!x$training)
@@ -38,4 +48,16 @@ summary.trendbreaker <- function(object, ...) {
              n_training_decreases,
              n_training_outliers = n_training_increases + n_training_decreases)
   
+}
+
+
+
+
+#' @rdname summary.trendbreaker
+#' @export
+summary.trendbreaker_incidence2 <- function(object, ...) {
+  out <- lapply(object, summary)
+  out <- dplyr::bind_rows(out)
+  out$group <- names(object)
+  dplyr::select(out, group, dplyr::everything())
 }

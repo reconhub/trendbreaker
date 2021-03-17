@@ -2,9 +2,12 @@
 % Please edit documentation in R/summary.R
 \name{summary.trendbreaker}
 \alias{summary.trendbreaker}
+\alias{summary.trendbreaker_incidence2}
 \title{Summary for trendbreaker outputs}
 \usage{
 \method{summary}{trendbreaker}(object, ...)
+
+\method{summary}{trendbreaker_incidence2}(object, ...)
 }
 \arguments{
 \item{object}{the \code{trendbreaker} object to summarise}
