@@ -24,13 +24,21 @@
 #' 
 summary.trendbreaker <- function(object, ...) {
   x <- object$results
+  alpha <- object$alpha
   n_recent <- sum(!x$training)
   n_recent_increases <- sum(!x$training &
                              x$classification == "increase",
                              na.rm = TRUE)
   n_recent_decreases <- sum(!x$training &
                              x$classification == "decrease",
-                             na.rm = TRUE)
+                            na.rm = TRUE)
+  n_recent_outliers <- n_recent_increases + n_recent_decreases
+  p_recent_outliers <- stats::pbinom(
+                                  n_recent_outliers,
+                                  size = n_recent,
+                                  prob = alpha,
+                                  lower.tail = FALSE)
+
   n_training <- sum(x$training)
   n_training_increases <- sum(x$training &
                              x$classification == "increase",
@@ -38,15 +46,23 @@ summary.trendbreaker <- function(object, ...) {
   n_training_decreases <- sum(x$training &
                              x$classification == "decrease",
                              na.rm = TRUE)
-
+  n_training_outliers <- n_training_increases + n_training_decreases
+  p_training_outliers <- stats::pbinom(
+                                  n_training_outliers,
+                                  size = n_training,
+                                  prob = alpha,
+                                  lower.tail = FALSE)
+ 
   data.frame(n_recent,
              n_recent_increases,
              n_recent_decreases,
-             n_recent_outliers = n_recent_increases + n_recent_decreases,
+             n_recent_outliers,
+             p_recent_outliers,
              n_training,
              n_training_increases,
              n_training_decreases,
-             n_training_outliers = n_training_increases + n_training_decreases)
+             n_training_outliers,
+             p_training_outliers)
   
 }
 
@@ -58,6 +74,9 @@ summary.trendbreaker <- function(object, ...) {
 summary.trendbreaker_incidence2 <- function(object, ...) {
   out <- lapply(object, summary)
   out <- dplyr::bind_rows(out)
-  out$group <- names(object)
-  dplyr::select(out, group, dplyr::everything())
+  if (!is.null(names(object))) {
+    out$group <- names(object)
+    out <- dplyr::select(out, group, dplyr::everything())
+  }
+  out
 }

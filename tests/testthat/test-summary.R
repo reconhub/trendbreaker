@@ -21,10 +21,11 @@ test_that("asmodee works with data.frame", {
   smry <- summary(res)
   expect_s3_class(smry, "data.frame")
   expect_identical(nrow(smry), 1L)
-  expect_identical(ncol(smry), 8L)
+  expect_identical(ncol(smry), 10L)
   expected_names <- c("n_recent", "n_recent_increases", "n_recent_decreases",
-                      "n_recent_outliers", "n_training", "n_training_increases",
-                      "n_training_decreases", "n_training_outliers")
+                      "n_recent_outliers", "p_recent_outliers", "n_training",
+                      "n_training_increases", "n_training_decreases",
+                      "n_training_outliers", "p_training_outliers")
   expect_identical(names(smry), expected_names)
   expect_identical(smry$n_recent_outliers,
                    smry$n_recent_increases + smry$n_recent_decreases)
@@ -35,42 +36,42 @@ test_that("asmodee works with data.frame", {
 
 
 
-## test_that("asmodee works with incidence2 object", {
-##   dat <- outbreaks::ebola_sim_clean$linelist
-##   dat <- dat[dat$date_of_onset > as.Date("2014-10-01"), ]
+test_that("asmodee works with incidence2 object", {
 
-##   model1 <- trending::glm_model(count ~ date_index, "poisson")
-##   model2 <- trending::glm_nb_model(count ~ date_index)
-##   models <- list(
-##     lm_trend = model1,
-##     glm_nb_trend = model2
-##   )
+  dat <- outbreaks::ebola_sim_clean$linelist
+  dat <- dat[dat$date_of_onset > as.Date("2014-10-01"), ]
 
-##   ## ungrouped incidence
-##   x <- incidence2::incidence(dat, date_index = date_of_onset)
-##   res <- asmodee(x, models, fixed_k = 7)
+  model1 <- trending::glm_model(count ~ date_index, "poisson")
+  model2 <- trending::glm_nb_model(count ~ date_index)
+  models <- list(
+    lm_trend = model1,
+    glm_nb_trend = model2
+  )
 
-##   expect_equal(res[[1]]$k, 7)
-##   expect_true(is.logical(res[[1]]$results$outlier))
-##   expect_true(!anyNA(res[[1]]$results$outlier))
+  ## ungrouped incidence
+  x <- incidence2::incidence(dat, date_index = date_of_onset)
+  res <- asmodee(x, models, fixed_k = 7)
+  smry <- summary(res)
 
-##   ## grouped incidence
-##   x <- incidence2::incidence(dat, groups = hospital, date_index = date_of_onset)
-##   res <- asmodee(x, models, fixed_k = 7)
+  expect_equal(smry, summary(res[[1]]))
+ 
+  ## grouped incidence
+  x <- incidence2::incidence(dat, groups = hospital, date_index = date_of_onset)
+  res <- asmodee(x, models, fixed_k = 7)
+  smry <- summary(res)
 
-##   expect_equal(res[[2]]$k, 7)
-##   expect_true(is.logical(res[[2]]$results$outlier))
-##   expect_true(!anyNA(res[[2]]$results$outlier))
+  expect_s3_class(smry, "data.frame")
+  expect_identical(nrow(smry), length(res))
+  expect_identical(ncol(smry), 11L)
+  expected_names <- c("group",
+                      "n_recent", "n_recent_increases", "n_recent_decreases",
+                      "n_recent_outliers", "p_recent_outliers", "n_training",
+                      "n_training_increases", "n_training_decreases",
+                      "n_training_outliers", "p_training_outliers")
+  expect_identical(names(smry), expected_names)
+  expect_identical(smry$n_recent_outliers,
+                   smry$n_recent_increases + smry$n_recent_decreases)
+  expect_identical(smry$n_training_outliers,
+                   smry$n_training_increases + smry$n_training_decreases)
 
-  
-##   ## grouped incidence, weekly data
-##   x <- incidence2::incidence(dat, "monday week",
-##                              groups = hospital,
-##                              date_index = date_of_onset)
-##   res <- asmodee(x, models, fixed_k = 3)
-
-##   expect_equal(res[[2]]$k, 3)
-##   expect_true(is.logical(res[[2]]$results$outlier))
-##   expect_true(!anyNA(res[[2]]$results$outlier))
-
-## })
+})

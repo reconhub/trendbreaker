@@ -207,22 +207,19 @@ asmodee.data.frame <- function(data,
 
 
   ## form output
-  n_outliers <- sum(res_outliers$outlier, na.rm = TRUE)
-  n_outliers_recent <- sum(utils::tail(res_outliers$outlier, selected_k),
-                           na.rm = TRUE)
-  n_outliers_train <-  n_outliers - n_outliers_recent
-  p_value <- stats::pbinom(n_outliers,
-                           size = nrow(data),
-                           prob = alpha,
-                           lower.tail = FALSE)
+  ## n_outliers <- sum(res_outliers$outlier, na.rm = TRUE)
+  ## n_outliers_recent <- sum(utils::tail(res_outliers$outlier, selected_k),
+  ##                          na.rm = TRUE)
+  ## n_outliers_train <-  n_outliers - n_outliers_recent
+  ## p_value <- stats::pbinom(n_outliers,
+  ##                          size = nrow(data),
+  ##                          prob = alpha,
+  ##                          lower.tail = FALSE)
 
   out <- list(
     k = selected_k,
     model = selected_model,
-    n_outliers = n_outliers,
-    n_outliers_train = n_outliers_train,
-    n_outliers_recent = n_outliers_recent,
-    p_value = p_value,
+    alpha = alpha,
     results = res_outliers,
     date_index = date_index,
     last_training_date = last_training_date,
