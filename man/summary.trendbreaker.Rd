@@ -21,10 +21,13 @@ a \code{data.frame} containing the following colums:
 \item n_recent_increases: number of recent increases
 \item n_recent_decreases: number of recent decreases
 \item n_recent_outliers: number of recent outliers
+\item p_recent_outliers: the binomial p-value for the number of recent outliers
 \item n_training: number of data points in training set
 \item n_training_increases: number of increases in training set
 \item n_training_decreases: number of decreases in training set
 \item n_training_outliers: number of outliers in training set
+\item p_training_outliers: the binomial p-value for the number of outliers
+in the training set
 }
 }
 \description{
