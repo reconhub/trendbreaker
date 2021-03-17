@@ -79,7 +79,7 @@ summary.trendbreaker_incidence2 <- function(object, ...) {
   out <- dplyr::bind_rows(out)
   if (!is.null(names(object))) {
     out$group <- names(object)
-    out <- dplyr::select(out, group, dplyr::everything())
+    out <- dplyr::select(out, "group", dplyr::everything())
   }
   out
 }
