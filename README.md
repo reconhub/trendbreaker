@@ -158,8 +158,8 @@ res
 #>     }
 #>     result
 #> }
-#> <bytecode: 0x556cfb348d30>
-#> <environment: 0x556cfc5e9c70>
+#> <bytecode: 0x7fbed5b30bc8>
+#> <environment: 0x7fbed9eb04f0>
 #> 
 #> attr(,"class")
 #> [1] "trending_model_fit" "list"              
@@ -213,49 +213,49 @@ res
 #> 42 2020-05-27  70 rest_of_week  8486     TRUE  9892.202  8979.999 10897.07
 #> 43 2020-05-28  71 rest_of_week  8411     TRUE  9629.161  8715.443 10638.67
 #>    lower_pi upper_pi outlier classification
-#> 1     21492    40258   FALSE         normal
-#> 2     21133    39501   FALSE         normal
-#> 3     17287    33551   FALSE         normal
-#> 4     17379    32027   FALSE         normal
-#> 5     23379    44969   FALSE         normal
-#> 6     18637    35057   FALSE         normal
-#> 7     18082    33923   FALSE         normal
-#> 8     17811    32972   FALSE         normal
-#> 9     17419    32253   FALSE         normal
-#> 10    14633    27520   FALSE         normal
-#> 11    14007    26788   FALSE         normal
-#> 12    19284    37314   FALSE         normal
-#> 13    15806    28577   FALSE         normal
-#> 14    15271    27976   FALSE         normal
-#> 15    14686    27261   FALSE         normal
-#> 16    14148    26425   FALSE         normal
-#> 17    12144    22720   FALSE         normal
-#> 18    12092    22206   FALSE         normal
-#> 19    15933    30879   FALSE         normal
-#> 20    12915    23981   FALSE         normal
-#> 21    12352    23047   FALSE         normal
-#> 22    12289    22607   FALSE         normal
-#> 23    11894    22035   FALSE         normal
-#> 24    10256    18791   FALSE         normal
-#> 25     9818    18715   FALSE         normal
-#> 26    12949    25062   FALSE         normal
-#> 27    10809    19816   FALSE         normal
-#> 28    10345    19145   FALSE         normal
-#> 29    10077    18453   FALSE         normal
-#> 30     9942    18066   FALSE         normal
-#> 31     8484    15617   FALSE         normal
-#> 32     8102    15330   FALSE         normal
-#> 33    11024    20993    TRUE       increase
-#> 34     8823    16288    TRUE       increase
-#> 35     8482    16041   FALSE         normal
-#> 36     8339    15730   FALSE         normal
-#> 37     8156    15123   FALSE         normal
-#> 38     6829    13011   FALSE         normal
-#> 39     6735    12635   FALSE         normal
-#> 40     8904    17663    TRUE       decrease
-#> 41     7298    13716   FALSE         normal
-#> 42     7021    13181   FALSE         normal
-#> 43     7013    13126   FALSE         normal
+#> 1     21451    39861   FALSE         normal
+#> 2     20999    38757   FALSE         normal
+#> 3     17640    33404   FALSE         normal
+#> 4     16929    32365   FALSE         normal
+#> 5     23307    44576   FALSE         normal
+#> 6     18739    33999   FALSE         normal
+#> 7     18564    33586   FALSE         normal
+#> 8     17610    33194   FALSE         normal
+#> 9     16879    31436   FALSE         normal
+#> 10    14515    28059   FALSE         normal
+#> 11    14454    26820   FALSE         normal
+#> 12    18798    37185   FALSE         normal
+#> 13    15540    28919   FALSE         normal
+#> 14    15177    28174   FALSE         normal
+#> 15    14533    26879   FALSE         normal
+#> 16    14397    26231   FALSE         normal
+#> 17    12159    22968   FALSE         normal
+#> 18    11965    22034   FALSE         normal
+#> 19    16047    30976   FALSE         normal
+#> 20    13134    24376   FALSE         normal
+#> 21    12456    23761   FALSE         normal
+#> 22    12143    22651   FALSE         normal
+#> 23    11954    21746   FALSE         normal
+#> 24    10226    18771   FALSE         normal
+#> 25     9846    18588   FALSE         normal
+#> 26    13249    25101   FALSE         normal
+#> 27    10691    19838   FALSE         normal
+#> 28    10383    19274   FALSE         normal
+#> 29     9913    18780   FALSE         normal
+#> 30     9872    18341   FALSE         normal
+#> 31     8341    15728   FALSE         normal
+#> 32     8096    15375   FALSE         normal
+#> 33    11002    20781    TRUE       increase
+#> 34     8794    16485    TRUE       increase
+#> 35     8595    15889   FALSE         normal
+#> 36     8275    15227   FALSE         normal
+#> 37     8245    15241   FALSE         normal
+#> 38     6922    12883   FALSE         normal
+#> 39     6656    12676   FALSE         normal
+#> 40     8959    17271    TRUE       decrease
+#> 41     7254    13757   FALSE         normal
+#> 42     6996    13132   FALSE         normal
+#> 43     6969    12720   FALSE         normal
 #> 
 #> $date_index
 #> [1] "date"
