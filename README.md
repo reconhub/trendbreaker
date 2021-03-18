@@ -158,23 +158,14 @@ res
 #>     }
 #>     result
 #> }
-#> <bytecode: 0x558208669248>
-#> <environment: 0x55820cec60c0>
+#> <bytecode: 0x556cfb348d30>
+#> <environment: 0x556cfc5e9c70>
 #> 
 #> attr(,"class")
 #> [1] "trending_model_fit" "list"              
 #> 
-#> $n_outliers
-#> [1] 3
-#> 
-#> $n_outliers_train
-#> [1] 3
-#> 
-#> $n_outliers_recent
-#> [1] 0
-#> 
-#> $p_value
-#> [1] 0.1665987
+#> $alpha
+#> [1] 0.05
 #> 
 #> $results
 #>          date day      weekday count training  estimate  lower_ci upper_ci
@@ -222,49 +213,49 @@ res
 #> 42 2020-05-27  70 rest_of_week  8486     TRUE  9892.202  8979.999 10897.07
 #> 43 2020-05-28  71 rest_of_week  8411     TRUE  9629.161  8715.443 10638.67
 #>    lower_pi upper_pi outlier classification
-#> 1     21380    39870   FALSE         normal
-#> 2     20281    38962   FALSE         normal
-#> 3     17528    33340   FALSE         normal
-#> 4     16787    32210   FALSE         normal
-#> 5     23047    45049   FALSE         normal
-#> 6     18602    34825   FALSE         normal
-#> 7     18181    33730   FALSE         normal
-#> 8     17596    32882   FALSE         normal
-#> 9     16949    32103   FALSE         normal
-#> 10    14664    27664   FALSE         normal
-#> 11    14380    27497   FALSE         normal
-#> 12    19202    36696   FALSE         normal
-#> 13    15668    28384   FALSE         normal
-#> 14    15057    27853   FALSE         normal
-#> 15    14873    27362   FALSE         normal
-#> 16    14514    26276   FALSE         normal
-#> 17    12066    22678   FALSE         normal
-#> 18    11740    21774   FALSE         normal
-#> 19    15551    30842   FALSE         normal
-#> 20    12929    23522   FALSE         normal
-#> 21    12542    23240   FALSE         normal
-#> 22    12384    22194   FALSE         normal
-#> 23    11984    22068   FALSE         normal
-#> 24     9872    18757   FALSE         normal
-#> 25     9712    18388   FALSE         normal
-#> 26    13064    25370   FALSE         normal
-#> 27    10670    19710   FALSE         normal
-#> 28    10513    18976   FALSE         normal
-#> 29    10062    18662   FALSE         normal
-#> 30     9941    18092   FALSE         normal
-#> 31     8255    15604   FALSE         normal
-#> 32     8052    15208   FALSE         normal
-#> 33    10868    21088    TRUE       increase
-#> 34     8715    16489    TRUE       increase
-#> 35     8552    16001   FALSE         normal
-#> 36     8431    15421   FALSE         normal
-#> 37     8275    15318   FALSE         normal
-#> 38     6884    12936   FALSE         normal
-#> 39     6823    12887   FALSE         normal
-#> 40     8974    17427    TRUE       decrease
-#> 41     7258    13496   FALSE         normal
-#> 42     7056    13235   FALSE         normal
-#> 43     6912    12973   FALSE         normal
+#> 1     21492    40258   FALSE         normal
+#> 2     21133    39501   FALSE         normal
+#> 3     17287    33551   FALSE         normal
+#> 4     17379    32027   FALSE         normal
+#> 5     23379    44969   FALSE         normal
+#> 6     18637    35057   FALSE         normal
+#> 7     18082    33923   FALSE         normal
+#> 8     17811    32972   FALSE         normal
+#> 9     17419    32253   FALSE         normal
+#> 10    14633    27520   FALSE         normal
+#> 11    14007    26788   FALSE         normal
+#> 12    19284    37314   FALSE         normal
+#> 13    15806    28577   FALSE         normal
+#> 14    15271    27976   FALSE         normal
+#> 15    14686    27261   FALSE         normal
+#> 16    14148    26425   FALSE         normal
+#> 17    12144    22720   FALSE         normal
+#> 18    12092    22206   FALSE         normal
+#> 19    15933    30879   FALSE         normal
+#> 20    12915    23981   FALSE         normal
+#> 21    12352    23047   FALSE         normal
+#> 22    12289    22607   FALSE         normal
+#> 23    11894    22035   FALSE         normal
+#> 24    10256    18791   FALSE         normal
+#> 25     9818    18715   FALSE         normal
+#> 26    12949    25062   FALSE         normal
+#> 27    10809    19816   FALSE         normal
+#> 28    10345    19145   FALSE         normal
+#> 29    10077    18453   FALSE         normal
+#> 30     9942    18066   FALSE         normal
+#> 31     8484    15617   FALSE         normal
+#> 32     8102    15330   FALSE         normal
+#> 33    11024    20993    TRUE       increase
+#> 34     8823    16288    TRUE       increase
+#> 35     8482    16041   FALSE         normal
+#> 36     8339    15730   FALSE         normal
+#> 37     8156    15123   FALSE         normal
+#> 38     6829    13011   FALSE         normal
+#> 39     6735    12635   FALSE         normal
+#> 40     8904    17663    TRUE       decrease
+#> 41     7298    13716   FALSE         normal
+#> 42     7021    13181   FALSE         normal
+#> 43     7013    13126   FALSE         normal
 #> 
 #> $date_index
 #> [1] "date"
@@ -312,7 +303,7 @@ models <- list(
 )
 
 # analyses on all data
-res <- asmodee(dat, models, method = evaluate_aic)
+res <- asmodee(dat, models, method = evaluate_aic, fixed_k = 7)
 
 plot(res)
 ```

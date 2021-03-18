@@ -159,7 +159,7 @@ models <- list(
 )
 
 # analyses on all data
-res <- asmodee(dat, models, method = evaluate_aic)
+res <- asmodee(dat, models, method = evaluate_aic, fixed_k = 7)
 
 plot(res)
 ```
