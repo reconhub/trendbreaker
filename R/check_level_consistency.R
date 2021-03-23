@@ -77,29 +77,32 @@ check_level_consistency <- function(model, x_training, x_testing,
 
 
 
-#' Same function, but looping over a list of models
+#' Retain models which have consistent levels
 #'
-#' @param models A list of [`trending_model()`] object.
+#' @param models A list of [`trending_model()`] objects.
+#'
+#' @return A list of [`trending_model()`] object which have consistent levels
+#'   for all categorical predictors between the training and testing data.
 
-check_level_consistency_models <- function(models,
+retain_level_consistent_models <- function(models,
                                            x_training,
                                            x_testing,
                                            warn = TRUE) {
-  models_ok <- vapply(
+  out <- vapply(
       models,
       check_level_consistency,
       x_training,
       x_testing,
       warn = FALSE,
       FUN.VALUE = logical(1))
+  
+  allgood <- all(out)
 
-  out <- all(models_ok)
-
-  if (!out & warn) {
+  if (!allgood & warn) {
     msg <- paste("some models were disabled because of new",
                  "levels in the prediction set")
     warning(msg)
   }
-  out
-
+  
+  models[out]
 }
