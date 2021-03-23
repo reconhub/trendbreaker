@@ -12,17 +12,21 @@
 #'
 #' @param model A [`trending_model()`] object.
 #'
-#' @param training A `data.frame` used as training set.
+#' @param x_training A `data.frame` used as training set.
 #' 
-#' @param testing A `data.frame` used as testing set.
+#' @param x_testing A `data.frame` used as testing set.
+#'
+#' @param quiet A `logical` indicating if warnings should be generated when
+#'   factor level mismatches are found.
 
 
-check_level_consistency <- function(model, training, testing) {
+check_level_consistency <- function(model, x_training, x_testing,
+                                    quiet = TRUE) {
 
   # Auxiliary functions
   
-  
-  ## Extract a dataset of all predictors of a model, keeping only factors
+  ## Extract a dataset of all predictors of a model, outputting a data.frame
+  ## containing only factors used in the model formula
   get_model_factors <- function(model, df) {
     ### Extract variable names from the formula
     form <- trending::get_formula(model)
@@ -56,6 +60,14 @@ check_level_consistency <- function(model, training, testing) {
   }
 
 
-  
-  
+  # Make the checks
+  factors_training <- get_model_factors(model, x_training)
+  factors_testing <- get_model_factors(model, x_testing)
+  is_ok <- check_factors(factors_training, factors_testing)
+  out <- all(is_ok)
+  if (!out) {
+    msg <- "some factors of the prediction set have new, unknown levels"
+    warning(msg)
+  }
+  out
 }
