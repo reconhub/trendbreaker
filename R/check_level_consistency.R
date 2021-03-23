@@ -16,12 +16,14 @@
 #' 
 #' @param x_testing A `data.frame` used as testing set.
 #'
-#' @param quiet A `logical` indicating if warnings should be generated when
+#' @param warn A `logical` indicating if warnings should be generated when
 #'   factor level mismatches are found.
-
+#'
+#' @return A single logical indicating if all levels were OK (TRUE); FALSE if
+#'   there was a single mismatch.
 
 check_level_consistency <- function(model, x_training, x_testing,
-                                    quiet = TRUE) {
+                                    warn = TRUE) {
 
   # Auxiliary functions
   
@@ -56,7 +58,7 @@ check_level_consistency <- function(model, x_training, x_testing,
     vapply(vars_test,
            function(e)
              check_factor(df_train[[e]], df_test[[e]]),
-           logical(1))     
+           FUN.VALUE = logical(1))
   }
 
 
@@ -65,9 +67,39 @@ check_level_consistency <- function(model, x_training, x_testing,
   factors_testing <- get_model_factors(model, x_testing)
   is_ok <- check_factors(factors_training, factors_testing)
   out <- all(is_ok)
-  if (!out) {
+  if (!out & warn) {
     msg <- "some factors of the prediction set have new, unknown levels"
     warning(msg)
   }
   out
+}
+
+
+
+
+#' Same function, but looping over a list of models
+#'
+#' @param models A list of [`trending_model()`] object.
+
+check_level_consistency_models <- function(models,
+                                           x_training,
+                                           x_testing,
+                                           warn = TRUE) {
+  models_ok <- vapply(
+      models,
+      check_level_consistency,
+      x_training,
+      x_testing,
+      warn = FALSE,
+      FUN.VALUE = logical(1))
+
+  out <- all(models_ok)
+
+  if (!out & warn) {
+    msg <- paste("some models were disabled because of new",
+                 "levels in the prediction set")
+    warning(msg)
+  }
+  out
+
 }
