@@ -108,10 +108,10 @@ asmodee <- function(data, models, ...) {
 #'   longer fit the previous trend. Larger values will require more computation
 #'   from the method. Only used if `fixed_k` is `NULL`.
 #'
-#' @param fixed_k An optional `integer` indicating the number of recent data points to be
-#'   excluded from the trend fitting procedure. Defaults to `NULL`, in which
-#'   case ASMODEE detects `k` automatically, at the expense of computational
-#'   time.
+#' @param fixed_k An optional `integer` indicating the number of recent data
+#'   points to be excluded from the trend fitting procedure. Defaults to `NULL`,
+#'   in which case ASMODEE detects `k` automatically, at the expense of
+#'   computational time.
 #'
 #' @param method A function used to evaluate model fit. Current choices are
 #'   `evaluate_aic` (default) and `evaluate_resampling`. `evaluate_aic` uses
@@ -120,15 +120,18 @@ asmodee <- function(data, models, ...) {
 #'   `evaluate_resampling` uses cross-validation and, by default, RMSE to assess
 #'   model fit.
 #'
-#' @param include_warnings Include results in output that triggered warnings but
-#'   not errors. Defaults to `FALSE`.
-#'
 #' @param simulate_pi Should the ciTools package be used to simulate prediction
 #'   intervals for glm models. Defaults to TRUE.
 #'
 #' @param uncertain Only used for glm models. If FALSE uncertainty in the fitted
 #'   parameters is ignored when generating the prediction intervals. Defaults to
 #'   FALSE.
+#'
+#' @param include_warnings Include results in output that triggered warnings but
+#'   not errors. Defaults to `FALSE`.
+#'
+#' @param quiet A `logical` indicating if warnings and messages should be
+#'   suppressed (TRUE) or use (FALSE, default).
 #'
 asmodee.data.frame <- function(data,
                                models,
@@ -140,8 +143,14 @@ asmodee.data.frame <- function(data,
                                simulate_pi = TRUE,
                                uncertain = FALSE,
                                include_warnings = FALSE,
+                               quiet = FALSE,
                                ...) {
 
+  if (!length(models)) {
+    msg <- "models has a length of zero"
+    stop(msg)
+  }
+  
   ## As the method relies on a 'time' variable for defining training/testing
   ## sets, we first need to retrieve this information from the 'time_index'
   ## argument. We borrow the same strategy as the one used in the *incidence2*
@@ -184,6 +193,20 @@ asmodee.data.frame <- function(data,
     
     selected_k <- as.integer(max(fixed_k, 0L))
     data_train <- get_training_data(data, date_index, selected_k)
+  browser()
+
+    ## Here we need to eliminate models which would error when using predict due
+    ## to new levels in the prediction set for categorical predictors (factors).
+    models <- retain_level_consistent_models(models,
+                                             na.omit(data_train),
+                                             data,
+                                             quiet)
+    if (!length(models)) {
+      msg <- paste("none of the models can be used for prediction:\n",
+                   "all have unknown levels in the prediction set")
+      stop(msg)
+    }
+    
     selected_model <- select_model(data_train, models, method, include_warnings, ...)
     selected_model <- trending::fit(selected_model, data_train)
   }
@@ -204,17 +227,6 @@ asmodee.data.frame <- function(data,
                                   alpha = alpha,
                                   simulate_pi = simulate_pi,
                                   uncertain = uncertain)
-
-
-  ## form output
-  ## n_outliers <- sum(res_outliers$outlier, na.rm = TRUE)
-  ## n_outliers_recent <- sum(utils::tail(res_outliers$outlier, selected_k),
-  ##                          na.rm = TRUE)
-  ## n_outliers_train <-  n_outliers - n_outliers_recent
-  ## p_value <- stats::pbinom(n_outliers,
-  ##                          size = nrow(data),
-  ##                          prob = alpha,
-  ##                          lower.tail = FALSE)
 
   out <- list(
     k = selected_k,
