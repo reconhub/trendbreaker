@@ -1,6 +1,6 @@
 #' Check level consistency across training / testing set
 #'
-#' This function ensures that models used in asmodee contain compatible levels
+#' This function ensures that a model used in asmodee contain compatible levels
 #' in the testing and training set. All levels in the testing set must be
 #' present in the training set (but the converse is not a requirement). It
 #' returns a list of models which comply with the requirement, and issues
@@ -10,24 +10,18 @@
 #'
 #' @noRd
 #'
-#' @param models A list of [`trending_model()`] objects.
+#' @param model A [`trending_model()`] object.
 #'
 #' @param training A `data.frame` used as training set.
 #' 
 #' @param testing A `data.frame` used as testing set.
 
 
-check_level_consistency <- function(models, training, testing) {
+check_level_consistency <- function(model, training, testing) {
 
   # Auxiliary functions
   
-  ## Check level consistency for a single factor
-  ## Returns TRUE if levels are okay, FALSE otherwise
-  check_factor <- function(f_train, f_test) {
-    all(levels(f_test) %in% levels(f_train))
-  }
-
-
+  
   ## Extract a dataset of all predictors of a model, keeping only factors
   get_model_factors <- function(model, df) {
     ### Extract variable names from the formula
@@ -42,5 +36,26 @@ check_level_consistency <- function(models, training, testing) {
     out[factors]
   }
 
+  ## Check level consistency for a single factor
+  ##
+  ## Returns TRUE if levels are okay, FALSE otherwise
+  check_factor <- function(f_train, f_test) {
+    all(levels(f_test) %in% levels(f_train))
+  }
+
+  ## Check level consistency for multiple factors
+  ##
+  ## This simply loops over all columns of testing data.frame, ensuring matching
+  ## names, and assuming all variables are factors.
+  check_factors <- function(df_train, df_test) {
+    vars_test <- names(df_test)
+    vapply(vars_test,
+           function(e)
+             check_factor(df_train[[e]], df_test[[e]]),
+           logical(1))     
+  }
+
+
+  
   
 }
