@@ -88,6 +88,12 @@ retain_level_consistent_models <- function(models,
                                            x_training,
                                            x_testing,
                                            warn = TRUE) {
+  ## Ensure there are no ghost levels in any of the data
+  x_training <- droplevels(x_training)
+  x_testing <- droplevels(x_testing)
+
+  ## Apply checks to all mnodels, output a vector of logicals; TRUE means checks
+  ## are OK.
   out <- vapply(
       models,
       check_level_consistency,

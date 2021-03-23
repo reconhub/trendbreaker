@@ -193,7 +193,6 @@ asmodee.data.frame <- function(data,
     
     selected_k <- as.integer(max(fixed_k, 0L))
     data_train <- get_training_data(data, date_index, selected_k)
-  browser()
 
     ## Here we need to eliminate models which would error when using predict due
     ## to new levels in the prediction set for categorical predictors (factors).
