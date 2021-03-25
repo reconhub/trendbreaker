@@ -49,7 +49,6 @@ sanitize_model <- function(model,
            FUN.VALUE = logical(1))
   }
 
-
   # Extract data.frame of predictors
   x_training <- get_predictor_data(model, x_training)
   x_testing <-  get_predictor_data(model, x_testing)
@@ -69,7 +68,7 @@ sanitize_model <- function(model,
 
 
   # Check that there are no NAs in testing set
-  res_missing <- any(is.na(x_testing))
+  res_missing <- !any(is.na(x_testing))
  if (!res_missing & warn) {
     msg <- "predictors of prediction set contain NAs"
     warning(msg)
