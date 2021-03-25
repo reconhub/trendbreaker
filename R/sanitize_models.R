@@ -26,7 +26,7 @@
 sanitize_model <- function(model,
                            x_training,
                            x_testing,
-                           warn = TRUE) {
+                           warn = FALSE) {
     
   # Auxiliary functions
   
@@ -83,38 +83,79 @@ sanitize_model <- function(model,
 
 
 
-#' Retain models which have consistent levels
+#' Sanitize several models
 #'
+#' Like the singular version, but for multiple models.
+#'
+#' @inheritParams sanitize_model
+#' 
 #' @param models A list of [`trending_model()`] objects.
+#'
+#' @return A `logical` vector with one value per model, `TRUE` indicating that
+#'   the model can be used to derive predictions using the provided data.
+#' 
+sanitize_models <- function(models,
+                           x_training,
+                           x_testing) {
+  
+  # Ensure there are no ghost levels in any of the data, including after removal
+  # of rows containing missing observations
+  x_training <- na.omit(x_training)
+  x_training <- droplevels(x_training)
+  x_testing <- droplevels(x_testing)
+
+  # Loop over models
+  out <- vapply(
+    models,
+    sanitize_model,
+    x_training,
+    x_testing,
+    warn = FALSE,
+    FUN.VALUE = logical(1))
+
+  out
+}
+
+
+
+
+
+#' Retain models which pass sanity checks
+#'
+#' This function retains models passing the sanity checks of
+#' `sanitize_models`. It can optionally throw an error if no model pass the
+#' checks.
+#' 
+#' @inheritParams sanitize_models
+#'
+#' @param error_if_void A `logical` indicating if an error should be issued if
+#'   no model pass the check, resulting in an empty list. Defaults to TRUE.
 #'
 #' @return A list of [`trending_model()`] object which have consistent levels
 #'   for all categorical predictors between the training and testing data.
 
-retain_level_consistent_models <- function(models,
-                                           x_training,
-                                           x_testing,
-                                           warn = TRUE) {
-  ## Ensure there are no ghost levels in any of the data
-  x_training <- droplevels(x_training)
-  x_testing <- droplevels(x_testing)
-
-  ## Apply checks to all mnodels, output a vector of logicals; TRUE means checks
-  ## are OK.
-  out <- vapply(
-      models,
-      check_level_consistency,
-      x_training,
-      x_testing,
-      warn = FALSE,
-      FUN.VALUE = logical(1))
+retain_sanitized_models <- function(models,
+                                    x_training,
+                                    x_testing,
+                                    warn = TRUE,
+                                    error_if_void = TRUE) {
+ 
+  models_ok <- sanitize_models(models,
+                               x_training,
+                               x_testing)
   
-  allgood <- all(out)
+  allgood <- all(models_ok)
 
   if (!allgood & warn) {
-    msg <- paste("some models were disabled because of new",
-                 "levels in the prediction set")
+   msg <- paste0("some models did not pass prediction sanity checks and were disabled;\n",
+                 "this can be due to new levels or NAs in the prediction set")
     warning(msg)
   }
+
+  if (!any(models_ok) & error_if_void) {
+    msg <- "no model passed prediction sanity checks"
+    stop(msg)
+  }
   
-  models[out]
+  models[models_ok]
 }

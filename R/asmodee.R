@@ -194,18 +194,15 @@ asmodee.data.frame <- function(data,
     selected_k <- as.integer(max(fixed_k, 0L))
     data_train <- get_training_data(data, date_index, selected_k)
 
-    ## Here we need to eliminate models which would error when using predict due
-    ## to new levels in the prediction set for categorical predictors (factors).
-    models <- retain_level_consistent_models(models,
-                                             na.omit(data_train),
-                                             data,
-                                             quiet)
-    if (!length(models)) {
-      msg <- paste("none of the models can be used for prediction:\n",
-                   "all have unknown levels in the prediction set")
-      stop(msg)
-    }
-    
+    ## Here we need to eliminate models which would error when using predict on
+    ## the testing set; this can be due to new levels in the prediction set for
+    ## categorical predictors (factors), or to the presence of NAs in the
+    ## predictors.
+    models <- retain_sanitized_models(models,
+                                      data_train,
+                                      data,
+                                      warn = !quiet,
+                                      error_if_void = TRUE)
     selected_model <- select_model(data_train, models, method, include_warnings, ...)
     selected_model <- trending::fit(selected_model, data_train)
   }
