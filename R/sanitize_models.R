@@ -1,10 +1,10 @@
-#' Check level consistency across training / testing set
+#' Check if a model can be used for predictions for specific data
 #'
-#' This function ensures that a model used in asmodee contain compatible levels
-#' in the testing and training set. All levels in the testing set must be
-#' present in the training set (but the converse is not a requirement). It
-#' returns a list of models which comply with the requirement, and issues
-#' warnings for the models which got discarded.
+#' This function ensures that a model trained on a given dataset can be used to
+#' make predictions on another specific dataset. It performs two types of
+#' checks: i) level compatibility, and ii) missing data. For i) checks ensure
+#' that factors of the testing set do not contain any new levels. For ii), it
+#' ensures that there are no NAs in predictors of the testing set.
 #'
 #' @author Thibaut Jombart
 #'
@@ -16,25 +16,20 @@
 #' 
 #' @param x_testing A `data.frame` used as testing set.
 #'
-#' @param warn A `logical` indicating if warnings should be generated when
-#'   factor level mismatches are found.
+#' @param warn A `logical` indicating if warnings should be generated issues are
+#'     found.
 #'
-#' @return A single logical indicating if all levels were OK (TRUE); FALSE if
-#'   there was a single mismatch.
+#' @return A single logical indicating if all checks were OK (TRUE); FALSE if
+#'     there was a single issue, either due to incompatible levels or missing
+#'     data.
 
-check_level_consistency <- function(model, x_training, x_testing,
-                                    warn = TRUE) {
-
+sanitize_model <- function(model,
+                           x_training,
+                           x_testing,
+                           warn = TRUE) {
+    
   # Auxiliary functions
   
-  ## Extract a dataset of all predictors of a model, outputting a data.frame
-  ## containing only factors used in the model formula
-  get_model_factors <- function(model, df) {
-    out <- get_predictor_data(model, df)
-    factors <- vapply(out, is.factor, logical(1))
-    out[factors]
-  }
-
   ## Check level consistency for a single factor
   ##
   ## Returns TRUE if levels are okay, FALSE otherwise
@@ -55,15 +50,33 @@ check_level_consistency <- function(model, x_training, x_testing,
   }
 
 
-  # Make the checks
-  factors_training <- get_model_factors(model, x_training)
-  factors_testing <- get_model_factors(model, x_testing)
-  is_ok <- check_factors(factors_training, factors_testing)
-  out <- all(is_ok)
-  if (!out & warn) {
+  # Extract data.frame of predictors
+  x_training <- get_predictor_data(model, x_training)
+  x_testing <-  get_predictor_data(model, x_testing)
+
+  # Check factors have consistent levels (no new levels in testing set)
+  is_factor_training <- vapply(x_training, is.factor, logical(1))
+  factors_training <- x_training[is_factor_training]
+  is_factor_testing <- vapply(x_testing, is.factor, logical(1))
+  factors_testing <- x_testing[is_factor_testing]
+
+  factors_ok <- check_factors(factors_training, factors_testing)
+  res_levels <- all(factors_ok)
+  if (!res_levels & warn) {
     msg <- "some factors of the prediction set have new, unknown levels"
     warning(msg)
   }
+
+
+  # Check that there are no NAs in testing set
+  res_missing <- any(is.na(x_testing))
+ if (!res_missing & warn) {
+    msg <- "predictors of prediction set contain NAs"
+    warning(msg)
+  }
+  
+  # Combine results
+  out <- res_levels & res_missing
   out
 }
 
