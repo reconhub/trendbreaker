@@ -130,6 +130,12 @@ asmodee <- function(data, models, ...) {
 #' @param include_warnings Include results in output that triggered warnings but
 #'   not errors. Defaults to `FALSE`.
 #'
+#' @param force_positive A `logical` indicating if prediction should be forced
+#'   to be positive (or zero); can be useful when using Gaussian models for
+#'   count data, to censore confidence or prediction intervals and avoid
+#'   negative predictions. Defaults to `FALSE` for general `data.frame` inputs,
+#'   and to `TRUE` for `incidence2` objects.
+#'
 #' @param quiet A `logical` indicating if warnings and messages should be
 #'   suppressed (TRUE) or use (FALSE, default).
 #'
@@ -144,6 +150,7 @@ asmodee.data.frame <- function(data,
                                uncertain = FALSE,
                                include_warnings = FALSE,
                                quiet = FALSE,
+                               force_positive = FALSE,
                                ...) {
 
   if (!length(models)) {
@@ -224,6 +231,23 @@ asmodee.data.frame <- function(data,
                                   simulate_pi = simulate_pi,
                                   uncertain = uncertain)
 
+  ## enforce positive predictions if required
+  neg_to_zero <- function(x) {
+    x[x < 0] <- 0
+    x
+  }    
+  if (force_positive) {
+    res_outliers <- dplyr::mutate(
+      res_outliers,
+      estimate = neg_to_zero(estimate),
+      lower_ci = neg_to_zero(lower_ci),
+      upper_ci = neg_to_zero(upper_ci),
+      lower_pi = neg_to_zero(lower_pi),
+      upper_pi = neg_to_zero(upper_pi)      
+    )
+  }
+
+  ## final output
   out <- list(
     k = selected_k,
     model = selected_model,
@@ -253,6 +277,7 @@ asmodee.incidence2 <- function(data,
                                simulate_pi = TRUE,
                                uncertain = FALSE,
                                include_warnings = FALSE,
+                               force_positive = TRUE,
                                ...) {
   # check incidence2 package is present
   check_suggests("incidence2")
