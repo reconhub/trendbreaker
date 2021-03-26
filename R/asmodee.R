@@ -302,6 +302,7 @@ asmodee.incidence2 <- function(data,
                 include_warnings = include_warnings,
                 simulate_pi = simulate_pi,
                 uncertain = uncertain,
+                force_positive = force_positive,
                 ...)
 
   names(out) <- names(split_dat)

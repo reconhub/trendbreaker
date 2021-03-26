@@ -67,10 +67,10 @@ sanitize_model <- function(model,
   }
 
 
-  # Check that there are no NAs in testing set
-  res_missing <- !any(is.na(x_testing))
- if (!res_missing & warn) {
-    msg <- "predictors of prediction set contain NAs"
+  # Check that there are no NAs in predictors, either in the training set or the testing set
+  res_missing <- !(any(is.na(x_training)) | any(is.na(x_testing)))
+  if (!res_missing & warn) {
+    msg <- "some predictors contain NAs"
     warning(msg)
   }
   
@@ -97,9 +97,7 @@ sanitize_models <- function(models,
                            x_training,
                            x_testing) {
   
-  # Ensure there are no ghost levels in any of the data, including after removal
-  # of rows containing missing observations
-  x_training <- na.omit(x_training)
+  # Ensure there are no ghost levels in any of the data
   x_training <- droplevels(x_training)
   x_testing <- droplevels(x_testing)
 
