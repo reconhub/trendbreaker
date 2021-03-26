@@ -4,7 +4,7 @@
 #' make predictions on another specific dataset. It performs two types of
 #' checks: i) level compatibility, and ii) missing data. For i) checks ensure
 #' that factors of the testing set do not contain any new levels. For ii), it
-#' ensures that there are no NAs in predictors of the testing set.
+#' ensures that there are no NAs in predictors of the training or testing sets.
 #'
 #' @author Thibaut Jombart
 #'
@@ -86,6 +86,8 @@ sanitize_model <- function(model,
 #'
 #' Like the singular version, but for multiple models.
 #'
+#' @noRd
+#' 
 #' @inheritParams sanitize_model
 #' 
 #' @param models A list of [`trending_model()`] objects.
@@ -123,6 +125,8 @@ sanitize_models <- function(models,
 #' `sanitize_models`. It can optionally throw an error if no model pass the
 #' checks.
 #' 
+#' @noRd
+#' 
 #' @inheritParams sanitize_models
 #'
 #' @param error_if_void A `logical` indicating if an error should be issued if
@@ -145,7 +149,7 @@ retain_sanitized_models <- function(models,
 
   if (!allgood & warn) {
    msg <- paste0("some models did not pass prediction sanity checks and were disabled;\n",
-                 "this can be due to new levels or NAs in the prediction set")
+                 "this can be due to new levels or NAs in predictors")
     warning(msg)
   }
 

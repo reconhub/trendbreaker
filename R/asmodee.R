@@ -237,14 +237,11 @@ asmodee.data.frame <- function(data,
     x
   }    
   if (force_positive) {
-    res_outliers <- dplyr::mutate(
-      res_outliers,
-      estimate = neg_to_zero(estimate),
-      lower_ci = neg_to_zero(lower_ci),
-      upper_ci = neg_to_zero(upper_ci),
-      lower_pi = neg_to_zero(lower_pi),
-      upper_pi = neg_to_zero(upper_pi)      
-    )
+    res_outliers$estimate <- neg_to_zero(res_outliers$estimate)
+    res_outliers$lower_ci <- neg_to_zero(res_outliers$lower_ci)
+    res_outliers$upper_ci <- neg_to_zero(res_outliers$upper_ci)
+    res_outliers$lower_pi <- neg_to_zero(res_outliers$lower_pi)
+    res_outliers$upper_pi <- neg_to_zero(res_outliers$upper_pi)
   }
 
   ## final output
