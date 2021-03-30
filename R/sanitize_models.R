@@ -27,27 +27,6 @@ sanitize_model <- function(model,
                            x_training,
                            x_testing,
                            warn = FALSE) {
-    
-  # Auxiliary functions
-  
-  ## Check level consistency for a single factor
-  ##
-  ## Returns TRUE if levels are okay, FALSE otherwise
-  check_factor <- function(f_train, f_test) {
-    all(levels(f_test) %in% levels(f_train))
-  }
-
-  ## Check level consistency for multiple factors
-  ##
-  ## This simply loops over all columns of testing data.frame, ensuring matching
-  ## names, and assuming all variables are factors.
-  check_factors <- function(df_train, df_test) {
-    vars_test <- names(df_test)
-    vapply(vars_test,
-           function(e)
-             check_factor(df_train[[e]], df_test[[e]]),
-           FUN.VALUE = logical(1))
-  }
 
   # Extract data.frame of predictors
   x_training <- get_predictor_data(model, x_training)
