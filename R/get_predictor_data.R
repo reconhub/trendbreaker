@@ -18,10 +18,8 @@
 get_predictor_data <- function(model, df) {
   ## Extract variable names from the formula
   form <- trending::get_formula(model)
-  vars <- unlist(strsplit(as.character(form)[3], "[-:+*|]"))
-  vars <- gsub("[ ]+", "", vars)
-  vars <- vars[vars != "1"] # remove intercept
-
+  vars <- all.vars(form)[-1]
+                         
   ## Ensure informative error if some variables are missing
   missing_vars <- vars[!vars %in% names(df)]
   if (length(missing_vars)) {
