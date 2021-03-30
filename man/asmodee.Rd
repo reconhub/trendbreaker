@@ -19,6 +19,8 @@ asmodee(data, models, ...)
   simulate_pi = TRUE,
   uncertain = FALSE,
   include_warnings = FALSE,
+  quiet = FALSE,
+  force_positive = FALSE,
   ...
 )
 
@@ -32,6 +34,7 @@ asmodee(data, models, ...)
   simulate_pi = TRUE,
   uncertain = FALSE,
   include_warnings = FALSE,
+  force_positive = TRUE,
   ...
 )
 }
@@ -58,10 +61,10 @@ look for a changepoint within this recent time period, after which data no
 longer fit the previous trend. Larger values will require more computation
 from the method. Only used if \code{fixed_k} is \code{NULL}.}
 
-\item{fixed_k}{An optional \code{integer} indicating the number of recent data points to be
-excluded from the trend fitting procedure. Defaults to \code{NULL}, in which
-case ASMODEE detects \code{k} automatically, at the expense of computational
-time.}
+\item{fixed_k}{An optional \code{integer} indicating the number of recent data
+points to be excluded from the trend fitting procedure. Defaults to \code{NULL},
+in which case ASMODEE detects \code{k} automatically, at the expense of
+computational time.}
 
 \item{method}{A function used to evaluate model fit. Current choices are
 \code{evaluate_aic} (default) and \code{evaluate_resampling}. \code{evaluate_aic} uses
@@ -79,6 +82,15 @@ FALSE.}
 
 \item{include_warnings}{Include results in output that triggered warnings but
 not errors. Defaults to \code{FALSE}.}
+
+\item{quiet}{A \code{logical} indicating if warnings and messages should be
+suppressed (TRUE) or use (FALSE, default).}
+
+\item{force_positive}{A \code{logical} indicating if prediction should be forced
+to be positive (or zero); can be useful when using Gaussian models for
+count data, to censore confidence or prediction intervals and avoid
+negative predictions. Defaults to \code{FALSE} for general \code{data.frame} inputs,
+and to \code{TRUE} for \code{incidence2} objects.}
 }
 \value{
 An \code{trendbreaker} object (S3 class inheriting \code{list}), containing items

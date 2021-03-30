@@ -108,10 +108,10 @@ asmodee <- function(data, models, ...) {
 #'   longer fit the previous trend. Larger values will require more computation
 #'   from the method. Only used if `fixed_k` is `NULL`.
 #'
-#' @param fixed_k An optional `integer` indicating the number of recent data points to be
-#'   excluded from the trend fitting procedure. Defaults to `NULL`, in which
-#'   case ASMODEE detects `k` automatically, at the expense of computational
-#'   time.
+#' @param fixed_k An optional `integer` indicating the number of recent data
+#'   points to be excluded from the trend fitting procedure. Defaults to `NULL`,
+#'   in which case ASMODEE detects `k` automatically, at the expense of
+#'   computational time.
 #'
 #' @param method A function used to evaluate model fit. Current choices are
 #'   `evaluate_aic` (default) and `evaluate_resampling`. `evaluate_aic` uses
@@ -120,15 +120,24 @@ asmodee <- function(data, models, ...) {
 #'   `evaluate_resampling` uses cross-validation and, by default, RMSE to assess
 #'   model fit.
 #'
-#' @param include_warnings Include results in output that triggered warnings but
-#'   not errors. Defaults to `FALSE`.
-#'
 #' @param simulate_pi Should the ciTools package be used to simulate prediction
 #'   intervals for glm models. Defaults to TRUE.
 #'
 #' @param uncertain Only used for glm models. If FALSE uncertainty in the fitted
 #'   parameters is ignored when generating the prediction intervals. Defaults to
 #'   FALSE.
+#'
+#' @param include_warnings Include results in output that triggered warnings but
+#'   not errors. Defaults to `FALSE`.
+#'
+#' @param force_positive A `logical` indicating if prediction should be forced
+#'   to be positive (or zero); can be useful when using Gaussian models for
+#'   count data, to censore confidence or prediction intervals and avoid
+#'   negative predictions. Defaults to `FALSE` for general `data.frame` inputs,
+#'   and to `TRUE` for `incidence2` objects.
+#'
+#' @param quiet A `logical` indicating if warnings and messages should be
+#'   suppressed (TRUE) or use (FALSE, default).
 #'
 asmodee.data.frame <- function(data,
                                models,
@@ -140,8 +149,15 @@ asmodee.data.frame <- function(data,
                                simulate_pi = TRUE,
                                uncertain = FALSE,
                                include_warnings = FALSE,
+                               quiet = FALSE,
+                               force_positive = FALSE,
                                ...) {
 
+  if (!length(models)) {
+    msg <- "models has a length of zero"
+    stop(msg)
+  }
+  
   ## As the method relies on a 'time' variable for defining training/testing
   ## sets, we first need to retrieve this information from the 'time_index'
   ## argument. We borrow the same strategy as the one used in the *incidence2*
@@ -184,6 +200,16 @@ asmodee.data.frame <- function(data,
     
     selected_k <- as.integer(max(fixed_k, 0L))
     data_train <- get_training_data(data, date_index, selected_k)
+
+    ## Here we need to eliminate models which would error when using predict on
+    ## the testing set; this can be due to new levels in the prediction set for
+    ## categorical predictors (factors), or to the presence of NAs in the
+    ## predictors.
+    models <- retain_sanitized_models(models,
+                                      data_train,
+                                      data,
+                                      warn = !quiet,
+                                      error_if_void = TRUE)
     selected_model <- select_model(data_train, models, method, include_warnings, ...)
     selected_model <- trending::fit(selected_model, data_train)
   }
@@ -205,17 +231,20 @@ asmodee.data.frame <- function(data,
                                   simulate_pi = simulate_pi,
                                   uncertain = uncertain)
 
+  ## enforce positive predictions if required
+  neg_to_zero <- function(x) {
+    x[x < 0] <- 0
+    x
+  }    
+  if (force_positive) {
+    res_outliers$estimate <- neg_to_zero(res_outliers$estimate)
+    res_outliers$lower_ci <- neg_to_zero(res_outliers$lower_ci)
+    res_outliers$upper_ci <- neg_to_zero(res_outliers$upper_ci)
+    res_outliers$lower_pi <- neg_to_zero(res_outliers$lower_pi)
+    res_outliers$upper_pi <- neg_to_zero(res_outliers$upper_pi)
+  }
 
-  ## form output
-  ## n_outliers <- sum(res_outliers$outlier, na.rm = TRUE)
-  ## n_outliers_recent <- sum(utils::tail(res_outliers$outlier, selected_k),
-  ##                          na.rm = TRUE)
-  ## n_outliers_train <-  n_outliers - n_outliers_recent
-  ## p_value <- stats::pbinom(n_outliers,
-  ##                          size = nrow(data),
-  ##                          prob = alpha,
-  ##                          lower.tail = FALSE)
-
+  ## final output
   out <- list(
     k = selected_k,
     model = selected_model,
@@ -245,6 +274,7 @@ asmodee.incidence2 <- function(data,
                                simulate_pi = TRUE,
                                uncertain = FALSE,
                                include_warnings = FALSE,
+                               force_positive = TRUE,
                                ...) {
   # check incidence2 package is present
   check_suggests("incidence2")
@@ -269,6 +299,7 @@ asmodee.incidence2 <- function(data,
                 include_warnings = include_warnings,
                 simulate_pi = simulate_pi,
                 uncertain = uncertain,
+                force_positive = force_positive,
                 ...)
 
   names(out) <- names(split_dat)

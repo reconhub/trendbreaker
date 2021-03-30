@@ -48,6 +48,13 @@ detect_changepoint <- function(data, models, date_index,
     data <- set_training_data(data, date_index, k)
     data_train <- get_training_data(data, date_index, k)
 
+    ## sanitize models
+    models <- retain_sanitized_models(models,
+                                      data_train,
+                                      data,
+                                      warn = FALSE,
+                                      error_if_void = TRUE)
+    
     ## select best model on training data
     current_model <- select_model(
       models = models,
