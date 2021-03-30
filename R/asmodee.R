@@ -265,6 +265,11 @@ asmodee.data.frame <- function(data,
 #' @export
 #'
 #' @rdname asmodee
+#'
+#' @param n_cores An `integer` indicating the number of cores to be used; if
+#'   greater than 1, then asmodee will be run in parallel across the number of
+#'   requested cores; defaults to 1.
+#' 
 asmodee.incidence2 <- function(data,
                                models,
                                alpha = 0.05,
@@ -275,6 +280,7 @@ asmodee.incidence2 <- function(data,
                                uncertain = FALSE,
                                include_warnings = FALSE,
                                force_positive = TRUE,
+                               n_cores = 1,
                                ...) {
   # check incidence2 package is present
   check_suggests("incidence2")
@@ -288,7 +294,9 @@ asmodee.incidence2 <- function(data,
   }
   date_index <- incidence2::get_dates_name(data)
 
-  out <- lapply(split_dat,
+  # Note: with mc.cores = 1, mclapply is simply a lapply, so we do not need a
+  # switch behaviour here.
+  out <- parallel::mclapply(split_dat,
                 asmodee.data.frame,
                 models = models,
                 date_index = date_index,
@@ -300,7 +308,10 @@ asmodee.incidence2 <- function(data,
                 simulate_pi = simulate_pi,
                 uncertain = uncertain,
                 force_positive = force_positive,
-                ...)
+                ...,
+                mc.cores = n_cores
+                )
+  
 
   names(out) <- names(split_dat)
   class(out) <- "trendbreaker_incidence2"

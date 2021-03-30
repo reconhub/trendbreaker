@@ -35,6 +35,7 @@ asmodee(data, models, ...)
   uncertain = FALSE,
   include_warnings = FALSE,
   force_positive = TRUE,
+  n_cores = 1,
   ...
 )
 }
@@ -91,6 +92,10 @@ to be positive (or zero); can be useful when using Gaussian models for
 count data, to censore confidence or prediction intervals and avoid
 negative predictions. Defaults to \code{FALSE} for general \code{data.frame} inputs,
 and to \code{TRUE} for \code{incidence2} objects.}
+
+\item{n_cores}{An \code{integer} indicating the number of cores to be used; if
+greater than 1, then asmodee will be run in parallel across the number of
+requested cores; defaults to 1.}
 }
 \value{
 An \code{trendbreaker} object (S3 class inheriting \code{list}), containing items
