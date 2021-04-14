@@ -1,3 +1,7 @@
+development version
+----------------------------
+* Currently undergoing refactoring.
+
 
 version 0.2.0 (23 September 2020)
 ----------------------------

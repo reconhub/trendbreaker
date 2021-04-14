@@ -10,13 +10,14 @@ test_that("trendbreaker accessors", {
     lm_trend = model2
   )
 
-  res <- asmodee(dat, models, x, method = trendeval::evaluate_aic, fixed_k = 1)
-  expect_identical(get_model(res), res$model)
+  res <- asmodee(dat, models, x, method = trendeval::evaluate_aic, k = 1)
+  # TODO - these need changing as they are just duplicating the implementation!
+  expect_identical(get_model(res), res$trending_model_fit$fitted_model)
   expect_equal(get_k(res), 1)
-  expect_identical(get_formula(res), formula(res$model$fitted_model))
+  expect_identical(get_formula(res), formula(res$trending_model_fit$fitted_model))
   expect_identical(get_response(res), "y")
 
-  
+
   nms <- c(colnames(dat), "training", "estimate", "lower_ci", "upper_ci", "lower_pi",
            "upper_pi", "outlier", "classification")
 
@@ -52,10 +53,10 @@ test_that("trendbreaker_incidence2 subsetting", {
   x <- incidence2::incidence(dat,
                              groups = hospital,
                              date_index = date_of_onset)
-  res <- asmodee(x, models, fixed_k = 7)
+  res <- asmodee(x, models, k = 7)
 
   expect_identical(class(res), class(res[1]))
   expect_identical(names(res)[c(1,3)],
                    names(res[c(1,3)]))
-  
+
 })

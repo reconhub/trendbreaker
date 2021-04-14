@@ -101,6 +101,8 @@ self-reporting of potential COVID-19 cases in England
 ```{r asmodee}
 library(trendbreaker) # for ASMODEE
 library(dplyr)        # for data manipulation
+library(future)
+plan("multisession")
 
 # load data
 data(nhs_pathways_covid19)
@@ -159,7 +161,7 @@ models <- list(
 )
 
 # analyses on all data
-res <- asmodee(dat, models, method = evaluate_aic, fixed_k = 7)
+res <- asmodee(dat, models, method = evaluate_aic, k = 7)
 
 plot(res)
 ```

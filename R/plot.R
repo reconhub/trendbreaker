@@ -106,8 +106,10 @@ plot.trendbreaker_incidence2 <- function(x,
                               ncol = NULL,
                               ...) {
 
+  x <- x$output # TODO - this won't work if someone has renamed columns
+
   x_axis <- x[[1]]$date_index
-  
+
   # if length one use normal plot function
   if (length(x) == 1) {
     plot(x[[1]],

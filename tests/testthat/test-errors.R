@@ -12,21 +12,21 @@ test_that("errors", {
 
   # detect_changepoint error
   expect_error(
-    asmodee(dat, models, x, method = trending::evaluate_aic),
-    "`max_k` (7) is too high for the dataset size (10)",
+    asmodee(dat, models, x, method = evaluate_aic, k = 7),
+    "`k` (7) is too high for the dataset size (10)",
     fixed = TRUE
   )
 
-  # detect_outliers errors
-  msg <- paste("`model` has not been trained on data;",
-                 "use `train()` to train your model, then detect outliers")
-  expect_error(detect_outliers(dat, model1),
-               msg,
-               fixed = TRUE)
-
-  msg <- "`model` should be an `trending_model_fit` object, but is a `character`"
-  expect_error(detect_outliers(dat, "batman"),
-               msg,
-               fixed = TRUE)
+  # # detect_outliers errors
+  # msg <- paste("`model` has not been trained on data;",
+  #                "use `train()` to train your model, then detect outliers")
+  # expect_error(detect_outliers(dat, model1),
+  #              msg,
+  #              fixed = TRUE)
+  #
+  # msg <- "`model` should be an `trending_model_fit` object, but is a `character`"
+  # expect_error(detect_outliers(dat, "batman"),
+  #              msg,
+  #              fixed = TRUE)
 
 })

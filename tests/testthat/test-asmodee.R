@@ -13,24 +13,17 @@ test_that("asmodee works with data.frame", {
       pois_weekday = trending::glm_model(n ~ weekday + date, "poisson"),
       nb_weekday = trending::glm_nb_model(n ~ weekday + date)
   )
-  
+
   ## fixed_k = 7
   res <- asmodee(x, models, "date",
-                 fixed_k = 7)
+                 k = 7)
   expect_equal(res$k, 7)
   expect_true(is.logical(res$results$outlier))
   expect_true(!anyNA(res$results$outlier))
 
-  ## optimize k
+  ## fixed_k, different pi estimation
   res <- asmodee(x, models, "date",
-                 max_k = 2)
-  expect_equal(res$k, 0)
-  expect_true(is.logical(res$results$outlier))
-  expect_true(!anyNA(res$results$outlier))
-
-   ## fixed_k, different pi estimation
-  res <- asmodee(x, models, "date",
-                 fixed_k = 3,
+                 k = 3,
                  simulate_pi = FALSE,
                  uncertain = TRUE
                  )
@@ -41,7 +34,7 @@ test_that("asmodee works with data.frame", {
   ## using 4-fold  cross validation
   res <- asmodee(x, models,
                  "date",
-                 fixed_k = 0,
+                 k = 0,
                  method = trendeval::evaluate_resampling,
                  v = 4)
   expect_equal(res$k, 0)
@@ -65,29 +58,29 @@ test_that("asmodee works with incidence2 object", {
 
   ## ungrouped incidence
   x <- incidence2::incidence(dat, date_index = date_of_onset)
-  res <- asmodee(x, models, fixed_k = 7)
+  res <- asmodee(x, models, k = 7)
 
-  expect_equal(res[[1]]$k, 7)
-  expect_true(is.logical(res[[1]]$results$outlier))
-  expect_true(!anyNA(res[[1]]$results$outlier))
+  expect_equal(res$output[[1]]$k, 7)
+  expect_true(is.logical(res$output[[1]]$results$outlier))
+  expect_true(!anyNA(res$output[[1]]$results$outlier))
 
   ## grouped incidence
   x <- incidence2::incidence(dat, groups = hospital, date_index = date_of_onset)
-  res <- asmodee(x, models, fixed_k = 7)
+  res <- asmodee(x, models, k = 7)
 
-  expect_equal(res[[2]]$k, 7)
-  expect_true(is.logical(res[[2]]$results$outlier))
-  expect_true(!anyNA(res[[2]]$results$outlier))
+  expect_equal(res$output[[2]]$k, 7)
+  expect_true(is.logical(res$output[[2]]$results$outlier))
+  expect_true(!anyNA(res$output[[2]]$results$outlier))
 
-  
+
   ## grouped incidence, weekly data
   x <- incidence2::incidence(dat, "monday week",
                              groups = hospital,
                              date_index = date_of_onset)
-  res <- asmodee(x, models, fixed_k = 3)
+  res <- asmodee(x, models, k = 3)
 
-  expect_equal(res[[2]]$k, 3)
-  expect_true(is.logical(res[[2]]$results$outlier))
-  expect_true(!anyNA(res[[2]]$results$outlier))
+  expect_equal(res$output[[2]]$k, 3)
+  expect_true(is.logical(res$output[[2]]$results$outlier))
+  expect_true(!anyNA(res$output[[2]]$results$outlier))
 
 })

@@ -24,7 +24,7 @@
 #' in the training set
 #'
 #' @rdname summary.trendbreaker
-#' 
+#'
 summary.trendbreaker <- function(object, ...) {
   x <- object$results
   alpha <- object$alpha
@@ -55,7 +55,7 @@ summary.trendbreaker <- function(object, ...) {
                                   size = n_training,
                                   prob = alpha,
                                   lower.tail = FALSE)
- 
+
   data.frame(n_recent,
              n_recent_increases,
              n_recent_decreases,
@@ -66,7 +66,7 @@ summary.trendbreaker <- function(object, ...) {
              n_training_decreases,
              n_training_outliers,
              p_training_outliers)
-  
+
 }
 
 
@@ -75,6 +75,7 @@ summary.trendbreaker <- function(object, ...) {
 #' @rdname summary.trendbreaker
 #' @export
 summary.trendbreaker_incidence2 <- function(object, ...) {
+  object <- object$output # TODO - this won't work if someone has renamed columns
   out <- lapply(object, summary)
   out <- dplyr::bind_rows(out)
   if (!is.null(names(object))) {

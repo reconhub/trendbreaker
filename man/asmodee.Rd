@@ -13,14 +13,15 @@ asmodee(data, models, ...)
   models,
   date_index,
   alpha = 0.05,
-  max_k = 7,
-  fixed_k = NULL,
-  method = trendeval::evaluate_aic,
+  k = 1,
+  method = evaluate_aic,
   simulate_pi = TRUE,
   uncertain = FALSE,
-  include_warnings = FALSE,
-  quiet = FALSE,
+  include_fitting_warnings = FALSE,
+  include_prediction_warnings = TRUE,
   force_positive = FALSE,
+  quiet = FALSE,
+  keep_intermediate = FALSE,
   ...
 )
 
@@ -28,14 +29,16 @@ asmodee(data, models, ...)
   data,
   models,
   alpha = 0.05,
-  max_k = 7,
-  fixed_k = NULL,
-  method = trendeval::evaluate_aic,
+  k = 1,
+  method = evaluate_aic,
   simulate_pi = TRUE,
   uncertain = FALSE,
-  include_warnings = FALSE,
+  include_fitting_warnings = FALSE,
+  include_prediction_warnings = TRUE,
+  include_group_warnings = FALSE,
   force_positive = TRUE,
-  n_cores = 1,
+  quiet = FALSE,
+  keep_intermediate = FALSE,
   ...
 )
 }
@@ -56,16 +59,8 @@ not.}
 calculation; defaults to 0.05, i.e. 95\% prediction intervals are
 calculated.}
 
-\item{max_k}{An \code{integer} indicating the maximum number of recent data points
-to be excluded from the trend fitting procedure. By default, ASMODEE will
-look for a changepoint within this recent time period, after which data no
-longer fit the previous trend. Larger values will require more computation
-from the method. Only used if \code{fixed_k} is \code{NULL}.}
-
-\item{fixed_k}{An optional \code{integer} indicating the number of recent data
-points to be excluded from the trend fitting procedure. Defaults to \code{NULL},
-in which case ASMODEE detects \code{k} automatically, at the expense of
-computational time.}
+\item{k}{An \code{integer} indicating the number of recent data  points to be
+excluded from the trend fitting procedure. Defaults to 1.}
 
 \item{method}{A function used to evaluate model fit. Current choices are
 \code{evaluate_aic} (default) and \code{evaluate_resampling}. \code{evaluate_aic} uses
@@ -77,25 +72,34 @@ model fit.}
 \item{simulate_pi}{Should the ciTools package be used to simulate prediction
 intervals for glm models. Defaults to TRUE.}
 
-\item{uncertain}{Only used for glm models. If FALSE uncertainty in the fitted
-parameters is ignored when generating the prediction intervals. Defaults to
-FALSE.}
+\item{uncertain}{Only used for glm models and if simulate_pi = FALSE. If
+FALSE uncertainty in the fitted parameters is ignored when generating the
+prediction intervals. Defaults to FALSE.}
 
-\item{include_warnings}{Include results in output that triggered warnings but
-not errors. Defaults to \code{FALSE}.}
+\item{include_fitting_warnings}{Should results include models that triggered
+warnings, but not errors, during the fitting procedure. Defaults to
+\code{FALSE}.}
+
+\item{include_prediction_warnings}{Should results include models that
+triggered warnings, but not errors, during the prediciton stage. Defaults
+to \code{FALSE}.}
+
+\item{force_positive}{A \code{logical} indicating if prediction should be forced
+to be positive (or zero); can be useful when using Gaussian models for
+count data, to censor confidence or prediction intervals and avoid
+negative predictions. Defaults to \code{FALSE} for general \code{data.frame} inputs,
+and to \code{TRUE} for \code{incidence2} objects.}
 
 \item{quiet}{A \code{logical} indicating if warnings and messages should be
 suppressed (TRUE) or use (FALSE, default).}
 
-\item{force_positive}{A \code{logical} indicating if prediction should be forced
-to be positive (or zero); can be useful when using Gaussian models for
-count data, to censore confidence or prediction intervals and avoid
-negative predictions. Defaults to \code{FALSE} for general \code{data.frame} inputs,
-and to \code{TRUE} for \code{incidence2} objects.}
+\item{keep_intermediate}{A \code{logical} indicating if all output from the
+fitting and prediction stages should be kept. If \code{TRUE} then a tibble will
+be returned in the .fitted_results position of the resulting list output.
+If \code{FALSE} (default) .fitted_results will be \code{NULL}.}
 
-\item{n_cores}{An \code{integer} indicating the number of cores to be used; if
-greater than 1, then asmodee will be run in parallel across the number of
-requested cores; defaults to 1.}
+\item{include_group_warnings}{Should results include models that triggered
+warnings, but not errors, during the prediciton stage. Defaults to \code{FALSE}.}
 }
 \value{
 An \code{trendbreaker} object (S3 class inheriting \code{list}), containing items
@@ -110,36 +114,32 @@ trend. Trend-fitting is done by fitting a series of user-specified models for
 the time series, with different methods for selecting best fit (see details,
 and the argument \code{method}). The prediction interval is then calculated for
 the best model, and every data point (including the training set and
-supplementary individuals) falling outside are classified as 'outliers'. The
-value of \code{k} can be fixed by the user, or automatically selected to minimise
-outliers in the training period and maximise and the detection of outliers in
-the recent period.
+supplementary individuals) falling outside are classified as 'outliers'.
 }
 \details{
 Automatic model selection is used to determine the model best
 fitting the training data from a list of user-provided models. First, all
 models are fitted to the data. Second, models are selected using the
-approach specified by the \code{method} argument. The default,
-\url{evaluate_resampling}, uses cross-validation
-(10-fold by default) and root mean squared error (RMSE) to assess model
-fit. This approach is likely to select models with good predictive
-abilities, but is computationally intensive. The alternative is using
-\url{evaluate_aic}, which uses Akaike's Information Criteria to
-assess model fit penalised by model complexity. This approach is fast, but
-only measures model fit rather than predictive ability.
+approach specified by the \code{method} argument. The default is
+\code{\link[=evaluate_aic]{evaluate_aic()}} which uses Akaike's Information Criteria to assess model
+fit penalised by model complexity. This approach is fast, but only measures
+model fit rather than predictive ability. The alternative is using
+\code{\link[=evaluate_resampling]{evaluate_resampling()}}, uses cross-validation (10-fold by default) and
+root mean squared error (RMSE) to assess model fit. This approach is likely
+to select models with good predictive abilities, but is computationally
+intensive.
 }
 \examples{
-
 if (require(cowplot) && require(tidyverse) && require(trending)) {
-  ## load data
+  # load data
   data(nhs_pathways_covid19)
 
-  ## select last 28 days
+  # select last 28 days
   first_date <- max(nhs_pathways_covid19$date, na.rm = TRUE) - 28
   pathways_recent <- nhs_pathways_covid19 \%>\%
     filter(date >= first_date)
 
-  ## define candidate models
+  # define candidate models
   models <- list(
     regression = lm_model(count ~ day),
     poisson_constant = glm_model(count ~ 1, family = "poisson"),
@@ -147,23 +147,14 @@ if (require(cowplot) && require(tidyverse) && require(trending)) {
     negbin_time_weekday = glm_nb_model(count ~ day + weekday)
   )
 
-  ## analyses on all data
+  # analyses on all data
   counts_overall <- pathways_recent \%>\%
     group_by(date, day, weekday) \%>\%
     summarise(count = sum(count))
 
-  ## results with automated detection of 'k'
-  res_overall <- asmodee(counts_overall,
-                         models,
-                         "date",
-                         method = evaluate_aic)
-  res_overall
-  plot(res_overall, "date")
-
-  ## results with fixed value of 'k' (7 days)
-  res_overall_k7 <- asmodee(counts_overall, models, date, fixed_k = 7)
+  # results with fixed value of 'k' (7 days)
+  res_overall_k7 <- asmodee(counts_overall, models, date, k = 7)
   plot(res_overall_k7, "date")
-
 }
 
 }
