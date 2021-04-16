@@ -357,7 +357,7 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 1,
                                include_prediction_warnings = TRUE,
                                include_group_warnings = FALSE,
                                force_positive = TRUE, quiet = FALSE,
-                               keep_intermediate = FALSE, ...) {
+                               keep_intermediate = FALSE, ..., n_cores = 1) {
 
   # check incidence2 package is present
   check_suggests("incidence2")
@@ -371,7 +371,7 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 1,
   }
   date_index <- incidence2::get_dates_name(data)
 
-  out <- lapply(
+  out <- future.apply::future_lapply(
     split_dat,
     safely(asmodee.data.frame),
     models = models,
@@ -385,7 +385,9 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 1,
     include_prediction_warnings = include_prediction_warnings,
     force_positive = force_positive,
     quiet = quiet,
-    keep_intermediate = keep_intermediate
+    keep_intermediate = keep_intermediate,
+    ...,
+    future.seed = TRUE
   )
 
   out <- base_transpose(out)

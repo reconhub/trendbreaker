@@ -39,7 +39,8 @@ asmodee(data, models, ...)
   force_positive = TRUE,
   quiet = FALSE,
   keep_intermediate = FALSE,
-  ...
+  ...,
+  n_cores = 1
 )
 }
 \arguments{
