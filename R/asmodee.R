@@ -162,22 +162,9 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 1,
   }
   data_train <- get_training_data(data, date_index, selected_k)
 
-  # Here we eliminate models which would error when using predict on
-  # the testing set due to either new levels in the prediction set for
-  # categorical predictors (factors), or the presence of NAs in the predictors.
-  models <- retain_sanitized_models(
-    models,
-    x_training = data_train,
-    x_testing = data,
-    warn = !quiet,
-    error_if_void = TRUE
-  )
-
   # fit all of the models and capture the warnings and errors
-  fitted_results <- lapply(models, function(x) safely(trending::fit)(x, data_train))
-  fitted_results <- base_transpose(fitted_results)
-  names(fitted_results) <- c("trending_model_fit", "fitting_warnings", "fitting_errors")
-  fitted_results <- tibble::as_tibble(fitted_results)
+  fitted_results <- clapply(models, trending::fit, data = data_train)
+  colnames(fitted_results) <- c("trending_model_fit", "fitting_warnings", "fitting_errors")
 
   # keep fitting_results (optional). useful for debugging
   .fitted_results <- NULL
@@ -255,9 +242,10 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 1,
   i <- 0
   success <- FALSE
   tmp <- out$trending_model_fit
+  predict_catcher <- make_catcher(predict)
   while(i < length(tmp) && !success) {
     i <- i + 1
-    pred_result <- safely(predict)(
+    pred_result <- predict_catcher(
       tmp[[i]],
       new_data = data,
       alpha = alpha,
@@ -371,9 +359,9 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 1,
   }
   date_index <- incidence2::get_dates_name(data)
 
-  out <- future.apply::future_lapply(
+  out <- future_clapply(
     split_dat,
-    safely(asmodee.data.frame),
+    asmodee.data.frame,
     models = models,
     date_index = date_index,
     alpha = alpha,
@@ -389,16 +377,12 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 1,
     ...,
     future.seed = TRUE
   )
+  names(out) <- c("output", "warnings", "errors")
 
-  out <- base_transpose(out)
   nms <- names(split_dat)
   if (is.null(nms)) nms <- NA
-  out <- tibble::tibble(
-    group = nms,
-    output = out[[1]],
-    warnings = out[[2]],
-    errors = out[[3]]
-  )
+  out$group = nms
+  out <- dplyr::relocate(out, group)
 
   # remove errors
   keep <- vapply(out$errors, is.null, logical(1))
