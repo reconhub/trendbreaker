@@ -62,7 +62,7 @@ test_that("asmodee works with incidence2 object", {
   expect_s3_class(smry, "data.frame")
   expect_identical(nrow(smry), length(res$output))
   expect_identical(ncol(smry), 11L)
-  expected_names <- c("group",
+  expected_names <- c("hospital",
                       "n_recent", "n_recent_increases", "n_recent_decreases",
                       "n_recent_outliers", "p_recent_outliers", "n_training",
                       "n_training_increases", "n_training_decreases",

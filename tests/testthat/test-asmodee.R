@@ -36,7 +36,7 @@ test_that("asmodee works with data.frame", {
                  "date",
                  k = 0,
                  method = trendeval::evaluate_resampling,
-                 v = 4)
+                 method_args = list(v = 4))
   expect_equal(res$k, 0)
   expect_true(is.logical(res$results$outlier))
   expect_true(!anyNA(res$results$outlier))
