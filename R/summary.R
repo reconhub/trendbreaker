@@ -75,12 +75,12 @@ summary.trendbreaker <- function(object, ...) {
 #' @rdname summary.trendbreaker
 #' @export
 summary.trendbreaker_incidence2 <- function(object, ...) {
-  object <- object$output # TODO - this won't work if someone has renamed columns
-  out <- lapply(object, summary)
+  out <- object$output # TODO - this won't work if someone has renamed columns
+  out <- lapply(out, summary)
   out <- dplyr::bind_rows(out)
-  if (!is.null(names(object))) {
-    out$group <- names(object)
-    out <- dplyr::select(out, "group", dplyr::everything())
+  groups <- attr(object, "groups")
+  if (!is.null(groups)) {
+    out <- dplyr::bind_cols(object[groups], out)
   }
   out
 }
