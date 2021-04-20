@@ -50,7 +50,8 @@ Imports:
     trendeval,
     rlang,
     tidyselect,
-    future.apply
+    future.apply,
+    ellipsis
 Remotes:
     reconhub/trending,
     reconhub/incidence2

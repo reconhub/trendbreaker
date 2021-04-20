@@ -121,23 +121,30 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
                                quiet = FALSE,
                                keep_intermediate = FALSE, ...) {
 
-  # sanity checks
-  # TODO - may want to add more
-  if (!length(models)) stop("models has a length of zero")
-  if (!is.numeric(k) || !is.finite(k)) {
-    stop("`k` must be a finite number")
-  }
+  # basic input checks
+  stopifnot("models has a length of zero" = length(models) > 0)
+  stopifnot("`alpha` must be a finite number" = is.numeric(alpha) && is.finite(alpha))
+  stopifnot("`k` must be a finite number" = is.numeric(k) && is.finite(k))
+  stopifnot("`simulate_pi` should be TRUE or FALSE" = is.logical(simulate_pi))
+  stopifnot("`uncertain` should be TRUE or FALSE" = is.logical(uncertain))
+  stopifnot("`include_fitting_warnings` should be TRUE or FALSE" = is.logical(include_fitting_warnings))
+  stopifnot("`include_prediction_warnings` should be TRUE or FALSE" = is.logical(include_prediction_warnings))
+  stopifnot("`force_positive` should be TRUE or FALSE" = is.logical(force_positive))
+  stopifnot("`quiet` should be TRUE or FALSE" = is.logical(quiet))
+  stopifnot("`keep_intermediate` should be TRUE or FALSE" = is.logical(keep_intermediate))
+  ellipsis::check_dots_empty()
 
   # As the method relies on a 'time' variable for defining training/testing
   # sets, we first need to retrieve this information from the 'time_index'
   # argument. We borrow the same strategy as the one used in the *incidence2*
-  # package.
+  # package. A by product of this is input checking of date_index!
   date_index <- rlang::enquo(date_index)
   idx <- tidyselect::eval_select(date_index, data)
   date_index <- names(data)[idx]
   dates <- data[[date_index]]
 
-  # Ensure k is of "reasonable" size
+  # Ensure k is a wholenumber of "reasonable" size
+  k <- int_cast(k) # this will error if cannot cast to integer
   n_dates <- length(unique(dates))
   if (k > (n_dates - 4)) {
     msg <- sprintf("`k` (%d) is too high for the dataset size (%d)", k, n_dates)
@@ -155,15 +162,14 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
 
   # Define the training set and boundary dates
   # TODO - this can be streamlined quite a bit as duplicating code
-  selected_k <- as.integer(max(k, 0L))
-  data <- set_training_data(data, date_index, selected_k)
+  data <- set_training_data(data, date_index, k)
   training <- data$training
   last_training_date <- max(dates[training], na.rm = TRUE)
   first_testing_date <- NULL
-  if (selected_k > 0) {
+  if (k > 0) {
     first_testing_date <- min(dates[!training], na.rm = TRUE)
   }
-  data_train <- get_training_data(data, date_index, selected_k)
+  data_train <- get_training_data(data, date_index, k)
 
   # fit all of the models and capture the warnings and errors
   fitted_results <- clapply(models, trending::fit, data = data_train)
@@ -187,12 +193,12 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   }
 
   # evaluate the models
-  # TODO - some duplication here
   method_args <- utils::modifyList(
     method_args,
     list(data = data_train, models = models, method = method),
     keep.null = TRUE
   )
+  # TODO - possibly some duplication here
   model_results <- do.call(trendeval::evaluate_models, method_args)
   model_results$model <- NULL   # this is cleaning up from trendeval output
   model_results$data <- NULL    # this is cleaning up from trendeval output
@@ -321,7 +327,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
 
   # final output
   out <- list(
-    k = selected_k,
+    k = k,
     model_name = out$model_name[[1]],
     trending_model_fit = out$trending_model_fit[[1]],
     alpha = alpha,

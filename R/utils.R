@@ -52,5 +52,24 @@ future_clapply <- function(X, FUN, ...) {
   tibble::tibble(result = res[[1]], warnings = res[[2]], errors = res[[3]])
 }
 
+# check if entries of a vector are whole numbers
+is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
+  abs(x - round(x)) < tol
+}
+
+
+# cast a vector to an integer
+int_cast <- function(x) {
+  x <- unclass(x)
+  if (!all(is.wholenumber(x) | is.na(x))) {
+    msg <- paste(deparse1(substitute(x)), "must be a vector of whole numbers")
+    stop(msg, call. = FALSE)
+  }
+  res <- as.integer(x)
+  names(res) <- names(x)
+  res
+}
+
+
 
 
