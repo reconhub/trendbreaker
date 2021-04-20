@@ -110,6 +110,7 @@ asmodee <- function(data, models, ...) {
 #'   If `FALSE` (default) .fitted_results will be `NULL`.
 #'
 #' @rdname asmodee
+#' @importFrom rlang .data
 #' @export
 asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
                                method = evaluate_aic, method_args = list(),
@@ -197,8 +198,8 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   model_results$data <- NULL    # this is cleaning up from trendeval output
   model_results <- dplyr::rename(
     model_results,
-    evaluation_warnings = warning,
-    evaluation_errors = error
+    evaluation_warnings = .data$warning,
+    evaluation_errors = .data$error
   )
 
   # combine fitting, evaluation data
@@ -208,7 +209,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   if (!"model_name" %in% names(out)) {
     out$model_name <- NA_character_
   }
-  out <- dplyr::relocate(out, model_name)
+  out <- dplyr::relocate(out, .data$model_name)
 
   # In case there are any errors with evaluation we remove these here also
   # This whould not occur with `evaluate_aic` as models causing problems
@@ -220,7 +221,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
 
   # error if no possible models
   if (nrow(out) == 0) {
-    if (include_fitting_warning) {
+    if (include_fitting_warnings) {
       msg <- "Unable to fit a model to the data without warnings or errors."
     } else {
       msg <- paste(
@@ -275,7 +276,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
 
   # error if no possible models
   if (!success) {
-    if (include_prediction_warning) {
+    if (include_prediction_warnings) {
       msg <- "Unable to make prediction to the data without warnings or errors."
     } else {
       msg <- paste(
