@@ -41,20 +41,7 @@ clapply <- function(X, FUN, ...) {
   f <- make_catcher(FUN)
   res <- lapply(X, f, ...)
   res <- lapply(seq_along(res[[1]]), function(x) lapply(res, "[[", x))
-  if (requireNamespace("tibble", quietly = TRUE)) {
-    out <- tibble::tibble(
-      result = res[[1]],
-      warnings = res[[2]],
-      errors = res[[3]]
-    )
-  } else {
-    out <- data.frame(
-      result = I(res[[1]]),
-      warnings = I(res[[2]]),
-      errors = I(res[[3]])
-    )
-  }
-  out
+  tibble::tibble(result = res[[1]], warnings = res[[2]], errors = res[[3]])
 }
 
 
@@ -62,20 +49,7 @@ future_clapply <- function(X, FUN, ...) {
   f <- make_catcher(FUN)
   res <- future.apply::future_lapply(X, f, ...)
   res <- lapply(seq_along(res[[1]]), function(x) lapply(res, "[[", x))
-  if (requireNamespace("tibble", quietly = TRUE)) {
-    out <- tibble::tibble(
-      result = res[[1]],
-      warnings = res[[2]],
-      errors = res[[3]]
-    )
-  } else {
-    out <- data.frame(
-      result = I(res[[1]]),
-      warnings = I(res[[2]]),
-      errors = I(res[[3]])
-    )
-  }
-  out
+  tibble::tibble(result = res[[1]], warnings = res[[2]], errors = res[[3]])
 }
 
 
