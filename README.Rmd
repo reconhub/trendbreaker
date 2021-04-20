@@ -78,20 +78,6 @@ example(asmodee)
 
 ## Main features
 
-The package implements the following main functions
-
-* `asmodee`: implements the Automatic Selection of Models and Outlier DEtection
-  for Epidemics
-  
-* `detect_changepoint`: a function to detect the points at which recent data
-  deviate from previous temporal trends using a fitted model and
-  data
-
-* `detect_outliers`: a function to identify outliers using a fitted model and
-  data
-  
-
-
 ### ASMODEE
 
 We illustrate ASMODEE using publicly available NHS pathways data recording
@@ -125,8 +111,15 @@ counts_overall <- pathways_recent %>%
   group_by(date, day, weekday) %>%
   summarise(count = sum(count))
 
-# results with automated detection of 'k'
-res <- asmodee(counts_overall, models, date_index = "date", method = evaluate_aic, simulate_pi = TRUE)
+# results with fixed 'k' = 7
+res <- asmodee(
+  counts_overall,
+  models,
+  k = 7,
+  date_index = "date",
+  method = evaluate_aic,
+  simulate_pi = TRUE
+)
 res
 plot(res, "date")
 ```
