@@ -124,7 +124,7 @@ counts_overall <- pathways_recent %>%
 res <- asmodee(counts_overall, models, date_index = "date", method = evaluate_aic, simulate_pi = TRUE)
 res
 #> $k
-#> [1] 1
+#> [1] 7
 #> 
 #> $model_name
 #> [1] "negbin_time_weekday"
@@ -132,16 +132,16 @@ res
 #> $trending_model_fit
 #> $fitted_model
 #> 
-#> Call:  MASS::glm.nb(formula = count ~ day + weekday, data = data, init.theta = 42.98833929, 
+#> Call:  MASS::glm.nb(formula = count ~ day + weekday, data = data, init.theta = 76.80468966, 
 #>     link = log)
 #> 
 #> Coefficients:
 #>    (Intercept)             day   weekdaymonday  weekdayweekend  
-#>       11.06830        -0.02649         0.19929        -0.13539  
+#>       10.81062        -0.02057         0.24398        -0.11588  
 #> 
-#> Degrees of Freedom: 41 Total (i.e. Null);  38 Residual
-#> Null Deviance:       230.4 
-#> Residual Deviance: 42.18     AIC: 789.4
+#> Degrees of Freedom: 35 Total (i.e. Null);  32 Residual
+#> Null Deviance:       186.5 
+#> Residual Deviance: 36.09     AIC: 665.4
 #> 
 #> $predict
 #> function (newdata, alpha = 0.05, add_pi = TRUE, simulate_pi = TRUE, 
@@ -163,8 +163,8 @@ res
 #>     }
 #>     result
 #> }
-#> <bytecode: 0x5582cf070c08>
-#> <environment: 0x5582ce145ec0>
+#> <bytecode: 0x560c57c03d70>
+#> <environment: 0x560c573d8480>
 #> 
 #> attr(,"class")
 #> [1] "trending_model_fit" "list"              
@@ -173,103 +173,30 @@ res
 #> [1] 0.05
 #> 
 #> $results
-#>          date day      weekday count training  estimate  lower_ci upper_ci
-#> 1  2020-04-16  29 rest_of_week 29497     TRUE 29737.341 26841.579 32945.51
-#> 2  2020-04-17  30 rest_of_week 27007     TRUE 28960.014 26220.406 31985.87
-#> 3  2020-04-18  31      weekend 25453     TRUE 24631.828 21978.663 27605.27
-#> 4  2020-04-19  32      weekend 23387     TRUE 23987.958 21455.713 26819.06
-#> 5  2020-04-20  33       monday 29287     TRUE 32646.622 28274.728 37694.51
-#> 6  2020-04-21  34 rest_of_week 23134     TRUE 26048.655 23859.609 28438.54
-#> 7  2020-04-22  35 rest_of_week 21803     TRUE 25367.750 23298.530 27620.74
-#> 8  2020-04-23  36 rest_of_week 22298     TRUE 24704.643 22748.361 26829.16
-#> 9  2020-04-24  37 rest_of_week 22027     TRUE 24058.869 22208.739 26063.13
-#> 10 2020-04-25  38      weekend 18861     TRUE 20463.178 18530.598 22597.31
-#> 11 2020-04-26  39      weekend 19569     TRUE 19928.276 18076.090 21970.25
-#> 12 2020-04-27  40       monday 25628     TRUE 27121.562 23749.117 30972.90
-#> 13 2020-04-28  41 rest_of_week 24236     TRUE 21640.224 20148.573 23242.31
-#> 14 2020-04-29  42 rest_of_week 25552     TRUE 21074.554 19656.406 22595.02
-#> 15 2020-04-30  43 rest_of_week 22387     TRUE 20523.670 19172.757 21969.77
-#> 16 2020-05-01  44 rest_of_week 19852     TRUE 19987.186 18697.348 21366.00
-#> 17 2020-05-02  45      weekend 17761     TRUE 17000.024 15526.990 18612.80
-#> 18 2020-05-03  46      weekend 19349     TRUE 16555.648 15130.182 18115.41
-#> 19 2020-05-04  47       monday 24385     TRUE 22531.554 19845.563 25581.08
-#> 20 2020-05-05  48 rest_of_week 20218     TRUE 17977.868 16873.790 19154.19
-#> 21 2020-05-06  49 rest_of_week 16498     TRUE 17507.931 16436.703 18648.97
-#> 22 2020-05-07  50 rest_of_week 15257     TRUE 17050.278 16007.012 18161.54
-#> 23 2020-05-08  51 rest_of_week 13230     TRUE 16604.588 15584.731 17691.18
-#> 24 2020-05-09  52      weekend 12780     TRUE 14122.968 12906.814 15453.72
-#> 25 2020-05-10  53      weekend 14946     TRUE 13753.797 12561.857 15058.84
-#> 26 2020-05-11  54       monday 19542     TRUE 18718.351 16486.818 21251.93
-#> 27 2020-05-12  55 rest_of_week 17299     TRUE 14935.324 13971.137 15966.05
-#> 28 2020-05-13  56 rest_of_week 16891     TRUE 14544.918 13587.132 15570.22
-#> 29 2020-05-14  57 rest_of_week 14750     TRUE 14164.717 13211.099 15187.17
-#> 30 2020-05-15  58 rest_of_week 13638     TRUE 13794.455 12843.129 14816.25
-#> 31 2020-05-16  59      weekend 12874     TRUE 11732.821 10641.971 12935.49
-#> 32 2020-05-17  60      weekend 12635     TRUE 11426.128 10346.634 12618.25
-#> 33 2020-05-18  61       monday 21868     TRUE 15550.489 13616.583 17759.06
-#> 34 2020-05-19  62 rest_of_week 18207     TRUE 12407.694 11452.978 13442.00
-#> 35 2020-05-20  63 rest_of_week 12966     TRUE 12083.360 11125.945 13123.16
-#> 36 2020-05-21  64 rest_of_week 10543     TRUE 11767.504 10807.063 12813.30
-#> 37 2020-05-22  65 rest_of_week  9212     TRUE 11459.904 10496.268 12512.01
-#> 38 2020-05-23  66      weekend  8030     TRUE  9747.178  8717.784 10898.12
-#> 39 2020-05-24  67      weekend  8123     TRUE  9492.389  8469.482 10638.84
-#> 40 2020-05-25  68       monday  8079     TRUE 12918.750 11188.383 14916.73
-#> 41 2020-05-26  69 rest_of_week  9275     TRUE 10307.837  9332.143 11385.54
-#> 42 2020-05-27  70 rest_of_week  8486     TRUE 10038.393  9060.304 11122.07
-#> 43 2020-05-28  71 rest_of_week  8411    FALSE  9775.991  8795.879 10865.32
-#>    lower_pi upper_pi outlier classification
-#> 1     21725    39814   FALSE         normal
-#> 2     20627    38783   FALSE         normal
-#> 3     17321    33200   FALSE         normal
-#> 4     17472    32491   FALSE         normal
-#> 5     23499    44897   FALSE         normal
-#> 6     18842    34785   FALSE         normal
-#> 7     18426    34087   FALSE         normal
-#> 8     17360    33025   FALSE         normal
-#> 9     17175    32304   FALSE         normal
-#> 10    14545    27186   FALSE         normal
-#> 11    14440    26789   FALSE         normal
-#> 12    18828    36864   FALSE         normal
-#> 13    15477    28955   FALSE         normal
-#> 14    15321    28535   FALSE         normal
-#> 15    14880    27325   FALSE         normal
-#> 16    14446    26715   FALSE         normal
-#> 17    12165    22933   FALSE         normal
-#> 18    11710    22322   FALSE         normal
-#> 19    15801    31024   FALSE         normal
-#> 20    13174    23802   FALSE         normal
-#> 21    12612    23438   FALSE         normal
-#> 22    12223    22238   FALSE         normal
-#> 23    12030    21743   FALSE         normal
-#> 24    10258    18949   FALSE         normal
-#> 25     9857    18337   FALSE         normal
-#> 26    13197    25098   FALSE         normal
-#> 27    10644    19747   FALSE         normal
-#> 28    10386    19185   FALSE         normal
-#> 29    10073    18835   FALSE         normal
-#> 30     9859    18415   FALSE         normal
-#> 31     8433    15649   FALSE         normal
-#> 32     8113    15039   FALSE         normal
-#> 33    11134    21716    TRUE       increase
-#> 34     8941    16305    TRUE       increase
-#> 35     8627    16406   FALSE         normal
-#> 36     8521    15605   FALSE         normal
-#> 37     8298    15447   FALSE         normal
-#> 38     6936    13142   FALSE         normal
-#> 39     6805    12889   FALSE         normal
-#> 40     9040    17674    TRUE       decrease
-#> 41     7341    13668   FALSE         normal
-#> 42     7213    13539   FALSE         normal
-#> 43     6814    12878   FALSE         normal
+#> # A tibble: 43 x 12
+#>    date         day weekday   count training estimate lower_ci upper_ci lower_pi
+#>    <date>     <int> <fct>     <int> <lgl>       <dbl>    <dbl>    <dbl>    <dbl>
+#>  1 2020-04-16    29 rest_of_… 29497 TRUE       27288.   25091.   29678.    21088
+#>  2 2020-04-17    30 rest_of_… 27007 TRUE       26733.   24653.   28988.    20854
+#>  3 2020-04-18    31 weekend   25453 TRUE       23323.   21284.   25557.    17950
+#>  4 2020-04-19    32 weekend   23387 TRUE       22848.   20896.   24983.    17539
+#>  5 2020-04-20    33 monday    29287 TRUE       32078.   28549.   36043.    24388
+#>  6 2020-04-21    34 rest_of_… 23134 TRUE       24621.   22957.   26406.    19399
+#>  7 2020-04-22    35 rest_of_… 21803 TRUE       24120.   22547.   25803.    18928
+#>  8 2020-04-23    36 rest_of_… 22298 TRUE       23629.   22141.   25218.    18686
+#>  9 2020-04-24    37 rest_of_… 22027 TRUE       23148.   21740.   24648.    17924
+#> 10 2020-04-25    38 weekend   18861 TRUE       20196.   18665.   21852.    15632
+#> # … with 33 more rows, and 3 more variables: upper_pi <dbl>, outlier <lgl>,
+#> #   classification <fct>
 #> 
 #> $date_index
 #> [1] "date"
 #> 
 #> $last_training_date
-#> [1] "2020-05-27"
+#> [1] "2020-05-21"
 #> 
 #> $first_testing_date
-#> [1] "2020-05-28"
+#> [1] "2020-05-22"
 #> 
 #> $.fitted_results
 #> NULL
