@@ -77,7 +77,7 @@ asmodee <- function(data, models, ...) {
 #'   calculation; defaults to 0.05, i.e. 95% prediction intervals are
 #'   calculated.
 #' @param k An `integer` indicating the number of recent data  points to be
-#'   excluded from the trend fitting procedure. Defaults to 1.
+#'   excluded from the trend fitting procedure. Defaults to 7.
 #' @param method A function used to evaluate model fit. Current choices are
 #'   `evaluate_aic` (default) and `evaluate_resampling`. `evaluate_aic` uses
 #'   Akaike's Information Criterion instead, which is faster but possibly less
@@ -109,7 +109,7 @@ asmodee <- function(data, models, ...) {
 #'
 #' @rdname asmodee
 #' @export
-asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 1,
+asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
                                method = evaluate_aic,
                                simulate_pi = TRUE, uncertain = FALSE,
                                include_fitting_warnings = FALSE,
@@ -338,7 +338,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 1,
 #'   warnings, but not errors, during the prediciton stage. Defaults to `FALSE`.
 #'
 #' @export
-asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 1,
+asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
                                method = evaluate_aic, simulate_pi = TRUE,
                                uncertain = FALSE,
                                include_fitting_warnings = FALSE,
