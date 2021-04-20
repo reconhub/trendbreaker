@@ -106,13 +106,18 @@ plot.trendbreaker_incidence2 <- function(x,
                               ncol = NULL,
                               ...) {
 
-  x <- x$output # TODO - this won't work if someone has renamed columns
 
-  x_axis <- x[[1]]$date_index
+  out <- x$output # TODO - this won't work if someone has renamed columns
+  groups <- attr(x, "groups")
+  if (!is.null(groups)) {
+    nms <- apply(x[groups], 1, paste, collapse = "-")
+  }
+
+  x_axis <- out[[1]]$date_index
 
   # if length one use normal plot function
-  if (length(x) == 1) {
-    plot(x[[1]],
+  if (length(out) == 1) {
+    plot(out[[1]],
          x_axis = x_axis,
          point_size = point_size,
          col_normal = col_normal,
@@ -132,8 +137,8 @@ plot.trendbreaker_incidence2 <- function(x,
           g <- plot(y, x_axis, point_size, col_normal, col_increase, col_decrease, guide, ...)
           g + ggplot2::theme(legend.position = "none") + ggplot2::labs(subtitle = z, x = NULL)
         },
-        x,
-        names(x),
+        out,
+        nms,
         SIMPLIFY = FALSE
       )
 
