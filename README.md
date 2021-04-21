@@ -10,6 +10,7 @@
 status](https://github.com/reconhub/trendbreaker/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/trendbreaker/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/reconhub/trendbreaker/branch/master/graph/badge.svg)](https://codecov.io/gh/reconhub/trendbreaker?branch=master)
+[![R-CMD-check](https://github.com/reconhub/trendbreaker/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/trendbreaker/actions)
 <!-- badges: end -->
 
 The *trendbreaker* package implements tools for detecting changes in
@@ -158,8 +159,8 @@ res
 #>     }
 #>     result
 #> }
-#> <bytecode: 0x5640a0acaa48>
-#> <environment: 0x5640a02a5120>
+#> <bytecode: 0x555dbbbb6e60>
+#> <environment: 0x555dbad35b60>
 #> 
 #> attr(,"class")
 #> [1] "trending_model_fit" "list"              
@@ -169,18 +170,18 @@ res
 #> 
 #> $results
 #> # A tibble: 43 x 12
-#>    date         day weekday   count training estimate lower_ci upper_ci lower_pi
-#>    <date>     <int> <fct>     <int> <lgl>       <dbl>    <dbl>    <dbl>    <dbl>
-#>  1 2020-04-16    29 rest_of_… 29497 TRUE       27288.   25091.   29678.    21077
-#>  2 2020-04-17    30 rest_of_… 27007 TRUE       26733.   24653.   28988.    20475
-#>  3 2020-04-18    31 weekend   25453 TRUE       23323.   21284.   25557.    18084
-#>  4 2020-04-19    32 weekend   23387 TRUE       22848.   20896.   24983.    17817
-#>  5 2020-04-20    33 monday    29287 TRUE       32078.   28549.   36043.    24710
-#>  6 2020-04-21    34 rest_of_… 23134 TRUE       24621.   22957.   26406.    19304
-#>  7 2020-04-22    35 rest_of_… 21803 TRUE       24120.   22547.   25803.    18837
-#>  8 2020-04-23    36 rest_of_… 22298 TRUE       23629.   22141.   25218.    18457
-#>  9 2020-04-24    37 rest_of_… 22027 TRUE       23148.   21740.   24648.    17996
-#> 10 2020-04-25    38 weekend   18861 TRUE       20196.   18665.   21852.    15792
+#>    date         day weekday  count .training estimate lower_ci upper_ci lower_pi
+#>    <date>     <int> <fct>    <int> <lgl>        <dbl>    <dbl>    <dbl>    <dbl>
+#>  1 2020-04-16    29 rest_of… 29497 TRUE        27288.   25091.   29678.    21175
+#>  2 2020-04-17    30 rest_of… 27007 TRUE        26733.   24653.   28988.    20914
+#>  3 2020-04-18    31 weekend  25453 TRUE        23323.   21284.   25557.    17992
+#>  4 2020-04-19    32 weekend  23387 TRUE        22848.   20896.   24983.    17623
+#>  5 2020-04-20    33 monday   29287 TRUE        32078.   28549.   36043.    24667
+#>  6 2020-04-21    34 rest_of… 23134 TRUE        24621.   22957.   26406.    19313
+#>  7 2020-04-22    35 rest_of… 21803 TRUE        24120.   22547.   25803.    18835
+#>  8 2020-04-23    36 rest_of… 22298 TRUE        23629.   22141.   25218.    18489
+#>  9 2020-04-24    37 rest_of… 22027 TRUE        23148.   21740.   24648.    18063
+#> 10 2020-04-25    38 weekend  18861 TRUE        20196.   18665.   21852.    15604
 #> # … with 33 more rows, and 3 more variables: upper_pi <dbl>, outlier <lgl>,
 #> #   classification <fct>
 #> 

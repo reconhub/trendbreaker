@@ -145,7 +145,8 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
 
   # Ensure k is a wholenumber of "reasonable" size
   k <- int_cast(k) # this will error if cannot cast to integer
-  n_dates <- length(unique(dates))
+  unique_dates <- unique(dates)
+  n_dates <- length(unique_dates)
   if (k > (n_dates - 4)) {
     msg <- sprintf("`k` (%d) is too high for the dataset size (%d)", k, n_dates)
     stop(msg)
@@ -153,23 +154,20 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
 
   # The rest of the algorithm will basically rely on:
   #  1. defining the training set by removing data of the most recent 'k' time
-  #     units in date_index; this is externalised in get_training_data()
+  #     units in date_index;
   #  2. fitting the model
   #  3. removing models that error (or optionally give warnings)
   #  4. evaluate using the training set (potential duplication here)
   #  4. deriving prediction intervals
   #  6. and classifying outliers
 
-  # Define the training set and boundary dates
-  # TODO - this can be streamlined quite a bit as duplicating code
-  data <- set_training_data(data, date_index, k)
-  training <- data$training
-  last_training_date <- max(dates[training], na.rm = TRUE)
+  data <- set_training_data(data, date_index = date_index, k = k)
+  last_training_date <- max(dates[data$.training], na.rm = TRUE)
   first_testing_date <- NULL
   if (k > 0) {
-    first_testing_date <- min(dates[!training], na.rm = TRUE)
+    first_testing_date <- min(dates[!data$.training], na.rm = TRUE)
   }
-  data_train <- get_training_data(data, date_index, k)
+  data_train <- get_training_data(data)
 
   # fit all of the models and capture the warnings and errors
   fitted_results <- clapply(models, trending::fit, data = data_train)
@@ -180,7 +178,6 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   if (keep_intermediate) .fitted_results <- fitted_results
 
   # remove fitting errors
-  # TODO - make function for the keeping
   keep <- vapply(fitted_results$fitting_errors, is.null, logical(1))
   fitted_results <- fitted_results[keep,]
   models <- models[keep]
@@ -198,7 +195,6 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
     list(data = data_train, models = models, method = method),
     keep.null = TRUE
   )
-  # TODO - possibly some duplication here
   model_results <- do.call(trendeval::evaluate_models, method_args)
   model_results$model <- NULL   # this is cleaning up from trendeval output
   model_results$data <- NULL    # this is cleaning up from trendeval output
@@ -298,31 +294,39 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   # subset to the best model and then combine with prediction results
   out <- out[i, ]
   models <- models[i]
-
-  # combine fitting, evaluation data
   out <- dplyr::bind_cols(out, pred_result)
 
-  # mark up outliers
+  # mark up outliers (note the hacks needed for precision issues)
   preds <- out$result[[1]]
   model <- out$trending_model_fit[[1]]$fitted_model
   observed <- all.vars(formula(model))[1]
-  outliers <- dplyr::mutate(
+  preds <- dplyr::mutate(
     preds,
-    outlier = .data[[observed]] < .data$lower_pi | .data[[observed]] > .data$upper_pi,
+    outlier = .data[[observed]] < lower_pi | .data[[observed]] > upper_pi,
+    outlier = dplyr::case_when(
+      outlier & dplyr::near(.data[[observed]], lower_pi) ~ FALSE,
+      outlier & dplyr::near(.data[[observed]], upper_pi) ~ FALSE,
+      TRUE ~ outlier
+    ),
     classification = dplyr::case_when(
-      .data[[observed]] < .data$lower_pi ~ "decrease",
-      .data[[observed]] > .data$upper_pi ~ "increase",
+      (.data[[observed]] < .data$lower_pi) & .data$outlier ~ "decrease",
+      (.data[[observed]] > .data$upper_pi) & .data$outlier ~ "increase",
       TRUE ~ "normal"
     ),
-    classification = factor(.data$classification,
-                            levels = c("increase", "normal", "decrease")
+    classification = factor(
+      .data$classification,
+      levels = c("increase", "normal", "decrease")
     )
   )
 
   # enforce positive predictions if required
   if (force_positive) {
     nms <- c("estimate", "lower_ci", "upper_ci", "lower_pi", "upper_pi")
-    outliers[nms] <- lapply(outliers[nms], neg_to_zero)
+    neg_to_zero <- function(x) {
+      x[x < 0] <- 0
+      x
+    }
+    preds[nms] <- lapply(preds[nms], neg_to_zero)
   }
 
   # final output
@@ -331,7 +335,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
     model_name = out$model_name[[1]],
     trending_model_fit = out$trending_model_fit[[1]],
     alpha = alpha,
-    results = tibble::as_tibble(outliers),
+    results = tibble::as_tibble(preds),
     date_index = date_index,
     last_training_date = last_training_date,
     first_testing_date = first_testing_date,
@@ -358,6 +362,8 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
 
   # check incidence2 package is present
   check_suggests("incidence2")
+
+  stopifnot("`include_group_warnings` should be TRUE or FALSE" = is.logical(include_group_warnings))
 
   groups <- incidence2::get_group_names(data)
   if (!is.null(groups)) {
@@ -410,7 +416,3 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
 }
 
 
-neg_to_zero <- function(x) {
-  x[x < 0] <- 0
-  x
-}
