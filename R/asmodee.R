@@ -302,10 +302,10 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   observed <- all.vars(formula(model))[1]
   preds <- dplyr::mutate(
     preds,
-    outlier = .data[[observed]] < lower_pi | .data[[observed]] > upper_pi,
+    outlier = .data[[observed]] < .data$lower_pi | .data[[observed]] > .data$upper_pi,
     outlier = dplyr::case_when(
-      outlier & dplyr::near(.data[[observed]], lower_pi) ~ FALSE,
-      outlier & dplyr::near(.data[[observed]], upper_pi) ~ FALSE,
+      outlier & dplyr::near(.data[[observed]], .data$lower_pi) ~ FALSE,
+      outlier & dplyr::near(.data[[observed]], .data$upper_pi) ~ FALSE,
       TRUE ~ outlier
     ),
     classification = dplyr::case_when(
