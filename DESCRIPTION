@@ -1,6 +1,6 @@
 Package: trendbreaker
 Title: Detect Changes in Temporal Trends
-Version: 0.0.2.9000
+Version: 0.0.4
 Authors@R: 
     c(
       person(
