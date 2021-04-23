@@ -370,6 +370,12 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
                                force_positive = TRUE, quiet = FALSE,
                                keep_intermediate = FALSE, ...) {
 
+  # This implementation merely loops over all strata of the incidence2 object,
+  # removing all strata which errored (optionally, which issued warnings);
+  # future_clapply provides an entry point for high-level parallelisation, but
+  # in line with 'future' the setup is left to the user and belongs outside
+  # trendbreaker.
+
   # check incidence2 package is present
   check_suggests("incidence2")
 
