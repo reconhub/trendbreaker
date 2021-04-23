@@ -15,12 +15,14 @@
 #'   models are fitted to the data. Second, models are selected using the
 #'   approach specified by the `method` argument. The default is
 #'   [`evaluate_aic()`] which uses Akaike's Information Criteria to assess model
-#'   fit penalised by model complexity. This approach is fast, but only measures
+#'   fit penalised by model complexity. This approach is fast, but measures
 #'   model fit rather than predictive ability. The alternative is using
 #'   [`evaluate_resampling()`], uses cross-validation (10-fold by default) and
 #'   root mean squared error (RMSE) to assess model fit. This approach is likely
 #'   to select models with good predictive abilities, but is computationally
-#'   intensive.
+#'   intensive. Also, it does not attempt to maximise the explained deviance, so
+#'   selected models may have good average predictions but underestimate
+#'   uncertainty.
 #'
 #' @author Thibaut Jombart, Dirk Schumacher and Tim Taylor, with inputs from
 #'   Michael Höhle, Mark Jit, John Edmunds, Andre Charlett, Stéphane Ghozzi
@@ -76,7 +78,7 @@ asmodee <- function(data, models, ...) {
 #' @param alpha The alpha threshold to be used for the prediction interval
 #'   calculation; defaults to 0.05, i.e. 95% prediction intervals are
 #'   calculated.
-#' @param k An `integer` indicating the number of recent data  points to be
+#' @param k An `integer` indicating the number of recent data points to be
 #'   excluded from the trend fitting procedure. Defaults to 7.
 #' @param method A function used to evaluate model fit. Current choices are
 #'   `evaluate_aic` (default) and `evaluate_resampling`. `evaluate_aic` uses
@@ -84,28 +86,30 @@ asmodee <- function(data, models, ...) {
 #'   good a selecting models with the best predictive power.
 #'   `evaluate_resampling` uses cross-validation and, by default, RMSE to assess
 #'   model fit.
-#' @param method_args Optional named list of additional arguments to pass to method.
-#'   Defaults to an empty list.
-#' @param simulate_pi Should the ciTools package be used to simulate prediction
-#'   intervals for glm models. Defaults to TRUE.
-#' @param uncertain Only used for glm models and if simulate_pi = FALSE. If
-#'   FALSE uncertainty in the fitted parameters is ignored when generating the
-#'   prediction intervals. Defaults to FALSE.
-#' @param include_fitting_warnings Should results include models that triggered
-#'   warnings, but not errors, during the fitting procedure. Defaults to
-#'   `FALSE`.
-#' @param include_prediction_warnings Should results include models that
-#'   triggered warnings, but not errors, during the prediciton stage. Defaults
+#' @param method_args Optional named list of additional arguments to pass to
+#'   method.  Defaults to an empty list.
+#' @param simulate_pi A `logical` indicating if prediction intervals should be
+#'   derived by bootstrap using the ciTools package, or calculated
+#'   analytically. Defaults to `TRUE`.
+#' @param uncertain A `logical` indicating if uncertainty in the fitted
+#'   parameters should be taken into account when deriving prections
+#'   intervals. Only used for glm models and if simulate_pi = `FALSE`. Defaults
 #'   to `FALSE`.
+#' @param include_fitting_warnings A `logical` indicating if results should
+#'   include models that triggered warnings (but not errors), during the fitting
+#'   procedure. Defaults to `FALSE`, as warnings can typically indicate lack of
+#'   convergence during the parameter estimation.
+#' @param include_prediction_warnings A `logical` indicating if results should
+#'   include models that triggered warnings (but not errors), during the
+#'   prediciton stage. Defaults to `TRUE`.
 #' @param force_positive A `logical` indicating if prediction should be forced
 #'   to be positive (or zero); can be useful when using Gaussian models for
-#'   count data, to censor confidence or prediction intervals and avoid
-#'   negative predictions. Defaults to `FALSE` for general `data.frame` inputs,
-#'   and to `TRUE` for `incidence2` objects.
+#'   count data, to avoid negative predictions. Defaults to `FALSE` for general
+#'   `data.frame` inputs, and to `TRUE` for `incidence2` objects.
 #' @param quiet A `logical` indicating if warnings and messages should be
-#'   suppressed (TRUE) or use (FALSE, default).
+#'   suppressed (`TRUE`) or used (`FALSE`, default).
 #' @param keep_intermediate A `logical` indicating if all output from the
-#'   fitting and prediction stages should be kept. If `TRUE` then a tibble will
+#'   fitting and prediction stages should be returned. If `TRUE`, a tibble will
 #'   be returned in the .fitted_results position of the resulting list output.
 #'   If `FALSE` (default) .fitted_results will be `NULL`.
 #'
