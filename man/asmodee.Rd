@@ -21,7 +21,6 @@ asmodee(data, models, ...)
   include_fitting_warnings = FALSE,
   include_prediction_warnings = TRUE,
   force_positive = FALSE,
-  quiet = FALSE,
   keep_intermediate = FALSE,
   ...
 )
@@ -37,9 +36,7 @@ asmodee(data, models, ...)
   uncertain = FALSE,
   include_fitting_warnings = FALSE,
   include_prediction_warnings = TRUE,
-  include_group_warnings = FALSE,
   force_positive = TRUE,
-  quiet = FALSE,
   keep_intermediate = FALSE,
   ...
 )
@@ -97,17 +94,10 @@ to be positive (or zero); can be useful when using Gaussian models for
 count data, to avoid negative predictions. Defaults to \code{FALSE} for general
 \code{data.frame} inputs, and to \code{TRUE} for \code{incidence2} objects.}
 
-\item{quiet}{A \code{logical} indicating if warnings and messages should be
-suppressed (\code{TRUE}) or used (\code{FALSE}, default).}
-
 \item{keep_intermediate}{A \code{logical} indicating if all output from the
 fitting and prediction stages should be returned. If \code{TRUE}, a tibble will
-be returned in the .fitted_results position of the resulting list output.
-If \code{FALSE} (default) .fitted_results will be \code{NULL}.}
-
-\item{include_group_warnings}{A \code{logical} indicating if results should
-include groups/strata of the \code{incidence2} object which triggered warnings
-(but no error). Defaults to \code{FALSE}.}
+be returned in the fitted_results position of the resulting list output.
+If \code{FALSE} (default) fitted_results will be \code{NULL}.}
 }
 \value{
 An \code{trendbreaker} object (S3 class inheriting \code{list}), containing items

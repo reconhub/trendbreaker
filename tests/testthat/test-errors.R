@@ -72,12 +72,6 @@ test_that("asmodee errors as expected", {
   )
 
   expect_error(
-    asmodee(dat, models, x, method = evaluate_aic, k = 2, quiet = "test"),
-    "`quiet` should be TRUE or FALSE",
-    fixed = TRUE
-  )
-
-  expect_error(
     asmodee(dat, models, x, method = evaluate_aic, k = 2, keep_intermediate = "test"),
     "`keep_intermediate` should be TRUE or FALSE",
     fixed = TRUE

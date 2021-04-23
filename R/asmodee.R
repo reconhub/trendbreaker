@@ -106,12 +106,10 @@ asmodee <- function(data, models, ...) {
 #'   to be positive (or zero); can be useful when using Gaussian models for
 #'   count data, to avoid negative predictions. Defaults to `FALSE` for general
 #'   `data.frame` inputs, and to `TRUE` for `incidence2` objects.
-#' @param quiet A `logical` indicating if warnings and messages should be
-#'   suppressed (`TRUE`) or used (`FALSE`, default).
 #' @param keep_intermediate A `logical` indicating if all output from the
 #'   fitting and prediction stages should be returned. If `TRUE`, a tibble will
-#'   be returned in the .fitted_results position of the resulting list output.
-#'   If `FALSE` (default) .fitted_results will be `NULL`.
+#'   be returned in the fitted_results position of the resulting list output.
+#'   If `FALSE` (default) fitted_results will be `NULL`.
 #'
 #' @rdname asmodee
 #' @importFrom rlang .data
@@ -122,7 +120,6 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
                                include_fitting_warnings = FALSE,
                                include_prediction_warnings = TRUE,
                                force_positive = FALSE,
-                               quiet = FALSE,
                                keep_intermediate = FALSE, ...) {
 
   # basic input checks
@@ -134,7 +131,6 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   stopifnot("`include_fitting_warnings` should be TRUE or FALSE" = is.logical(include_fitting_warnings))
   stopifnot("`include_prediction_warnings` should be TRUE or FALSE" = is.logical(include_prediction_warnings))
   stopifnot("`force_positive` should be TRUE or FALSE" = is.logical(force_positive))
-  stopifnot("`quiet` should be TRUE or FALSE" = is.logical(quiet))
   stopifnot("`keep_intermediate` should be TRUE or FALSE" = is.logical(keep_intermediate))
   ellipsis::check_dots_empty()
 
@@ -228,17 +224,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
 
   # error if no possible models
   if (nrow(out) == 0) {
-    if (include_fitting_warnings) {
-      msg <- "Unable to fit any model without warnings or errors."
-    } else {
-      msg <- paste(
-        "Unable to fit any model without warnings or errors.",
-        "Consider using `include_fitting_warnings = TRUE`",
-        "to include more models which issued warnings.",
-        sep = "\n"
-      )
-    }
-    stop(msg)
+    stop("Unable to fit any model without warnings or errors.")
   }
 
   # Rank models from the best to the worst.
@@ -306,7 +292,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   models <- models[i]
   out <- dplyr::bind_cols(out, pred_result)
 
-  
+
   # Step 7: identify outliers and shape the output
   # (note the hacks needed for precision issues)
   preds <- out$result[[1]]
@@ -355,10 +341,6 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
 
 
 #' @rdname asmodee
-#' 
-#' @param include_group_warnings A `logical` indicating if results should
-#'   include groups/strata of the `incidence2` object which triggered warnings
-#'   (but no error). Defaults to `FALSE`.
 #'
 #' @export
 asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
@@ -366,8 +348,7 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
                                simulate_pi = TRUE, uncertain = FALSE,
                                include_fitting_warnings = FALSE,
                                include_prediction_warnings = TRUE,
-                               include_group_warnings = FALSE,
-                               force_positive = TRUE, quiet = FALSE,
+                               force_positive = TRUE,
                                keep_intermediate = FALSE, ...) {
 
   # This implementation merely loops over all strata of the incidence2 object,
@@ -378,9 +359,6 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
 
   # check incidence2 package is present
   check_suggests("incidence2")
-
-  stopifnot("`include_group_warnings` should be TRUE or FALSE" =
-              is.logical(include_group_warnings))
 
   groups <- incidence2::get_group_names(data)
   if (!is.null(groups)) {
@@ -406,7 +384,6 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
     include_fitting_warnings = include_fitting_warnings,
     include_prediction_warnings = include_prediction_warnings,
     force_positive = force_positive,
-    quiet = quiet,
     keep_intermediate = keep_intermediate,
     ...,
     future.seed = TRUE
@@ -420,12 +397,6 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
   # remove errors
   keep <- vapply(out$errors, is.null, logical(1))
   out <- out[keep,]
-
-  # optionally remove warnings
-  if (!include_group_warnings) {
-    keep <- vapply(out$warnings, is.null, logical(1))
-    out <- out[keep,]
-  }
 
   class(out) <- c("trendbreaker_incidence2", class(out))
   attr(out, "groups") <- groups
