@@ -105,8 +105,9 @@ fitting and prediction stages should be returned. If \code{TRUE}, a tibble will
 be returned in the .fitted_results position of the resulting list output.
 If \code{FALSE} (default) .fitted_results will be \code{NULL}.}
 
-\item{include_group_warnings}{Should results include models that triggered
-warnings, but not errors, during the prediciton stage. Defaults to \code{FALSE}.}
+\item{include_group_warnings}{A \code{logical} indicating if results should
+include groups/strata of the \code{incidence2} object which triggered warnings
+(but no error). Defaults to \code{FALSE}.}
 }
 \value{
 An \code{trendbreaker} object (S3 class inheriting \code{list}), containing items

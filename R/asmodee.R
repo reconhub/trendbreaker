@@ -355,8 +355,10 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
 
 
 #' @rdname asmodee
-#' @param include_group_warnings Should results include models that triggered
-#'   warnings, but not errors, during the prediciton stage. Defaults to `FALSE`.
+#' 
+#' @param include_group_warnings A `logical` indicating if results should
+#'   include groups/strata of the `incidence2` object which triggered warnings
+#'   (but no error). Defaults to `FALSE`.
 #'
 #' @export
 asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
@@ -371,7 +373,8 @@ asmodee.incidence2 <- function(data, models, alpha = 0.05, k = 7,
   # check incidence2 package is present
   check_suggests("incidence2")
 
-  stopifnot("`include_group_warnings` should be TRUE or FALSE" = is.logical(include_group_warnings))
+  stopifnot("`include_group_warnings` should be TRUE or FALSE" =
+              is.logical(include_group_warnings))
 
   groups <- incidence2::get_group_names(data)
   if (!is.null(groups)) {
