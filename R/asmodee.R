@@ -178,8 +178,8 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
 
   # keep fitting_results (optional); useful for closer inspection of models
   # which errored
-  .fitted_results <- NULL
-  if (keep_intermediate) .fitted_results <- fitted_results
+  all_fitted_results <- NULL
+  if (keep_intermediate) all_fitted_results <- fitted_results
 
   # Step 3: remove models with fitting errors/warnings
   keep <- vapply(fitted_results$fitting_errors, is.null, logical(1))
@@ -333,7 +333,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
     date_index = date_index,
     last_training_date = last_training_date,
     first_testing_date = first_testing_date,
-    .fitted_results = .fitted_results
+    fitted_results = all_fitted_results
   )
   class(out) <- c("trendbreaker", class(out))
   out
