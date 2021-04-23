@@ -13,10 +13,9 @@ test_that("asmodee works with data.frame", {
       pois_weekday = trending::glm_model(n ~ weekday + date, "poisson"),
       nb_weekday = trending::glm_nb_model(n ~ weekday + date)
   )
-  
-  ## fixed_k = 7
-  res <- asmodee(x, models, "date",
-                 fixed_k = 7)
+
+  # k = 7
+  res <- asmodee(x, models, "date", k = 7)
 
   smry <- summary(res)
   expect_s3_class(smry, "data.frame")
@@ -50,20 +49,20 @@ test_that("asmodee works with incidence2 object", {
 
   ## ungrouped incidence
   x <- incidence2::incidence(dat, date_index = date_of_onset)
-  res <- asmodee(x, models, fixed_k = 7)
+  res <- asmodee(x, models, k = 7)
   smry <- summary(res)
 
-  expect_equal(smry, summary(res[[1]]))
- 
+  expect_equal(smry, summary(res$output[[1]]))
+
   ## grouped incidence
   x <- incidence2::incidence(dat, groups = hospital, date_index = date_of_onset)
-  res <- asmodee(x, models, fixed_k = 7)
+  res <- asmodee(x, models, k = 7)
   smry <- summary(res)
 
   expect_s3_class(smry, "data.frame")
-  expect_identical(nrow(smry), length(res))
+  expect_identical(nrow(smry), length(res$output))
   expect_identical(ncol(smry), 11L)
-  expected_names <- c("group",
+  expected_names <- c("hospital",
                       "n_recent", "n_recent_increases", "n_recent_decreases",
                       "n_recent_outliers", "p_recent_outliers", "n_training",
                       "n_training_increases", "n_training_decreases",

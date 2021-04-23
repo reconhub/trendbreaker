@@ -22,6 +22,7 @@ knitr::opts_chunk$set(
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3888494.svg)](https://doi.org/10.5281/zenodo.3888494)
 [![R build status](https://github.com/reconhub/trendbreaker/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/trendbreaker/actions)
 [![Codecov test coverage](https://codecov.io/gh/reconhub/trendbreaker/branch/master/graph/badge.svg)](https://codecov.io/gh/reconhub/trendbreaker?branch=master)
+[![R-CMD-check](https://github.com/reconhub/trendbreaker/workflows/R-CMD-check/badge.svg)](https://github.com/reconhub/trendbreaker/actions)
 <!-- badges: end -->
 
 The *trendbreaker* package implements tools for detecting changes in temporal
@@ -78,20 +79,6 @@ example(asmodee)
 
 ## Main features
 
-The package implements the following main functions
-
-* `asmodee`: implements the Automatic Selection of Models and Outlier DEtection
-  for Epidemics
-  
-* `detect_changepoint`: a function to detect the points at which recent data
-  deviate from previous temporal trends using a fitted model and
-  data
-
-* `detect_outliers`: a function to identify outliers using a fitted model and
-  data
-  
-
-
 ### ASMODEE
 
 We illustrate ASMODEE using publicly available NHS pathways data recording
@@ -101,6 +88,8 @@ self-reporting of potential COVID-19 cases in England
 ```{r asmodee}
 library(trendbreaker) # for ASMODEE
 library(dplyr)        # for data manipulation
+library(future)
+plan("multisession")
 
 # load data
 data(nhs_pathways_covid19)
@@ -123,8 +112,15 @@ counts_overall <- pathways_recent %>%
   group_by(date, day, weekday) %>%
   summarise(count = sum(count))
 
-# results with automated detection of 'k'
-res <- asmodee(counts_overall, models, date_index = "date", method = evaluate_aic, simulate_pi = TRUE)
+# results with fixed 'k' = 7
+res <- asmodee(
+  counts_overall,
+  models,
+  k = 7,
+  date_index = "date",
+  method = evaluate_aic,
+  simulate_pi = TRUE
+)
 res
 plot(res, "date")
 ```
@@ -159,7 +155,7 @@ models <- list(
 )
 
 # analyses on all data
-res <- asmodee(dat, models, method = evaluate_aic, fixed_k = 7)
+res <- asmodee(dat, models, method = evaluate_aic, k = 7)
 
 plot(res)
 ```

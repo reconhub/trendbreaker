@@ -1,6 +1,6 @@
 Package: trendbreaker
 Title: Detect Changes in Temporal Trends
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: 
     c(
       person(
@@ -49,7 +49,9 @@ Imports:
     trending,
     trendeval,
     rlang,
-    tidyselect
+    tidyselect,
+    future.apply,
+    ellipsis
 Remotes:
-    reconhub/trending@bootstrap,
+    reconhub/trending,
     reconhub/incidence2

@@ -7,43 +7,35 @@
 #'
 #' * `get_model()`: fitted model capturing the temporal trend in the data as an
 #' `trendbreaker_model_fit` object
-#'
 #' * `get_k()`: number of recent days excluded from the temporal trend
-#'
 #' * `get_formula()`: formula of the retained fitted model
-#'
 #' * `get_response()`: response variable of the model
-#'
 #' * `get_results()`: main `data.frame` containing the original data, the
-#' predicted values with lower and upper bounds for the prediction interval, a
-#' `logical` variable `outlier` which is `TRUE` for data points falling outside
-#' the prediction interval, and `classification` of outliers as a `factor`.
-#'
+#'    predicted values with lower and upper bounds for the prediction interval,
+#'    a `logical` variable `outlier` which is `TRUE` for data points falling
+#'    outside the prediction interval, and `classification` of outliers as a
+#'    `factor`.
 #' * `get_outliers()`: returns data points (as rows of `get_results(x)`
-#' corresponding to outliers
-#'
-#' * `predict()`: function to make model predictions from the fitted model in the
-#' `trendbreaker` object; accepts two arguments `newdata`, a mandatory input
-#' containing data for which predictions are derived, and `alpha`, the threshold
-#' used for prediction intervals, defaulting to 0.05.
-#'
-#' @author Thibaut Jombart, Dirk Schumacher
-#'
-#' @aliases trendbreaker-accessors trendbreaker-class
+#'    corresponding to outliers.
+#' * `predict()`: function to make model predictions from the fitted model in
+#'    the `trendbreaker` object; accepts two arguments `newdata`, a mandatory
+#'    input containing data for which predictions are derived, and `alpha`, the
+#'    threshold used for prediction intervals, defaulting to 0.05.
 #'
 #' @param x an `trendbreaker` object, as returned by [`asmodee`](asmodee)
-#'
 #' @param ... further arguments passed to other methods
 #'
+#' @author Thibaut Jombart, Dirk Schumacher and Tim Taylor.
+#'
+#' @aliases trendbreaker-accessors trendbreaker-class
 #'
 #' @importFrom trending get_model
 #' @export
 #' @rdname trendbreaker-accessors
 #' @aliases get_model.trendbreaker
 get_model.trendbreaker <- function(x, ...) {
-  x$model
+  (x$trending_model_fit)$fitted_model
 }
-
 
 
 #' @importFrom trending get_formula
@@ -51,9 +43,8 @@ get_model.trendbreaker <- function(x, ...) {
 #' @rdname trendbreaker-accessors
 #' @aliases get_formula.trendbreaker
 get_formula.trendbreaker <- function(x, ...) {
-  formula(get_model(x)$fitted_model)
+  formula(get_model(x))
 }
-
 
 
 #' @importFrom trending get_response
@@ -61,9 +52,8 @@ get_formula.trendbreaker <- function(x, ...) {
 #' @rdname trendbreaker-accessors
 #' @aliases get_response.trendbreaker
 get_response.trendbreaker <- function(x, ...) {
-  as.character(get_formula(x))[2]
+  all.vars(get_formula(x))[1]
 }
-
 
 
 #' @export
@@ -99,21 +89,6 @@ get_outliers.trendbreaker <- function(x, ...) {
 #' @param alpha the alpha threshold to be used for prediction intervals,
 #'   defaulting to 0.05, i.e. 95% prediction intervals are derived
 predict.trendbreaker <- function(object, newdata, alpha = 0.05, ...) {
-  get_model(object)$predict(newdata = newdata, alpha = alpha)
+  (object$trending_model_fit)$predict(newdata = newdata, alpha = alpha)
 }
 
-
-
-
-
-#' @export
-#' @rdname trendbreaker-accessors
-#' @param i a subset of dates to retain
-
-"[.trendbreaker_incidence2" <- function(x, i){
-  oclass <- class(x)
-  class(x) <- "list"
-  out <- x[i]
-  class(out) <- oclass
-  out
-}

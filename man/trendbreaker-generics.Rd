@@ -20,11 +20,9 @@ get_outliers(x, ...)
 }
 \description{
 These are generic functions used by the \emph{trendbreaker} package, mostly used for
-accessing content of various objects. See \code{?trendbreaker-accessors} for methods
-relating to \code{trendbreaker} objects, and \code{trendbreaker_model-accessors} for methods
-relating to \code{trendbreaker_model} objects.
+accessing content of various objects. See \code{?trendbreaker-accessors} for
+associated methods.
 }
 \seealso{
 \url{trendbreaker-accessors},
-\url{trendbreaker_model-accessors}
 }
