@@ -61,7 +61,7 @@ not.}
 calculation; defaults to 0.05, i.e. 95\% prediction intervals are
 calculated.}
 
-\item{k}{An \code{integer} indicating the number of recent data  points to be
+\item{k}{An \code{integer} indicating the number of recent data points to be
 excluded from the trend fitting procedure. Defaults to 7.}
 
 \item{method}{A function used to evaluate model fit. Current choices are
@@ -71,35 +71,37 @@ good a selecting models with the best predictive power.
 \code{evaluate_resampling} uses cross-validation and, by default, RMSE to assess
 model fit.}
 
-\item{method_args}{Optional named list of additional arguments to pass to method.
-Defaults to an empty list.}
+\item{method_args}{Optional named list of additional arguments to pass to
+method.  Defaults to an empty list.}
 
-\item{simulate_pi}{Should the ciTools package be used to simulate prediction
-intervals for glm models. Defaults to TRUE.}
+\item{simulate_pi}{A \code{logical} indicating if prediction intervals should be
+derived by bootstrap using the ciTools package, or calculated
+analytically. Defaults to \code{TRUE}.}
 
-\item{uncertain}{Only used for glm models and if simulate_pi = FALSE. If
-FALSE uncertainty in the fitted parameters is ignored when generating the
-prediction intervals. Defaults to FALSE.}
-
-\item{include_fitting_warnings}{Should results include models that triggered
-warnings, but not errors, during the fitting procedure. Defaults to
-\code{FALSE}.}
-
-\item{include_prediction_warnings}{Should results include models that
-triggered warnings, but not errors, during the prediciton stage. Defaults
+\item{uncertain}{A \code{logical} indicating if uncertainty in the fitted
+parameters should be taken into account when deriving prections
+intervals. Only used for glm models and if simulate_pi = \code{FALSE}. Defaults
 to \code{FALSE}.}
+
+\item{include_fitting_warnings}{A \code{logical} indicating if results should
+include models that triggered warnings (but not errors), during the fitting
+procedure. Defaults to \code{FALSE}, as warnings can typically indicate lack of
+convergence during the parameter estimation.}
+
+\item{include_prediction_warnings}{A \code{logical} indicating if results should
+include models that triggered warnings (but not errors), during the
+prediciton stage. Defaults to \code{TRUE}.}
 
 \item{force_positive}{A \code{logical} indicating if prediction should be forced
 to be positive (or zero); can be useful when using Gaussian models for
-count data, to censor confidence or prediction intervals and avoid
-negative predictions. Defaults to \code{FALSE} for general \code{data.frame} inputs,
-and to \code{TRUE} for \code{incidence2} objects.}
+count data, to avoid negative predictions. Defaults to \code{FALSE} for general
+\code{data.frame} inputs, and to \code{TRUE} for \code{incidence2} objects.}
 
 \item{quiet}{A \code{logical} indicating if warnings and messages should be
-suppressed (TRUE) or use (FALSE, default).}
+suppressed (\code{TRUE}) or used (\code{FALSE}, default).}
 
 \item{keep_intermediate}{A \code{logical} indicating if all output from the
-fitting and prediction stages should be kept. If \code{TRUE} then a tibble will
+fitting and prediction stages should be returned. If \code{TRUE}, a tibble will
 be returned in the .fitted_results position of the resulting list output.
 If \code{FALSE} (default) .fitted_results will be \code{NULL}.}
 
@@ -127,12 +129,14 @@ fitting the training data from a list of user-provided models. First, all
 models are fitted to the data. Second, models are selected using the
 approach specified by the \code{method} argument. The default is
 \code{\link[=evaluate_aic]{evaluate_aic()}} which uses Akaike's Information Criteria to assess model
-fit penalised by model complexity. This approach is fast, but only measures
+fit penalised by model complexity. This approach is fast, but measures
 model fit rather than predictive ability. The alternative is using
 \code{\link[=evaluate_resampling]{evaluate_resampling()}}, uses cross-validation (10-fold by default) and
 root mean squared error (RMSE) to assess model fit. This approach is likely
 to select models with good predictive abilities, but is computationally
-intensive.
+intensive. Also, it does not attempt to maximise the explained deviance, so
+selected models may have good average predictions but underestimate
+uncertainty.
 }
 \examples{
 if (require(cowplot) && require(tidyverse) && require(trending)) {

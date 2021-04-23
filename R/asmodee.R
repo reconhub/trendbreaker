@@ -292,7 +292,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
       msg <- "Unable to derive predictions from any model without warnings or errors."
     } else {
       msg <- paste(
-        "Unable to derive predictions from any model without warnings or errors."
+        "Unable to derive predictions from any model without warnings or errors.",
         "Consider using `include_prediction_warnings = TRUE`",
         "to include models which can issue predictions with warnings.",
         sep = "\n"
