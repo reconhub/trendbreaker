@@ -71,5 +71,8 @@ int_cast <- function(x) {
 }
 
 
-
-
+# change negative entries to zero
+neg_to_zero <- function(x) {
+  x[x < 0] <- 0
+  x
+}

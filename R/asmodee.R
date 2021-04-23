@@ -156,15 +156,18 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
     stop(msg)
   }
 
-  # The rest of the algorithm will basically rely on:
+  # The rest of the algorithm will basically rely on the following steps:
   #  1. defining the training set by removing data of the most recent 'k' time
   #     units in date_index;
-  #  2. fitting the model
-  #  3. removing models that error (or optionally give warnings)
-  #  4. evaluate using the training set (potential duplication here)
-  #  4. deriving prediction intervals
-  #  6. and classifying outliers
+  #  2. fitting all models to the data
+  #  3. removing models that error on fitting (or optionally give warnings)
+  #  4. evaluate models using the training set, rank from best to worst
+  #  5. removing models that cannot be evaluated
+  #  6. derive prediction intervals by decreasing model rank, keeping the first
+  #    model not giving errors (or optionally give warnings) as the 'best' model
+  #  7. identify outliers
 
+  # Step 1: identify training set
   data <- set_training_data(data, date_index = date_index, k = k)
   last_training_date <- max(dates[data$.training], na.rm = TRUE)
   first_testing_date <- NULL
@@ -173,15 +176,16 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   }
   data_train <- get_training_data(data)
 
-  # fit all of the models and capture the warnings and errors
+  # Step 2: fit all of the models and capture the warnings and errors
   fitted_results <- clapply(models, trending::fit, data = data_train)
   colnames(fitted_results) <- c("trending_model_fit", "fitting_warnings", "fitting_errors")
 
-  # keep fitting_results (optional). useful for debugging
+  # keep fitting_results (optional); useful for closer inspection of models
+  # which errored
   .fitted_results <- NULL
   if (keep_intermediate) .fitted_results <- fitted_results
 
-  # remove fitting errors
+  # Step 3: remove models with fitting errors/warnings
   keep <- vapply(fitted_results$fitting_errors, is.null, logical(1))
   fitted_results <- fitted_results[keep,]
   models <- models[keep]
@@ -193,7 +197,7 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
     models <- models[keep]
   }
 
-  # evaluate the models
+  # Step 4: evaluate the models
   method_args <- utils::modifyList(
     method_args,
     list(data = data_train, models = models, method = method),
@@ -211,16 +215,13 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   # combine fitting, evaluation data
   out <- dplyr::bind_cols(fitted_results, model_results)
 
-  # bring model_name to front (here we allow for potential of unnamed models)
+  # bring model_name to front (here we allow for potentially unnamed models)
   if (!"model_name" %in% names(out)) {
     out$model_name <- NA_character_
   }
   out <- dplyr::relocate(out, .data$model_name)
 
-  # In case there are any errors with evaluation we remove these here also
-  # This whould not occur with `evaluate_aic` as models causing problems
-  # would already have been removed. Mainly for evaluating methods that rely
-  # on sampling
+  # Step 5: remove models which could not be evaluated
   keep <- vapply(out$evaluation_errors, is.null, logical(1))
   out <- out[keep,]
   models <- models[keep]
@@ -228,10 +229,10 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   # error if no possible models
   if (nrow(out) == 0) {
     if (include_fitting_warnings) {
-      msg <- "Unable to fit a model to the data without warnings or errors."
+      msg <- "Unable to fit any model without warnings or errors."
     } else {
       msg <- paste(
-        "Unable to fit a model to the data without warnings or errors.",
+        "Unable to fit any model without warnings or errors.",
         "Consider using `include_fitting_warnings = TRUE`",
         "to include more models which issued warnings.",
         sep = "\n"
@@ -240,14 +241,19 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
     stop(msg)
   }
 
-  # order results and keep the top one
+  # Rank models from the best to the worst.
   # TODO - this assumes only last column is of interest. Ok for aic but would
   #        be an issue if people passed multiple metrics through to a different
   #        method so we should warn in this scenario
   models <- models[order(out[, ncol(out), drop = TRUE])]
   out <- out[order(out[, ncol(out), drop = TRUE]), ]
 
-  # loop through possible models until we can succesfully make prediction
+  # Step 6: loop through models from the best to the worst one, attempting to
+  # derive prediction intervals for each; the first one to work with no error
+  # (optionally, no warning) is retained as the 'best' model. This is necessary
+  # because the 'best fitting' model may not be able to yield predictions on the
+  # recent data points, e.g. when categorical predictors have new levels
+  # (i.e. absent from the training set).
   i <- 0
   success <- FALSE
   tmp <- out$trending_model_fit
@@ -283,24 +289,26 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   # error if no possible models
   if (!success) {
     if (include_prediction_warnings) {
-      msg <- "Unable to make prediction to the data without warnings or errors."
+      msg <- "Unable to derive predictions from any model without warnings or errors."
     } else {
       msg <- paste(
-        "Unable to make a prediction to the data without warnings or errors.",
+        "Unable to derive predictions from any model without warnings or errors."
         "Consider using `include_prediction_warnings = TRUE`",
-        "to include more models which issued warnings.",
+        "to include models which can issue predictions with warnings.",
         sep = "\n"
       )
     }
     stop(msg)
   }
 
-  # subset to the best model and then combine with prediction results
+  # retain the best model and then combine with prediction results
   out <- out[i, ]
   models <- models[i]
   out <- dplyr::bind_cols(out, pred_result)
 
-  # mark up outliers (note the hacks needed for precision issues)
+  
+  # Step 7: identify outliers and shape the output
+  # (note the hacks needed for precision issues)
   preds <- out$result[[1]]
   model <- out$trending_model_fit[[1]]$fitted_model
   observed <- all.vars(formula(model))[1]
@@ -326,10 +334,6 @@ asmodee.data.frame <- function(data, models, date_index, alpha = 0.05, k = 7,
   # enforce positive predictions if required
   if (force_positive) {
     nms <- c("estimate", "lower_ci", "upper_ci", "lower_pi", "upper_pi")
-    neg_to_zero <- function(x) {
-      x[x < 0] <- 0
-      x
-    }
     preds[nms] <- lapply(preds[nms], neg_to_zero)
   }
 
